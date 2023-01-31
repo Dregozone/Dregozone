@@ -1,4 +1,4 @@
-### Hi there 👋
+### Hi, I'm Anders 👋
 
 ## Get in touch
 ![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)
@@ -8,7 +8,7 @@ Portfolio
 Download my CV
 
 
-🔭 I’m currently working on
+## 🔭 I’m currently working on
 ...
 
 
@@ -34,7 +34,7 @@ Download my CV
 ![Windows 11](https://img.shields.io/badge/Windows%2011-%230079d5.svg?style=for-the-badge&logo=Windows%2011&logoColor=white)
 
 
-🌱 I’m currently learning
+## 🌱 I’m currently learning
 ### Languages/Frameworks/Tools
 ![Redux](https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white)
 
@@ -44,10 +44,10 @@ Download my CV
 ![Selenium](https://img.shields.io/badge/-selenium-%43B02A?style=for-the-badge&logo=selenium&logoColor=white)
 
 
-👯 I’m not looking to collaborate on anything at this moment in time
+## 👯 I’m not looking to collaborate on anything at this moment in time
 
 
-😄 Pronouns: He/Him
+## 😄 Pronouns: He/Him
 
 
 <!-- 
