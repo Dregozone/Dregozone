@@ -8,7 +8,7 @@
 
 - BeeActive - Fitness and nutrition app to track workouts and food consumption against user targets
 - Booker - Social events planner with shared friend calendars and events
-- (Many more...)
+- *(Many more...)*
 
 
 ## :books: My tech stack
