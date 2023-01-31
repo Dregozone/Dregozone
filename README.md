@@ -35,21 +35,7 @@ Download my CV
 
 
 ### 🌱 I’m currently learning
-#### Languages/Frameworks/Tools
 ![Redux](https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white)
-
-#### Testing
 ![Jest](https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white)
 ![Mocha](https://img.shields.io/badge/-mocha-%238D6748?style=for-the-badge&logo=mocha&logoColor=white)
 ![Selenium](https://img.shields.io/badge/-selenium-%43B02A?style=for-the-badge&logo=selenium&logoColor=white)
-
-
-### 👯 I’m not looking to collaborate on anything at this moment in time
-
-
-### 😄 Pronouns: He/Him
-
-
-<!-- 
-💬 Ask me about ()
--->
