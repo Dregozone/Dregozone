@@ -1,7 +1,7 @@
 ## Get in touch
-![Contact](http://www.glacialstudio.co.uk/contact)
-| ![LinkedIn](https://uk.linkedin.com/in/andreas-learmonth-982318a1)
-| ![Portfolio](http://www.glacialstudio.co.uk/portfolio)
+[Contact](http://www.glacialstudio.co.uk/contact)
+| [LinkedIn](https://uk.linkedin.com/in/andreas-learmonth-982318a1)
+| [Portfolio](http://www.glacialstudio.co.uk/portfolio)
 
 ## 🔭 I’m currently working on
 - [Planner](https://www.planner.glacialstudio.co.uk) - Daily & Weekly habit/goal tracker with personal development focus, includes daily gratitude and journalling capability
