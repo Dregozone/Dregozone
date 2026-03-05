@@ -39,10 +39,15 @@
                 <!-- Auth controls -->
                 <div class="hidden sm:flex items-center gap-4">
                     @auth
+                        @if (auth()->user()->isAdmin())
+                            <a href="{{ route('admin.blog.index') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Admin</a>
+                        @endif
+
                         <a href="{{ route('dashboard') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Dashboard</a>
+                        
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="text-sm font-medium text-stone-400 hover:text-stone-600 transition-colors">Logout</button>
+                            <button type="submit" class="text-sm font-medium text-stone-400 hover:text-stone-600 transition-colors cursor-pointer">Logout</button>
                         </form>
                     @else
                         <a href="{{ route('login') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Login</a>
