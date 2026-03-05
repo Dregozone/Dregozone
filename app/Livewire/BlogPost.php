@@ -23,7 +23,11 @@ class BlogPost extends Component
     {
         $relatedPosts = BlogPostModel::published()
             ->where('id', '!=', $this->post->id)
-            ->whereJsonContains('tags', $this->post->tags ?? [])
+            ->where(function ($query) {
+                foreach ($this->post->tags ?? [] as $tag) {
+                    $query->orWhereJsonContains('tags', $tag);
+                }
+            })
             ->take(3)
             ->get();
 
