@@ -23,9 +23,22 @@
             <div class="flex flex-col sm:flex-row gap-4">
                 <div class="flex-1">
                     <label for="email" class="sr-only">Email address</label>
-                    <input type="email" id="email" wire:model="email" placeholder="Enter your email address"
-                        class="w-full px-4 py-3 rounded-lg border-0 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600"
-                        required>
+
+                    <div class="w-full rounded-lg bg-gradient-to-tr from-violet-600 via-red-300 to-blue-500 p-0.5">
+                        <input 
+                            type="email" 
+                            id="email" 
+                            wire:model="email" 
+                            placeholder="Enter your email address"
+                            class="
+                                w-full bg-white/80 px-4 py-3 rounded-md border-0 text-gray-900 placeholder-gray-500 
+                                {{-- focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600 --}} 
+                                focus:outline-none focus:bg-white/70 transition-colors duration-200 focus:shadow-lg
+                            "
+                            required
+                        >
+                    </div>
+
                     @error('email')
                         <p class="mt-1 text-sm text-red-200">{{ $message }}</p>
                     @enderror
