@@ -70,6 +70,7 @@
     </div>
 
     @livewireScripts
+    @fluxScripts
 </body>
 
 </html>

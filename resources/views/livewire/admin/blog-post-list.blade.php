@@ -159,7 +159,7 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex space-x-2">
-                                            <a href="{{ route('admin.blog.edit', $post) }}"
+                                            <a href="{{ route('admin.blog.edit', $post->id) }}"
                                                 class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300">
                                                 Edit
                                             </a>

@@ -21,7 +21,7 @@ Route::get('/contact', Contact::class)->name('contact');
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/blog', BlogPostList::class)->name('blog.index');
     Route::get('/blog/create', BlogPostForm::class)->name('blog.create');
-    Route::get('/blog/{post}/edit', BlogPostForm::class)->name('blog.edit');
+    Route::get('/blog/{postId}/edit', BlogPostForm::class)->name('blog.edit');
 });
 
 // Auth routes

@@ -31,6 +31,19 @@ class BlogPostForm extends Component
 
     public $isEditing = false;
 
+    public array $availableTags = [
+        'AI',
+        'Database',
+        'Design',
+        'Laravel',
+        'Livewire',
+        'Optimization',
+        'Performance',
+        'PHP',
+        'Trends',
+        'Web Development',
+    ];
+
     protected $rules = [
         'title' => 'required|min:3|max:255',
         'excerpt' => 'required|min:10|max:500',
@@ -78,20 +91,6 @@ class BlogPostForm extends Component
         session()->flash('message', $this->isEditing ? 'Post updated successfully!' : 'Post created successfully!');
 
         return redirect()->route('admin.blog.index');
-    }
-
-    public function addTag()
-    {
-        $tag = trim(request('tag'));
-        if ($tag && ! in_array($tag, $this->tags)) {
-            $this->tags[] = $tag;
-        }
-    }
-
-    public function removeTag($index)
-    {
-        unset($this->tags[$index]);
-        $this->tags = array_values($this->tags);
     }
 
     public function render()
