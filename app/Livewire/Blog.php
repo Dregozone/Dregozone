@@ -2,18 +2,22 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\BlogPost;
-use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
+use Livewire\Component;
+use Livewire\WithPagination;
 
-#[Layout('components.layouts.app.blank')]
+#[Layout('components.layouts.main')]
+#[Title('Blog')]
 class Blog extends Component
 {
     use WithPagination;
 
     public $search = '';
+
     public $tag = '';
+
     public $sortBy = 'latest';
 
     protected $queryString = [
@@ -38,9 +42,9 @@ class Blog extends Component
 
         if ($this->search) {
             $query->where(function ($q) {
-                $q->where('title', 'like', '%' . $this->search . '%')
-                  ->orWhere('excerpt', 'like', '%' . $this->search . '%')
-                  ->orWhere('content', 'like', '%' . $this->search . '%');
+                $q->where('title', 'like', '%'.$this->search.'%')
+                    ->orWhere('excerpt', 'like', '%'.$this->search.'%')
+                    ->orWhere('content', 'like', '%'.$this->search.'%');
             });
         }
 
@@ -64,7 +68,7 @@ class Blog extends Component
         $tags = BlogPost::published()
             ->whereNotNull('tags')
             ->get()
-            ->flatMap(fn($post) => $post->tags ?? [])
+            ->flatMap(fn ($post) => $post->tags ?? [])
             ->unique()
             ->sort()
             ->values();

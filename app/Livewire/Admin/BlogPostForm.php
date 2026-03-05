@@ -4,21 +4,31 @@ namespace App\Livewire\Admin;
 
 use App\Models\BlogPost;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
+#[Layout('components.layouts.admin')]
 class BlogPostForm extends Component
 {
     use WithFileUploads;
 
     public BlogPost $post;
+
     public $title = '';
+
     public $excerpt = '';
+
     public $content = '';
+
     public $tags = [];
+
     public $status = 'draft';
+
     public $featured_image;
+
     public $published_at;
+
     public $isEditing = false;
 
     protected $rules = [
@@ -43,7 +53,7 @@ class BlogPostForm extends Component
             $this->status = $this->post->status;
             $this->published_at = $this->post->published_at?->format('Y-m-d\TH:i');
         } else {
-            $this->post = new BlogPost();
+            $this->post = new BlogPost;
         }
     }
 
@@ -66,14 +76,14 @@ class BlogPostForm extends Component
         $this->post->save();
 
         session()->flash('message', $this->isEditing ? 'Post updated successfully!' : 'Post created successfully!');
-        
+
         return redirect()->route('admin.blog.index');
     }
 
     public function addTag()
     {
         $tag = trim(request('tag'));
-        if ($tag && !in_array($tag, $this->tags)) {
+        if ($tag && ! in_array($tag, $this->tags)) {
             $this->tags[] = $tag;
         }
     }

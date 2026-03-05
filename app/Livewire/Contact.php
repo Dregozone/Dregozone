@@ -3,19 +3,28 @@
 namespace App\Livewire;
 
 use App\Models\ContactMessage;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
+use Livewire\Component;
 
-#[Layout('components.layouts.app.blank')]
+#[Layout('components.layouts.main')]
+#[Title('Contact')]
 class Contact extends Component
 {
     public $name = '';
+
     public $email = '';
+
     public $subject = '';
+
     public $message = '';
+
     public $type = 'general';
+
     public $budget = '';
+
     public $timeline = '';
+
     public $projectType = '';
 
     protected $rules = [
@@ -31,7 +40,7 @@ class Contact extends Component
         $this->validate();
 
         $metadata = [];
-        
+
         if ($this->type === 'work_request') {
             $metadata = [
                 'budget' => $this->budget,

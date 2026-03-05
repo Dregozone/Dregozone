@@ -3,15 +3,21 @@
 namespace App\Livewire\Admin;
 
 use App\Models\BlogPost;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+#[Layout('components.layouts.admin')]
+#[Title('Blog Posts')]
 class BlogPostList extends Component
 {
     use WithPagination;
 
     public $search = '';
+
     public $status = '';
+
     public $sortBy = 'latest';
 
     public function updatingSearch()
@@ -23,7 +29,7 @@ class BlogPostList extends Component
     {
         $post = BlogPost::findOrFail($postId);
         $post->delete();
-        
+
         session()->flash('message', 'Post deleted successfully!');
     }
 
@@ -34,7 +40,7 @@ class BlogPostList extends Component
             'status' => $post->status === 'published' ? 'draft' : 'published',
             'published_at' => $post->status === 'draft' ? now() : null,
         ]);
-        
+
         session()->flash('message', 'Post status updated!');
     }
 
@@ -44,8 +50,8 @@ class BlogPostList extends Component
 
         if ($this->search) {
             $query->where(function ($q) {
-                $q->where('title', 'like', '%' . $this->search . '%')
-                  ->orWhere('excerpt', 'like', '%' . $this->search . '%');
+                $q->where('title', 'like', '%'.$this->search.'%')
+                    ->orWhere('excerpt', 'like', '%'.$this->search.'%');
             });
         }
 

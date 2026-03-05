@@ -1,8 +1,3 @@
-@extends('layouts.main')
-
-@section('title', 'Contact - Professional Developer')
-
-@section('content')
     <!-- Hero Section -->
     <div class="bg-gradient-to-r from-blue-600 to-indigo-600 py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -261,4 +256,4 @@
             @livewire('newsletter-signup')
         </div>
     </div>
-@endsection
+

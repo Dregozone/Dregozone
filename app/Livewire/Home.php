@@ -2,12 +2,14 @@
 
 namespace App\Livewire;
 
-use App\Models\Project;
-use Livewire\Component;
 use App\Models\BlogPost;
+use App\Models\Project;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
+use Livewire\Component;
 
-#[Layout('components.layouts.app.blank')]
+#[Layout('components.layouts.main')]
+#[Title('Developer & Writer')]
 class Home extends Component
 {
     public function render()

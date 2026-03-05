@@ -3,10 +3,10 @@
 namespace App\Livewire;
 
 use App\Models\BlogPost as BlogPostModel;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Component;
 
-#[Layout('components.layouts.app.blank')]
+#[Layout('components.layouts.main')]
 class BlogPost extends Component
 {
     public BlogPostModel $post;
@@ -14,7 +14,7 @@ class BlogPost extends Component
     public function mount(BlogPostModel $post)
     {
         $this->post = $post;
-        
+
         // Increment view count
         $this->post->increment('views');
     }

@@ -4,13 +4,13 @@ namespace App\Livewire;
 
 use App\Models\NewsletterSubscriber;
 use Livewire\Component;
-use Livewire\Attributes\Layout;
 
-#[Layout('components.layouts.app.blank')]
 class NewsletterSignup extends Component
 {
     public $email = '';
+
     public $name = '';
+
     public $subscribed = false;
 
     protected $rules = [

@@ -1,8 +1,3 @@
-@extends('layouts.admin')
-
-@section('title', $isEditing ? 'Edit Post' : 'Create Post')
-
-@section('content')
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
@@ -168,4 +163,4 @@
             }
         });
     </script>
-@endsection
+
