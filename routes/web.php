@@ -2,6 +2,8 @@
 
 use App\Livewire\Admin\BlogPostForm;
 use App\Livewire\Admin\BlogPostList;
+use App\Livewire\Admin\ProjectForm;
+use App\Livewire\Admin\ProjectList;
 use App\Livewire\Blog;
 use App\Livewire\BlogPost;
 use App\Livewire\Contact;
@@ -22,6 +24,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/blog', BlogPostList::class)->name('blog.index');
     Route::get('/blog/create', BlogPostForm::class)->name('blog.create');
     Route::get('/blog/{postId}/edit', BlogPostForm::class)->name('blog.edit');
+
+    Route::get('/projects', ProjectList::class)->name('projects.index');
+    Route::get('/projects/create', ProjectForm::class)->name('projects.create');
+    Route::get('/projects/{projectId}/edit', ProjectForm::class)->name('projects.edit');
 });
 
 // Auth routes
