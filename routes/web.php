@@ -8,6 +8,7 @@ use App\Livewire\Blog;
 use App\Livewire\BlogPost;
 use App\Livewire\Contact;
 use App\Livewire\Home;
+use App\Livewire\Projects;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -18,6 +19,7 @@ Route::get('/', Home::class)->name('home');
 Route::get('/blog', Blog::class)->name('blog');
 Route::get('/blog/{post:slug}', BlogPost::class)->name('blog.post');
 Route::get('/contact', Contact::class)->name('contact');
+Route::get('/projects', Projects::class)->name('projects');
 
 // Admin routes (protected)
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {

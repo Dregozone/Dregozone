@@ -22,7 +22,8 @@
 <body class="h-full font-sans antialiased bg-white text-stone-900">
 
     <!-- Navigation -->
-    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-100">
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-100"
+        x-data="{ mobileOpen: false }">
         <div class="max-w-6xl mx-auto px-6">
             <div class="flex items-center justify-between h-16">
 
@@ -35,18 +36,19 @@
                 <nav class="hidden sm:flex items-center gap-8">
                     <a href="{{ route('home') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Home</a>
                     <a href="{{ route('blog') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Blog</a>
+                    <a href="{{ route('projects') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Projects</a>
                     <a href="{{ route('contact') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Contact</a>
                 </nav>
 
-                <!-- Auth controls -->
+                <!-- Auth controls (desktop) -->
                 <div class="hidden sm:flex items-center gap-4">
                     @auth
                         @if (auth()->user()->isAdmin())
                             <a href="{{ route('admin.blog.index') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Admin</a>
                         @endif
-    
+
                         {{-- <a href="{{ route('dashboard') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Dashboard</a> --}}
-    
+
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="text-sm font-medium text-stone-400 hover:text-stone-600 transition-colors cursor-pointer">Logout</button>
@@ -57,7 +59,58 @@
                     @endauth
                 </div>
 
+                <!-- Mobile hamburger -->
+                <button @click="mobileOpen = !mobileOpen"
+                    class="sm:hidden inline-flex items-center justify-center w-9 h-9 rounded-lg text-stone-500 hover:text-stone-900 hover:bg-stone-100 transition-colors"
+                    aria-label="Toggle navigation">
+                    <svg x-show="!mobileOpen" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    <svg x-show="mobileOpen" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
             </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div x-show="mobileOpen"
+            x-transition:enter="transition ease-out duration-150"
+            x-transition:enter-start="opacity-0 -translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-100"
+            x-transition:leave-start="opacity-100 translate-y-0"
+            x-transition:leave-end="opacity-0 -translate-y-1"
+            class="sm:hidden border-t border-stone-100 bg-white/95 backdrop-blur-md">
+            <nav class="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-1">
+                <a href="{{ route('home') }}" @click="mobileOpen = false"
+                    class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Home</a>
+                <a href="{{ route('blog') }}" @click="mobileOpen = false"
+                    class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Blog</a>
+                <a href="{{ route('projects') }}" @click="mobileOpen = false"
+                    class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Projects</a>
+                <a href="{{ route('contact') }}" @click="mobileOpen = false"
+                    class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Contact</a>
+
+                <div class="mt-3 pt-3 border-t border-stone-100 flex flex-col gap-2">
+                    @auth
+                        @if (auth()->user()->isAdmin())
+                            <a href="{{ route('admin.blog.index') }}" @click="mobileOpen = false"
+                                class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Admin</a>
+                        @endif
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-stone-400 hover:text-stone-600 hover:bg-stone-50 transition-colors cursor-pointer">Logout</button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" @click="mobileOpen = false"
+                            class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Login</a>
+                        <a href="{{ route('register') }}" @click="mobileOpen = false"
+                            class="mx-3 mt-1 text-center bg-stone-900 text-white px-4 py-2.5 rounded-full text-sm font-semibold hover:bg-stone-700 transition-colors">Register</a>
+                    @endauth
+                </div>
+            </nav>
         </div>
     </header>
 
@@ -99,6 +152,7 @@
                     <ul class="space-y-3">
                         <li><a href="{{ route('home') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Home</a></li>
                         <li><a href="{{ route('blog') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Blog</a></li>
+                        <li><a href="{{ route('projects') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Projects</a></li>
                         <li><a href="{{ route('contact') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Contact</a></li>
                     </ul>
                 </div>
