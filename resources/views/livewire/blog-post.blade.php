@@ -56,7 +56,7 @@
                 </div>
             @endif
 
-            <article class="prose prose-lg prose-stone max-w-none">
+            <article class="prose prose-lg prose-stone max-w-none tracking-wider text-lg font-['Inter',sans-serif]">
                 {!! $post->content !!}
             </article>
 
