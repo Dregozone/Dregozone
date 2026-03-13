@@ -168,6 +168,11 @@
                                                     class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300">
                                                     View
                                                 </a>
+                                            @else
+                                                <a href="{{ route('admin.blog.preview', $post->id) }}" target="_blank"
+                                                    class="text-amber-600 dark:text-amber-400 hover:text-amber-900 dark:hover:text-amber-300">
+                                                    Preview
+                                                </a>
                                             @endif
                                             <button wire:click="toggleStatus({{ $post->id }})"
                                                 class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-900 dark:hover:text-yellow-300">

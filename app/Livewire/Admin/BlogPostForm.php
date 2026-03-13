@@ -42,6 +42,11 @@ class BlogPostForm extends Component
         'PHP',
         'Trends',
         'Web Development',
+
+        'Running',
+        'Gym',
+        'General',
+        'Cooking',
     ];
 
     protected $rules = [

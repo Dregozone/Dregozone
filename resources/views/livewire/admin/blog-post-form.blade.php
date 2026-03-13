@@ -74,7 +74,7 @@
             <!-- Tags -->
             <flux:field>
                 <flux:label>Tags</flux:label>
-                <flux:pillbox wire:model="tags" multiple placeholder="Choose tags...">
+                <flux:pillbox wire:model="tags" multiple searchable placeholder="Choose tags...">
                     @foreach ($availableTags as $tag)
                         <flux:pillbox.option value="{{ $tag }}">{{ $tag }}</flux:pillbox.option>
                     @endforeach
