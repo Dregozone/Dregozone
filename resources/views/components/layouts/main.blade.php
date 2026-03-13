@@ -29,7 +29,7 @@
 
                 <!-- Brand -->
                 <a href="{{ route('home') }}" class="text-lg font-black tracking-tight text-stone-900 hover:text-stone-700 transition-colors">
-                    <span class="text-amber-500">A</span>ndersLearmonth
+                    <span class="text-amber-600">Anders</span>Learmonth
                 </a>
 
                 <!-- Primary nav -->
@@ -127,7 +127,7 @@
                 <!-- Brand col -->
                 <div class="md:col-span-2">
                     <a href="{{ route('home') }}" class="text-xl font-black tracking-tight text-stone-900">
-                        <span class="text-amber-500">A</span>ndersLearmonth
+                        <span class="text-amber-600">Anders</span>Learmonth
                     </a>
                     <p class="mt-3 text-stone-500 text-sm leading-relaxed max-w-xs">
                         Building things for the web, writing about what I learn, and exploring the world one language at a time.

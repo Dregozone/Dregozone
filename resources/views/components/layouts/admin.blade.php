@@ -28,7 +28,7 @@
                     <div class="flex">
                         <div class="flex-shrink-0 flex items-center">
                             <a href="{{ route('home') }}" class="text-2xl font-bold text-gray-900 dark:text-white">
-                                <span class="text-amber-500">A</span>ndersLearmonth
+                                <span class="text-amber-500">Anders</span>Learmonth
                             </a>
                             <span class="ml-4 text-sm text-gray-500 dark:text-gray-400">Admin</span>
                         </div>
