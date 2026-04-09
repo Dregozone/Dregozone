@@ -1,38 +1,79 @@
-## Get in touch
-[Contact](http://www.glacialstudio.co.uk/#contact)
-| [LinkedIn](https://uk.linkedin.com/in/andreas-learmonth-982318a1)
-| [Portfolio](http://www.glacialstudio.co.uk/#pastWork)
+# 👋 Hi, I’m Anders  
+**Founder @ Glacial Studio**  
+Building reproducible, agentic workflows and beautifully crafted, innovative web apps with the **TALL stack**, deep SQL expertise, and a growing love for **local AI development**.
 
-## 🔭 I’m currently working on
-- [Planner](https://www.planner.glacialstudio.co.uk) - Daily & Weekly habit/goal tracker with personal development focus, includes daily gratitude and journalling capability
-- [Scribe-MES](https://www.scribe.glacialstudio.co.uk) - Cloud-based Manufacturing Execution System to track build of custom products
-- [BeeActive](https://www.beeactive.glacialstudio.co.uk) - Fitness and nutrition app to track workouts and food consumption against user targets
-- [Booker](https://github.com/Dregozone/BookerApplication) - Pre-release: Social events planner with shared friend calendars and events
-- *(Many more...)*
+<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbGZpZ2Z0Z2Z5dGZ3bGZ6dGZ5dGZ5dGZ5dGZ5dGZ5dGZ5/26tn33aiTi1jkl6H6/giphy.gif" width="100%" />
 
-## :books: My tech stack
-### Languages
-- PHP
-- JavaScript
-- CSS
-- HTML
-- T-SQL
-- MySQL
+---
 
-### Frameworks
-![Laravel](https://img.shields.io/badge/laravel-%23FF2D20.svg?style=for-the-badge&logo=laravel&logoColor=white)
-![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+## ✉️ Get in touch  
+[Contact](http://www.glacialstudio.co.uk/#contact)  
+[LinkedIn](https://uk.linkedin.com/in/andreas-learmonth-982318a1)  
+[Portfolio](http://www.glacialstudio.co.uk/#pastWork)
 
-### Tools & OS
-![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
-![Bootstrap](https://img.shields.io/badge/bootstrap-%23563D7C.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Debian](https://img.shields.io/badge/Debian-D70A53?style=for-the-badge&logo=debian&logoColor=white)
-![Windows 11](https://img.shields.io/badge/Windows%2011-%230079d5.svg?style=for-the-badge&logo=Windows%2011&logoColor=white)
+---
 
+## 🔭 What I’m Building Right Now (Private)
 
-## 🌱 I’m currently learning
-- More of the Laravel 1st party tools
-- Pest
-- React + Redux
-- Selenium
+| Project | Description |
+|--------|-------------|
+| **Evoluna** | Personal development planner with habit tracking, journalling, gratitude, and long‑term goal alignment |
+| **Whenish** | Shared calendar + event organiser with friend groups and collaborative scheduling |
+| **Personal‑Assistant** | Local‑model AI assistant that integrates with my apps for unified visibility and intelligent automation |
+
+---
+
+## 🧠 Ongoing Projects & Ideas (Public)
+
+| Project | Description |
+|--------|-------------|
+| [**Gatekeeper‑AI**](https://github.com/Dregozone/gatekeeper) | A unified interface for all my projects to request AI responses from a single, managed endpoint layer |
+| [**Atlas‑Fit**](https://github.com/Dregozone/atlas-fit) | Fitness & nutrition logger with macro tracking, workout logging, and progress insights |
+| [**ExclusionZone**](https://github.com/Dregozone/ExclusionZone) | A browser‑based MMORPG set in a post‑apocalyptic world inspired by *Roadside Picnic* |
+| [**RouletteHelper**](https://github.com/Dregozone/RouletteHelper) | Statistical analysis engine that attempts to “predict” roulette outcomes based on historical patterns |
+
+---
+
+## 🧰 My Tech Stack  
+
+### 🏗️ Core Specialisms  
+- **TALL Stack** (Laravel, Livewire, Alpine.js, TailwindCSS)  
+- **Flux Pro Components** for rapid UI development  
+- **Advanced MSSQL** (certified with London Academy of IT)  
+- **Local AI Development** (Ollama, model orchestration, SQLite experimentation)  
+- **Clean architecture, reproducible workflows, agentic automation**
+
+---
+
+## 💻 Languages  
+![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![T-SQL](https://img.shields.io/badge/T--SQL-CC2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)
+
+---
+
+## 🧩 Frameworks & Libraries  
+![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![Livewire](https://img.shields.io/badge/Livewire-4E56A6?style=for-the-badge&logo=livewire&logoColor=white)
+![Alpine.js](https://img.shields.io/badge/Alpine.js-8BC0D0?style=for-the-badge&logo=alpinedotjs&logoColor=black)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white)
+
+---
+
+## 🛠️ Tools, Platforms & OS  
+![Git](https://img.shields.io/badge/Git-F05033?style=for-the-badge&logo=git&logoColor=white)
+![Debian](https://img.shields.io/badge/Debian-A81D33?style=for-the-badge&logo=debian&logoColor=white)
+![Windows 11](https://img.shields.io/badge/Windows_11-0078D4?style=for-the-badge&logo=windows11&logoColor=white)
+![Ollama](https://img.shields.io/badge/Ollama-000000?style=for-the-badge&logo=github&logoColor=white)
+
+---
+
+## 🌱 Currently Learning  
+- Laravel first‑party ecosystem (Forge, Nightwatch, Reverb, Prompts)
+- Pest for elegant testing
+- Postgres
+- Local AI workflows (Ollama, model routing, vector stores)
+
+---
