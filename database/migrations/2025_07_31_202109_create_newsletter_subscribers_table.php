@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('email')->unique();
             $table->string('name')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_subscribed')->default(true);
             $table->timestamp('subscribed_at');
             $table->timestamp('unsubscribed_at')->nullable();
+            $table->string('secret_key', 64)->unique();
+            $table->unsignedInteger('emails_sent')->default(0);
             $table->timestamps();
         });
     }

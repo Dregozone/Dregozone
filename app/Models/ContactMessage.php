@@ -17,10 +17,12 @@ class ContactMessage extends Model
         'type',
         'status',
         'metadata',
+        'status_changed_at',
     ];
 
     protected $casts = [
         'metadata' => 'array',
+        'status_changed_at' => 'datetime',
     ];
 
     public function scopeNew($query)
@@ -33,13 +35,32 @@ class ContactMessage extends Model
         return $query->whereIn('status', ['new', 'read']);
     }
 
-    public function markAsRead()
+    public function markAsRead(): void
     {
         $this->update(['status' => 'read']);
     }
 
-    public function markAsReplied()
+    public function markAsReplied(): void
     {
-        $this->update(['status' => 'replied']);
+        $this->update([
+            'status' => 'replied',
+            'status_changed_at' => now(),
+        ]);
+    }
+
+    public function markAsIgnored(): void
+    {
+        $this->update([
+            'status' => 'ignored',
+            'status_changed_at' => now(),
+        ]);
+    }
+
+    public function markAsActioned(): void
+    {
+        $this->update([
+            'status' => 'actioned',
+            'status_changed_at' => now(),
+        ]);
     }
 }

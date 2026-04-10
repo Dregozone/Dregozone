@@ -18,8 +18,9 @@ return new class extends Migration
             $table->string('subject');
             $table->text('message');
             $table->enum('type', ['work_request', 'general', 'partnership'])->default('general');
-            $table->enum('status', ['new', 'read', 'replied', 'archived'])->default('new');
+            $table->enum('status', ['new', 'read', 'replied', 'ignored', 'actioned', 'archived'])->default('new');
             $table->json('metadata')->nullable();
+            $table->timestamp('status_changed_at')->nullable();
             $table->timestamps();
         });
     }
