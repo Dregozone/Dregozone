@@ -82,6 +82,37 @@
                 <flux:error name="tags" />
             </flux:field>
 
+            <!-- Create New Tag -->
+            <div class="rounded-md border border-dashed border-gray-300 dark:border-gray-600 p-4">
+                @if ($showNewTagInput)
+                    <div class="flex items-center gap-3">
+                        <input type="text" wire:model="newTagName"
+                            placeholder="New tag name..."
+                            class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                            wire:keydown.enter.prevent="createTag" />
+                        <button type="button" wire:click="createTag"
+                            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-md font-medium transition-colors duration-200">
+                            Add Tag
+                        </button>
+                        <button type="button" wire:click="$set('showNewTagInput', false)"
+                            class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                            Cancel
+                        </button>
+                    </div>
+                    @error('newTagName')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                @else
+                    <button type="button" wire:click="$set('showNewTagInput', true)"
+                        class="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Create a new tag
+                    </button>
+                @endif
+            </div>
+
             <!-- Status and Publish Date -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
