@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\BlogPost;
+use App\Models\Tag;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -31,23 +32,11 @@ class BlogPostForm extends Component
 
     public $isEditing = false;
 
-    public array $availableTags = [
-        'AI',
-        'Database',
-        'Design',
-        'Laravel',
-        'Livewire',
-        'Optimization',
-        'Performance',
-        'PHP',
-        'Trends',
-        'Web Development',
+    public array $availableTags = [];
 
-        'Running',
-        'Gym',
-        'General',
-        'Cooking',
-    ];
+    public string $newTagName = '';
+
+    public bool $showNewTagInput = false;
 
     protected $rules = [
         'title' => 'required|min:3|max:255',
@@ -57,10 +46,13 @@ class BlogPostForm extends Component
         'status' => 'required|in:draft,published',
         'featured_image' => 'nullable|image|max:2048',
         'published_at' => 'nullable|date',
+        'newTagName' => 'nullable|string|max:100',
     ];
 
     public function mount($postId = null)
     {
+        $this->availableTags = Tag::allNames()->toArray();
+
         if ($postId) {
             $this->post = BlogPost::findOrFail($postId);
             $this->isEditing = true;
@@ -73,6 +65,29 @@ class BlogPostForm extends Component
         } else {
             $this->post = new BlogPost;
         }
+    }
+
+    public function createTag(): void
+    {
+        $this->validateOnly('newTagName', [
+            'newTagName' => 'required|string|min:2|max:100',
+        ]);
+
+        $name = trim($this->newTagName);
+
+        $tag = Tag::createFromName($name);
+
+        if (! in_array($tag->name, $this->availableTags)) {
+            $this->availableTags[] = $tag->name;
+            sort($this->availableTags);
+        }
+
+        if (! in_array($tag->name, $this->tags)) {
+            $this->tags[] = $tag->name;
+        }
+
+        $this->newTagName = '';
+        $this->showNewTagInput = false;
     }
 
     public function save()

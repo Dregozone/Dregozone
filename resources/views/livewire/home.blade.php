@@ -279,24 +279,31 @@
 
             <div class="flex flex-wrap gap-3">
                 @php
-                    $topics = [
-                        ['label' => 'Laravel & PHP', 'colour' => 'bg-red-50 text-red-700 border-red-200'],
-                        ['label' => 'Livewire', 'colour' => 'bg-pink-50 text-pink-700 border-pink-200'],
-                        ['label' => 'Language Learning', 'colour' => 'bg-violet-50 text-violet-700 border-violet-200'],
-                        ['label' => 'Open Source', 'colour' => 'bg-emerald-50 text-emerald-700 border-emerald-200'],
-                        ['label' => 'Side Projects', 'colour' => 'bg-amber-50 text-amber-700 border-amber-200'],
-                        ['label' => 'JavaScript', 'colour' => 'bg-yellow-50 text-yellow-700 border-yellow-200'],
-                        ['label' => 'Career & Learning', 'colour' => 'bg-sky-50 text-sky-700 border-sky-200'],
-                        ['label' => 'Productivity', 'colour' => 'bg-teal-50 text-teal-700 border-teal-200'],
-                        ['label' => 'Building in Public', 'colour' => 'bg-orange-50 text-orange-700 border-orange-200'],
-                        ['label' => 'Personal', 'colour' => 'bg-rose-50 text-rose-700 border-rose-200'],
+                    $tagColours = [
+                        'bg-red-50 text-red-700 border-red-200',
+                        'bg-pink-50 text-pink-700 border-pink-200',
+                        'bg-violet-50 text-violet-700 border-violet-200',
+                        'bg-emerald-50 text-emerald-700 border-emerald-200',
+                        'bg-amber-50 text-amber-700 border-amber-200',
+                        'bg-yellow-50 text-yellow-700 border-yellow-200',
+                        'bg-sky-50 text-sky-700 border-sky-200',
+                        'bg-teal-50 text-teal-700 border-teal-200',
+                        'bg-orange-50 text-orange-700 border-orange-200',
+                        'bg-rose-50 text-rose-700 border-rose-200',
                     ];
                 @endphp
-                @foreach($topics as $topic)
-                    <a href="{{ route('blog', ['search' => $topic['label']]) }}"
-                        class="inline-flex items-center px-4 py-2 rounded-full border text-sm font-semibold transition-all hover:scale-105 hover:shadow-sm {{ $topic['colour'] }}">
-                        {{ $topic['label'] }}
-                    </a>
+                @foreach($topTags as $index => $topic)
+                    @php $colour = $tagColours[$index % count($tagColours)]; @endphp
+                    @if($topic->count > 0)
+                        <a href="{{ route('blog', ['tag' => $topic->name]) }}"
+                            class="inline-flex items-center px-4 py-2 rounded-full border text-sm font-semibold transition-all hover:scale-105 hover:shadow-sm {{ $colour }}">
+                            {{ $topic->name }}
+                        </a>
+                    @else
+                        <span class="inline-flex items-center px-4 py-2 rounded-full border text-sm font-semibold {{ $colour }} opacity-60 cursor-default">
+                            {{ $topic->name }}
+                        </span>
+                    @endif
                 @endforeach
             </div>
         </div>
