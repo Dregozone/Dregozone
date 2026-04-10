@@ -1,0 +1,102 @@
+<?php
+
+namespace App\Livewire\Admin;
+
+use App\Models\Project;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+
+#[Layout('components.layouts.admin')]
+class ProjectForm extends Component
+{
+    use WithFileUploads;
+
+    public Project $project;
+
+    public string $title = '';
+
+    public string $description = '';
+
+    public array $technologies = [];
+
+    public string $status = 'in_progress';
+
+    public string $url = '';
+
+    public string $github_url = '';
+
+    public int $order = 0;
+
+    public bool $featured = false;
+
+    public $image;
+
+    public bool $isEditing = false;
+
+    public array $availableTechnologies = [
+        'Alpine.js', 'Bootstrap', 'FFmpeg', 'JavaScript', 'jQuery',
+        'Laravel', 'Livewire', 'MySQL', 'PHP', 'PostgreSQL',
+        'Redis', 'Swagger', 'Tailwind CSS', 'TypeScript', 'Vue.js',
+        'WebSockets',
+    ];
+
+    protected array $rules = [
+        'title' => 'required|min:3|max:255',
+        'description' => 'required|min:10',
+        'technologies' => 'array',
+        'status' => 'required|in:in_progress,completed,archived',
+        'url' => 'nullable|url|max:255',
+        'github_url' => 'nullable|url|max:255',
+        'order' => 'integer|min:0',
+        'featured' => 'boolean',
+        'image' => 'nullable|image|max:2048',
+    ];
+
+    public function mount(?int $projectId = null): void
+    {
+        if ($projectId) {
+            $this->project = Project::findOrFail($projectId);
+            $this->isEditing = true;
+            $this->title = $this->project->title;
+            $this->description = $this->project->description;
+            $this->technologies = $this->project->technologies ?? [];
+            $this->status = $this->project->status;
+            $this->url = $this->project->url ?? '';
+            $this->github_url = $this->project->github_url ?? '';
+            $this->order = $this->project->order;
+            $this->featured = $this->project->featured;
+        } else {
+            $this->project = new Project;
+        }
+    }
+
+    public function save(): void
+    {
+        $this->validate();
+
+        $this->project->title = $this->title;
+        $this->project->description = $this->description;
+        $this->project->technologies = $this->technologies;
+        $this->project->status = $this->status;
+        $this->project->url = $this->url ?: null;
+        $this->project->github_url = $this->github_url ?: null;
+        $this->project->order = $this->order;
+        $this->project->featured = $this->featured;
+
+        if ($this->image) {
+            $this->project->image = $this->image->store('project-images', 'public');
+        }
+
+        $this->project->save();
+
+        session()->flash('message', $this->isEditing ? 'Project updated successfully!' : 'Project created successfully!');
+
+        $this->redirect(route('admin.projects.index'), navigate: true);
+    }
+
+    public function render(): \Illuminate\View\View
+    {
+        return view('livewire.admin.project-form');
+    }
+}
