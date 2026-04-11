@@ -5,6 +5,7 @@ use App\Livewire\Admin\BlogPostForm;
 use App\Livewire\Admin\BlogPostList;
 use App\Livewire\Admin\BlogPostPreview;
 use App\Livewire\Admin\ContactMessageList;
+use App\Livewire\Admin\NewsletterSubscriberList;
 use App\Livewire\Admin\ProjectForm;
 use App\Livewire\Admin\ProjectList;
 use App\Livewire\Blog;
@@ -39,6 +40,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/projects/{projectId}/edit', ProjectForm::class)->name('projects.edit');
 
     Route::get('/contact-messages', ContactMessageList::class)->name('contact-messages.index');
+
+    Route::get('/newsletter-subscribers', NewsletterSubscriberList::class)->name('newsletter-subscribers.index');
+    Route::get('/newsletter-subscribers/export', [EmailController::class, 'exportActiveSubscribers'])->name('newsletter-subscribers.export');
 });
 
 // Auth routes
