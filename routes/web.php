@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\EmailController;
 use App\Livewire\Admin\BlogPostForm;
 use App\Livewire\Admin\BlogPostList;
 use App\Livewire\Admin\BlogPostPreview;
+use App\Livewire\Admin\ContactMessageList;
 use App\Livewire\Admin\ProjectForm;
 use App\Livewire\Admin\ProjectList;
 use App\Livewire\Blog;
@@ -22,6 +24,9 @@ Route::get('/blog/{post:slug}', BlogPost::class)->name('blog.post');
 Route::get('/contact', Contact::class)->name('contact');
 Route::get('/projects', Projects::class)->name('projects');
 
+// Email management routes
+Route::get('/emails/unsubscribe', [EmailController::class, 'unsubscribe'])->name('emails.unsubscribe');
+
 // Admin routes (protected)
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/blog', BlogPostList::class)->name('blog.index');
@@ -32,6 +37,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/projects', ProjectList::class)->name('projects.index');
     Route::get('/projects/create', ProjectForm::class)->name('projects.create');
     Route::get('/projects/{projectId}/edit', ProjectForm::class)->name('projects.edit');
+
+    Route::get('/contact-messages', ContactMessageList::class)->name('contact-messages.index');
 });
 
 // Auth routes
