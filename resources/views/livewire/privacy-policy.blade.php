@@ -15,7 +15,7 @@
             <p class="lead text-stone-600">
                 This Privacy Policy explains how Anders Learmonth (<strong>"I", "me", or "my"</strong>) collects,
                 uses, and protects information that you provide when using this website
-                (<strong>anderslearmonth.com</strong>). I am committed to ensuring that your privacy is protected and
+                (<strong>dregozone.com</strong>). I am committed to ensuring that your privacy is protected and
                 that this website complies with the UK General Data Protection Regulation (UK GDPR) and the Data
                 Protection Act 2018.
             </p>
@@ -182,10 +182,6 @@
                 I take reasonable precautions to protect your personal data against unauthorised access, disclosure,
                 or loss. The website is served over HTTPS. Access to stored contact messages and subscriber data is
                 restricted to authenticated administrators only.
-            </p>
-            <p>
-                In the unlikely event of a data breach that poses a risk to your rights and freedoms, I will notify
-                the ICO within 72 hours and inform affected individuals without undue delay.
             </p>
 
             <hr class="border-stone-200 my-10">
