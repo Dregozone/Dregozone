@@ -62,6 +62,6 @@ class ProjectList extends Component
             default:       $query->orderBy('order', 'asc');
         }
 
-        return view('livewire.admin.project-list', ['projects' => $query->paginate(15)]);
+        return view('livewire.admin.project-list', ['projects' => $query->with('uploadedImage')->paginate(15)]);
     }
 }

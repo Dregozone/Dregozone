@@ -3,6 +3,7 @@
 use App\Livewire\Admin\ProjectForm;
 use App\Livewire\Admin\ProjectList;
 use App\Models\Project;
+use App\Models\UploadedImage;
 use App\Models\User;
 use Livewire\Livewire;
 
@@ -130,4 +131,68 @@ test('authenticated admin can visit edit project page', function () {
     $project = Project::factory()->create();
 
     $this->get("/admin/projects/{$project->id}/edit")->assertStatus(200);
+});
+
+test('project form stores base64 image as uploaded image record', function () {
+    $this->actingAs(adminUser());
+
+    $base64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+
+    Livewire::test(ProjectForm::class)
+        ->set('title', 'Image Project')
+        ->set('description', 'A project with a base64 image attached.')
+        ->set('status', 'in_progress')
+        ->set('base64Image', $base64)
+        ->call('save')
+        ->assertHasNoErrors();
+
+    $project = Project::where('title', 'Image Project')->first();
+    expect($project)->not->toBeNull();
+    expect($project->uploadedImage)->not->toBeNull();
+    expect($project->uploadedImage->base64_data)->toBe($base64);
+});
+
+test('project form updates uploaded image when editing', function () {
+    $this->actingAs(adminUser());
+
+    $project = Project::factory()->create();
+    $original = 'data:image/png;base64,ORIGINAL';
+    $project->uploadedImage()->create(['base64_data' => $original]);
+
+    $updated = 'data:image/png;base64,UPDATED';
+
+    Livewire::test(ProjectForm::class, ['projectId' => $project->id])
+        ->set('title', $project->title)
+        ->set('description', $project->description)
+        ->set('base64Image', $updated)
+        ->call('save')
+        ->assertHasNoErrors();
+
+    expect($project->fresh()->uploadedImage->base64_data)->toBe($updated);
+});
+
+test('project form deletes uploaded image when base64 is cleared while editing', function () {
+    $this->actingAs(adminUser());
+
+    $project = Project::factory()->create();
+    $project->uploadedImage()->create(['base64_data' => 'data:image/png;base64,SOMEDATA']);
+
+    Livewire::test(ProjectForm::class, ['projectId' => $project->id])
+        ->set('title', $project->title)
+        ->set('description', $project->description)
+        ->set('base64Image', '')
+        ->call('save')
+        ->assertHasNoErrors();
+
+    expect($project->fresh()->uploadedImage)->toBeNull();
+});
+
+test('authenticated admin can access image converter page', function () {
+    $this->actingAs(adminUser());
+
+    $this->get('/admin/image-converter')->assertStatus(200);
+});
+
+test('guests are redirected to login from image converter route', function () {
+    $this->get('/admin/image-converter')->assertRedirect('/login');
 });

@@ -61,12 +61,23 @@
 
             <!-- Featured Image -->
             <div>
-                <label for="featured_image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Featured Image
+                <label for="base64Image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Featured Image (Base64)
                 </label>
-                <input type="file" wire:model="featured_image" id="featured_image" accept="image/*"
-                    class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
-                @error('featured_image')
+                @if ($isEditing && $base64Image)
+                    <div class="mb-3">
+                        <img src="{{ $base64Image }}" alt="{{ $title }}"
+                            class="h-32 w-auto rounded-lg object-cover">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Current image. Paste a new base64 string below to replace it.</p>
+                    </div>
+                @endif
+                <textarea wire:model="base64Image" id="base64Image" rows="4"
+                    class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-sm"
+                    placeholder="Paste a base64 data URI here (e.g. data:image/jpeg;base64,...)"></textarea>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    Use the <a href="{{ route('admin.image-converter') }}" class="text-blue-600 dark:text-blue-400 hover:underline">Image Converter</a> to generate a base64 string from an image file.
+                </p>
+                @error('base64Image')
                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                 @enderror
             </div>

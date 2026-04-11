@@ -4,16 +4,14 @@ namespace App\Livewire\Admin;
 
 use App\Models\BlogPost;
 use App\Models\Tag;
+use App\Models\UploadedImage;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 
 #[Layout('components.layouts.admin')]
 class BlogPostForm extends Component
 {
-    use WithFileUploads;
-
     public BlogPost $post;
 
     public $title = '';
@@ -26,7 +24,7 @@ class BlogPostForm extends Component
 
     public $status = 'draft';
 
-    public $featured_image;
+    public string $base64Image = '';
 
     public $published_at;
 
@@ -44,7 +42,7 @@ class BlogPostForm extends Component
         'content' => 'required|min:50',
         'tags' => 'array',
         'status' => 'required|in:draft,published',
-        'featured_image' => 'nullable|image|max:2048',
+        'base64Image' => 'nullable|string',
         'published_at' => 'nullable|date',
         'newTagName' => 'nullable|string|max:100',
     ];
@@ -54,7 +52,7 @@ class BlogPostForm extends Component
         $this->availableTags = Tag::allNames()->toArray();
 
         if ($postId) {
-            $this->post = BlogPost::findOrFail($postId);
+            $this->post = BlogPost::with('uploadedImage')->findOrFail($postId);
             $this->isEditing = true;
             $this->title = $this->post->title;
             $this->excerpt = $this->post->excerpt;
@@ -62,6 +60,7 @@ class BlogPostForm extends Component
             $this->tags = $this->post->tags ?? [];
             $this->status = $this->post->status;
             $this->published_at = $this->post->published_at?->format('Y-m-d\TH:i');
+            $this->base64Image = $this->post->uploadedImage?->base64_data ?? '';
         } else {
             $this->post = new BlogPost;
         }
@@ -102,11 +101,19 @@ class BlogPostForm extends Component
         $this->post->status = $this->status;
         $this->post->published_at = $this->status === 'published' ? ($this->published_at ?? now()) : null;
 
-        if ($this->featured_image) {
-            $this->post->featured_image = $this->featured_image->store('blog-images', 'public');
-        }
-
         $this->post->save();
+
+        if ($this->base64Image) {
+            UploadedImage::updateOrCreate(
+                [
+                    'imageable_id' => $this->post->id,
+                    'imageable_type' => BlogPost::class,
+                ],
+                ['base64_data' => $this->base64Image]
+            );
+        } elseif ($this->isEditing) {
+            $this->post->uploadedImage()->delete();
+        }
 
         session()->flash('message', $this->isEditing ? 'Post updated successfully!' : 'Post created successfully!');
 

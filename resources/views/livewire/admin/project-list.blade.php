@@ -95,10 +95,10 @@
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center">
-                                        @if ($project->image)
+                                        @if ($project->uploadedImage)
                                             <div class="flex-shrink-0 h-12 w-12">
                                                 <img class="h-12 w-12 rounded-lg object-cover"
-                                                    src="{{ Storage::url($project->image) }}" alt="{{ $project->title }}">
+                                                    src="{{ $project->uploadedImage->base64_data }}" alt="{{ $project->title }}">
                                             </div>
                                         @else
                                             <div class="flex-shrink-0 h-12 w-12 bg-gray-200 dark:bg-gray-600 rounded-lg flex items-center justify-center">
