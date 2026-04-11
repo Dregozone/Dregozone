@@ -63,7 +63,7 @@ class Blog extends Component
                 $query->orderBy('published_at', 'desc');
         }
 
-        $posts = $query->paginate(9);
+        $posts = $query->with('uploadedImage')->paginate(9);
 
         $tags = BlogPost::published()
             ->whereNotNull('tags')

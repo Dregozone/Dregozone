@@ -13,7 +13,7 @@ class BlogPost extends Component
 
     public function mount(BlogPostModel $post)
     {
-        $this->post = $post;
+        $this->post = $post->load('uploadedImage');
 
         // Increment view count
         $this->post->increment('views');
@@ -29,6 +29,7 @@ class BlogPost extends Component
                 }
             })
             ->take(3)
+            ->with('uploadedImage')
             ->get();
 
         if ($relatedPosts->count() < 3) {
@@ -36,6 +37,7 @@ class BlogPost extends Component
                 ->where('id', '!=', $this->post->id)
                 ->whereNotIn('id', $relatedPosts->pluck('id'))
                 ->take(3 - $relatedPosts->count())
+                ->with('uploadedImage')
                 ->get();
 
             $relatedPosts = $relatedPosts->merge($additionalPosts);

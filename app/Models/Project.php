@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Project extends Model
 {
@@ -48,5 +49,10 @@ class Project extends Model
     {
         return $query->where('status', 'in_progress')
                     ->orderBy('order');
+    }
+
+    public function uploadedImage(): MorphOne
+    {
+        return $this->morphOne(UploadedImage::class, 'imageable');
     }
 }

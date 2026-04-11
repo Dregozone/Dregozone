@@ -50,6 +50,10 @@
                                 class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium {{ request()->routeIs('admin.newsletter-subscribers.*') ? 'border-blue-500 text-gray-900 dark:text-white' : '' }}">
                                 Newsletter
                             </a>
+                            <a href="{{ route('admin.image-converter') }}"
+                                class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium {{ request()->routeIs('admin.image-converter') ? 'border-blue-500 text-gray-900 dark:text-white' : '' }}">
+                                Image Converter
+                            </a>
                             <a href="{{ route('home') }}"
                                 class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                                 View Site
@@ -114,6 +118,10 @@
                     <a href="{{ route('admin.newsletter-subscribers.index') }}"
                         class="block pl-3 pr-4 py-2 text-base font-medium border-l-4 {{ request()->routeIs('admin.newsletter-subscribers.*') ? 'border-blue-500 text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20' : 'border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200' }}">
                         Newsletter
+                    </a>
+                    <a href="{{ route('admin.image-converter') }}"
+                        class="block pl-3 pr-4 py-2 text-base font-medium border-l-4 {{ request()->routeIs('admin.image-converter') ? 'border-blue-500 text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20' : 'border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200' }}">
+                        Image Converter
                     </a>
                     <a href="{{ route('home') }}"
                         class="block pl-3 pr-4 py-2 text-base font-medium border-l-4 border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200">

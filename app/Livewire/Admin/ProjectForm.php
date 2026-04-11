@@ -3,15 +3,13 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Project;
+use App\Models\UploadedImage;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 
 #[Layout('components.layouts.admin')]
 class ProjectForm extends Component
 {
-    use WithFileUploads;
-
     public Project $project;
 
     public string $title = '';
@@ -30,7 +28,7 @@ class ProjectForm extends Component
 
     public bool $featured = false;
 
-    public $image;
+    public string $base64Image = '';
 
     public bool $isEditing = false;
 
@@ -50,13 +48,13 @@ class ProjectForm extends Component
         'github_url' => 'nullable|url|max:255',
         'order' => 'integer|min:0',
         'featured' => 'boolean',
-        'image' => 'nullable|image|max:2048',
+        'base64Image' => 'nullable|string',
     ];
 
     public function mount(?int $projectId = null): void
     {
         if ($projectId) {
-            $this->project = Project::findOrFail($projectId);
+            $this->project = Project::with('uploadedImage')->findOrFail($projectId);
             $this->isEditing = true;
             $this->title = $this->project->title;
             $this->description = $this->project->description;
@@ -66,6 +64,7 @@ class ProjectForm extends Component
             $this->github_url = $this->project->github_url ?? '';
             $this->order = $this->project->order;
             $this->featured = $this->project->featured;
+            $this->base64Image = $this->project->uploadedImage?->base64_data ?? '';
         } else {
             $this->project = new Project;
         }
@@ -84,11 +83,19 @@ class ProjectForm extends Component
         $this->project->order = $this->order;
         $this->project->featured = $this->featured;
 
-        if ($this->image) {
-            $this->project->image = $this->image->store('project-images', 'public');
-        }
-
         $this->project->save();
+
+        if ($this->base64Image) {
+            UploadedImage::updateOrCreate(
+                [
+                    'imageable_id' => $this->project->id,
+                    'imageable_type' => Project::class,
+                ],
+                ['base64_data' => $this->base64Image]
+            );
+        } elseif ($this->isEditing) {
+            $this->project->uploadedImage()->delete();
+        }
 
         session()->flash('message', $this->isEditing ? 'Project updated successfully!' : 'Project created successfully!');
 
