@@ -42,4 +42,14 @@ class EmailController extends Controller
             'message' => 'You have been successfully unsubscribed from the newsletter.',
         ]);
     }
+
+    public function exportActiveSubscribers(): \Illuminate\Http\JsonResponse
+    {
+        $emails = NewsletterSubscriber::where('is_subscribed', true)
+            ->orderBy('subscribed_at', 'desc')
+            ->pluck('email');
+
+        return response()->json(['active_subscribers' => $emails])
+            ->header('Content-Disposition', 'inline; filename="active-subscribers.json"');
+    }
 }
