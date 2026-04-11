@@ -154,6 +154,7 @@
                         <li><a href="{{ route('blog') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Blog</a></li>
                         <li><a href="{{ route('projects') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Projects</a></li>
                         <li><a href="{{ route('contact') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Contact</a></li>
+                        <li><a href="{{ route('privacy-policy') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Privacy Policy</a></li>
                     </ul>
                 </div>
 
@@ -169,11 +170,18 @@
             </div>
 
             <div class="mt-12 pt-8 border-t border-stone-200 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <p class="text-sm text-stone-400">&copy; {{ date('Y') }} Anders Learmonth. All rights reserved.</p>
-                <p class="text-sm text-stone-400">Built with Laravel &amp; Livewire</p>
+                <p class="text-sm text-stone-400">&copy; {{ date('Y') }} Anders Learmonth. All rights reserved. Blog posts and written content may not be reproduced without attribution.</p>
+                <div class="flex items-center gap-4">
+                    <a href="{{ route('privacy-policy') }}" class="text-sm text-stone-400 hover:text-stone-600 transition-colors">Privacy Policy</a>
+                    <span class="text-stone-300">·</span>
+                    <p class="text-sm text-stone-400">Built with Laravel &amp; Livewire</p>
+                </div>
             </div>
         </div>
     </footer>
+
+    <!-- Cookie Consent Banner -->
+    <x-cookie-banner />
 
     @livewireScripts
 </body>

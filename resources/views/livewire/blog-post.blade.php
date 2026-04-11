@@ -95,6 +95,13 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Copyright Notice -->
+            <div class="mt-6 p-4 bg-stone-50 rounded-xl border border-stone-100">
+                <p class="text-xs text-stone-500 leading-relaxed">
+                    &copy; {{ date('Y') }} Anders Learmonth. All rights reserved. This article is original content and may not be reproduced, copied, or republished without written permission. Please link back with attribution if you reference or quote this work.
+                </p>
+            </div>
         </div>
     </div>
 

@@ -12,6 +12,7 @@ use App\Livewire\Blog;
 use App\Livewire\BlogPost;
 use App\Livewire\Contact;
 use App\Livewire\Home;
+use App\Livewire\PrivacyPolicy;
 use App\Livewire\Projects;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
@@ -24,6 +25,8 @@ Route::get('/blog', Blog::class)->name('blog');
 Route::get('/blog/{post:slug}', BlogPost::class)->name('blog.post');
 Route::get('/contact', Contact::class)->name('contact');
 Route::get('/projects', Projects::class)->name('projects');
+
+Route::get('/privacy-policy', PrivacyPolicy::class)->name('privacy-policy');
 
 // Email management routes
 Route::get('/emails/unsubscribe', [EmailController::class, 'unsubscribe'])->name('emails.unsubscribe');
