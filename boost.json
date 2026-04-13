@@ -5,13 +5,13 @@
         "opencode"
     ],
     "guidelines": true,
-    "herd_mcp": false,
     "mcp": true,
     "nightwatch_mcp": false,
     "sail": false,
     "skills": [
+        "laravel-best-practices",
+        "configure-nightwatch",
         "fluxui-development",
-        "volt-development",
         "pest-testing",
         "tailwindcss-development"
     ]
