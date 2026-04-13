@@ -84,23 +84,21 @@ class ProjectForm extends Component
 
         $this->project->save();
 
+        // Sync the selected library image to this project via the morph relationship.
         $existingImage = $this->isEditing ? $this->project->uploadedImage()->first() : null;
 
         if ($this->pendingImageId !== null) {
-            if ($existingImage && $existingImage->id !== $this->pendingImageId) {
-                $existingImage->delete();
-            }
-
             if (! $existingImage || $existingImage->id !== $this->pendingImageId) {
-                UploadedImage::where('id', $this->pendingImageId)
-                    ->where('imageable_type', 'pending')
-                    ->update([
-                        'imageable_id' => $this->project->id,
-                        'imageable_type' => Project::class,
-                    ]);
+                // Release previous link back to library.
+                $existingImage?->releaseToLibrary();
+
+                UploadedImage::where('id', $this->pendingImageId)->update([
+                    'imageable_id' => $this->project->id,
+                    'imageable_type' => Project::class,
+                ]);
             }
         } elseif ($existingImage) {
-            $existingImage->delete();
+            $existingImage->releaseToLibrary();
         }
 
         session()->flash('message', $this->isEditing ? 'Project updated successfully!' : 'Project created successfully!');
@@ -110,10 +108,6 @@ class ProjectForm extends Component
 
     public function render(): \Illuminate\View\View
     {
-        return view('livewire.admin.project-form', [
-            'currentImageBase64' => $this->pendingImageId
-                ? UploadedImage::find($this->pendingImageId)?->base64_data
-                : null,
-        ]);
+        return view('livewire.admin.project-form');
     }
 }

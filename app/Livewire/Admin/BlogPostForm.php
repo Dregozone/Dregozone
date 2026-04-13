@@ -46,7 +46,7 @@ class BlogPostForm extends Component
         'newTagName' => 'nullable|string|max:100',
     ];
 
-    public function mount($postId = null)
+    public function mount($postId = null): void
     {
         $this->availableTags = Tag::allNames()->toArray();
 
@@ -88,7 +88,7 @@ class BlogPostForm extends Component
         $this->showNewTagInput = false;
     }
 
-    public function save()
+    public function save(): void
     {
         $this->validate();
 
@@ -102,36 +102,29 @@ class BlogPostForm extends Component
 
         $this->post->save();
 
+        // Sync the selected library image to this post via the morph relationship.
         $existingImage = $this->isEditing ? $this->post->uploadedImage()->first() : null;
 
         if ($this->pendingImageId !== null) {
-            if ($existingImage && $existingImage->id !== $this->pendingImageId) {
-                $existingImage->delete();
-            }
-
             if (! $existingImage || $existingImage->id !== $this->pendingImageId) {
-                UploadedImage::where('id', $this->pendingImageId)
-                    ->where('imageable_type', 'pending')
-                    ->update([
-                        'imageable_id' => $this->post->id,
-                        'imageable_type' => BlogPost::class,
-                    ]);
+                $existingImage?->releaseToLibrary();
+
+                UploadedImage::where('id', $this->pendingImageId)->update([
+                    'imageable_id' => $this->post->id,
+                    'imageable_type' => BlogPost::class,
+                ]);
             }
         } elseif ($existingImage) {
-            $existingImage->delete();
+            $existingImage->releaseToLibrary();
         }
 
         session()->flash('message', $this->isEditing ? 'Post updated successfully!' : 'Post created successfully!');
 
-        return redirect()->route('admin.blog.index');
+        $this->redirect(route('admin.blog.index'), navigate: true);
     }
 
     public function render(): \Illuminate\View\View
     {
-        return view('livewire.admin.blog-post-form', [
-            'currentImageBase64' => $this->pendingImageId
-                ? UploadedImage::find($this->pendingImageId)?->base64_data
-                : null,
-        ]);
+        return view('livewire.admin.blog-post-form');
     }
 }

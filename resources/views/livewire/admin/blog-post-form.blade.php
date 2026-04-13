@@ -60,80 +60,13 @@
             </div>
 
             <!-- Featured Image -->
-            <div wire:ignore
-                x-data="{
-                    preview: @json($currentImageBase64 ?? ''),
-                    uploading: false,
-                    uploadError: '',
-                    removeImage() {
-                        this.preview = '';
-                        this.uploadError = '';
-                        $wire.set('pendingImageId', null);
-                    },
-                    async handleFileSelect(event) {
-                        const file = event.target.files[0];
-                        if (!file) return;
-                        this.uploading = true;
-                        this.uploadError = '';
-                        const reader = new FileReader();
-                        reader.onload = async (e) => {
-                            const base64 = e.target.result;
-                            this.preview = base64;
-                            try {
-                                const response = await fetch('{{ route('admin.images.upload') }}', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
-                                    },
-                                    body: JSON.stringify({ base64_data: base64 }),
-                                });
-                                if (!response.ok) throw new Error('Upload failed');
-                                const data = await response.json();
-                                $wire.set('pendingImageId', data.id);
-                            } catch (err) {
-                                this.uploadError = 'Failed to upload image. Please try again.';
-                                this.preview = '';
-                            } finally {
-                                this.uploading = false;
-                            }
-                        };
-                        reader.readAsDataURL(file);
-                    },
-                }"
-            >
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Featured Image
-                </label>
-
-                <template x-if="preview">
-                    <div class="mb-3">
-                        <img :src="preview" alt="Featured image" class="h-32 w-auto rounded-lg object-cover">
-                        <button type="button" @click="removeImage"
-                            class="mt-2 text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 font-medium">
-                            Remove image
-                        </button>
-                    </div>
-                </template>
-
-                <template x-if="!preview">
-                    <label for="imageFile"
-                        class="flex flex-col items-center justify-center w-full px-3 py-6 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-md cursor-pointer hover:border-blue-400 dark:hover:border-blue-500 transition-colors duration-200">
-                        <input type="file" id="imageFile" accept="image/*" class="sr-only" @change="handleFileSelect">
-                        <span x-show="!uploading" class="text-sm text-gray-500 dark:text-gray-400">
-                            Click to select an image file
-                        </span>
-                        <span x-show="uploading" class="text-sm text-blue-600 dark:text-blue-400">
-                            Uploading…
-                        </span>
-                    </label>
-                </template>
-
-                <p x-show="uploadError" x-text="uploadError" class="mt-1 text-sm text-red-600 dark:text-red-400"></p>
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                    Supports JPEG, PNG, GIF, WebP and other common image formats. The image is uploaded separately before the post is saved.
-                </p>
-            </div>
+            <flux:field>
+                <flux:label>Featured Image</flux:label>
+                <livewire:admin.image-picker wire:model="pendingImageId" :key="'blog-image-'.$post->id" />
+                <flux:description>
+                    Select from your <a href="{{ route('admin.images.index') }}" target="_blank" class="underline">image library</a>. Upload new images there first.
+                </flux:description>
+            </flux:field>
 
             <!-- Tags -->
             <flux:field>

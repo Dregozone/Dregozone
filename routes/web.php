@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\Admin\ImageUploadController;
 use App\Http\Controllers\EmailController;
 use App\Livewire\Admin\BlogPostForm;
 use App\Livewire\Admin\BlogPostList;
 use App\Livewire\Admin\BlogPostPreview;
 use App\Livewire\Admin\ContactMessageList;
 use App\Livewire\Admin\ImageConverter;
+use App\Livewire\Admin\ImageList;
 use App\Livewire\Admin\NewsletterSubscriberList;
 use App\Livewire\Admin\ProjectForm;
 use App\Livewire\Admin\ProjectList;
@@ -51,7 +51,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     Route::get('/image-converter', ImageConverter::class)->name('image-converter');
 
-    Route::post('/images/upload', [ImageUploadController::class, 'store'])->name('images.upload');
+    Route::get('/images', ImageList::class)->name('images.index');
 });
 
 // Auth routes
