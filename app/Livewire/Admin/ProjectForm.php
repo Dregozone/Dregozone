@@ -28,7 +28,7 @@ class ProjectForm extends Component
 
     public bool $featured = false;
 
-    public string $base64Image = '';
+    public ?int $pendingImageId = null;
 
     public bool $isEditing = false;
 
@@ -48,7 +48,6 @@ class ProjectForm extends Component
         'github_url' => 'nullable|url|max:255',
         'order' => 'integer|min:0',
         'featured' => 'boolean',
-        'base64Image' => 'nullable|string',
     ];
 
     public function mount(?int $projectId = null): void
@@ -64,7 +63,7 @@ class ProjectForm extends Component
             $this->github_url = $this->project->github_url ?? '';
             $this->order = $this->project->order;
             $this->featured = $this->project->featured;
-            $this->base64Image = $this->project->uploadedImage?->base64_data ?? '';
+            $this->pendingImageId = $this->project->uploadedImage?->id;
         } else {
             $this->project = new Project;
         }
@@ -85,16 +84,23 @@ class ProjectForm extends Component
 
         $this->project->save();
 
-        if ($this->base64Image) {
-            UploadedImage::updateOrCreate(
-                [
-                    'imageable_id' => $this->project->id,
-                    'imageable_type' => Project::class,
-                ],
-                ['base64_data' => $this->base64Image]
-            );
-        } elseif ($this->isEditing) {
-            $this->project->uploadedImage()->delete();
+        $existingImage = $this->isEditing ? $this->project->uploadedImage()->first() : null;
+
+        if ($this->pendingImageId !== null) {
+            if ($existingImage && $existingImage->id !== $this->pendingImageId) {
+                $existingImage->delete();
+            }
+
+            if (! $existingImage || $existingImage->id !== $this->pendingImageId) {
+                UploadedImage::where('id', $this->pendingImageId)
+                    ->where('imageable_type', 'pending')
+                    ->update([
+                        'imageable_id' => $this->project->id,
+                        'imageable_type' => Project::class,
+                    ]);
+            }
+        } elseif ($existingImage) {
+            $existingImage->delete();
         }
 
         session()->flash('message', $this->isEditing ? 'Project updated successfully!' : 'Project created successfully!');
@@ -104,6 +110,10 @@ class ProjectForm extends Component
 
     public function render(): \Illuminate\View\View
     {
-        return view('livewire.admin.project-form');
+        return view('livewire.admin.project-form', [
+            'currentImageBase64' => $this->pendingImageId
+                ? UploadedImage::find($this->pendingImageId)?->base64_data
+                : null,
+        ]);
     }
 }

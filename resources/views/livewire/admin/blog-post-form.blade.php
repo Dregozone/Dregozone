@@ -60,26 +60,79 @@
             </div>
 
             <!-- Featured Image -->
-            <div>
-                <label for="base64Image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Featured Image (Base64)
+            <div wire:ignore
+                x-data="{
+                    preview: @json($currentImageBase64 ?? ''),
+                    uploading: false,
+                    uploadError: '',
+                    removeImage() {
+                        this.preview = '';
+                        this.uploadError = '';
+                        $wire.set('pendingImageId', null);
+                    },
+                    async handleFileSelect(event) {
+                        const file = event.target.files[0];
+                        if (!file) return;
+                        this.uploading = true;
+                        this.uploadError = '';
+                        const reader = new FileReader();
+                        reader.onload = async (e) => {
+                            const base64 = e.target.result;
+                            this.preview = base64;
+                            try {
+                                const response = await fetch('{{ route('admin.images.upload') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                                    },
+                                    body: JSON.stringify({ base64_data: base64 }),
+                                });
+                                if (!response.ok) throw new Error('Upload failed');
+                                const data = await response.json();
+                                $wire.set('pendingImageId', data.id);
+                            } catch (err) {
+                                this.uploadError = 'Failed to upload image. Please try again.';
+                                this.preview = '';
+                            } finally {
+                                this.uploading = false;
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    },
+                }"
+            >
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Featured Image
                 </label>
-                @if ($isEditing && $base64Image)
+
+                <template x-if="preview">
                     <div class="mb-3">
-                        <img src="{{ $base64Image }}" alt="{{ $title }}"
-                            class="h-32 w-auto rounded-lg object-cover">
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Current image. Paste a new base64 string below to replace it.</p>
+                        <img :src="preview" alt="Featured image" class="h-32 w-auto rounded-lg object-cover">
+                        <button type="button" @click="removeImage"
+                            class="mt-2 text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 font-medium">
+                            Remove image
+                        </button>
                     </div>
-                @endif
-                <textarea wire:model="base64Image" id="base64Image" rows="4"
-                    class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-sm"
-                    placeholder="Paste a base64 data URI here (e.g. data:image/jpeg;base64,...)"></textarea>
+                </template>
+
+                <template x-if="!preview">
+                    <label for="imageFile"
+                        class="flex flex-col items-center justify-center w-full px-3 py-6 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-md cursor-pointer hover:border-blue-400 dark:hover:border-blue-500 transition-colors duration-200">
+                        <input type="file" id="imageFile" accept="image/*" class="sr-only" @change="handleFileSelect">
+                        <span x-show="!uploading" class="text-sm text-gray-500 dark:text-gray-400">
+                            Click to select an image file
+                        </span>
+                        <span x-show="uploading" class="text-sm text-blue-600 dark:text-blue-400">
+                            Uploading…
+                        </span>
+                    </label>
+                </template>
+
+                <p x-show="uploadError" x-text="uploadError" class="mt-1 text-sm text-red-600 dark:text-red-400"></p>
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                    Use the <a href="{{ route('admin.image-converter') }}" class="text-blue-600 dark:text-blue-400 hover:underline">Image Converter</a> to generate a base64 string from an image file.
+                    Supports JPEG, PNG, GIF, WebP and other common image formats. The image is uploaded separately before the post is saved.
                 </p>
-                @error('base64Image')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                @enderror
             </div>
 
             <!-- Tags -->
@@ -166,6 +219,3 @@
             </div>
         </form>
     </div>
-
-
-

@@ -24,7 +24,7 @@ class BlogPostForm extends Component
 
     public $status = 'draft';
 
-    public string $base64Image = '';
+    public ?int $pendingImageId = null;
 
     public $published_at;
 
@@ -42,7 +42,6 @@ class BlogPostForm extends Component
         'content' => 'required|min:50',
         'tags' => 'array',
         'status' => 'required|in:draft,published',
-        'base64Image' => 'nullable|string',
         'published_at' => 'nullable|date',
         'newTagName' => 'nullable|string|max:100',
     ];
@@ -60,7 +59,7 @@ class BlogPostForm extends Component
             $this->tags = $this->post->tags ?? [];
             $this->status = $this->post->status;
             $this->published_at = $this->post->published_at?->format('Y-m-d\TH:i');
-            $this->base64Image = $this->post->uploadedImage?->base64_data ?? '';
+            $this->pendingImageId = $this->post->uploadedImage?->id;
         } else {
             $this->post = new BlogPost;
         }
@@ -103,16 +102,23 @@ class BlogPostForm extends Component
 
         $this->post->save();
 
-        if ($this->base64Image) {
-            UploadedImage::updateOrCreate(
-                [
-                    'imageable_id' => $this->post->id,
-                    'imageable_type' => BlogPost::class,
-                ],
-                ['base64_data' => $this->base64Image]
-            );
-        } elseif ($this->isEditing) {
-            $this->post->uploadedImage()->delete();
+        $existingImage = $this->isEditing ? $this->post->uploadedImage()->first() : null;
+
+        if ($this->pendingImageId !== null) {
+            if ($existingImage && $existingImage->id !== $this->pendingImageId) {
+                $existingImage->delete();
+            }
+
+            if (! $existingImage || $existingImage->id !== $this->pendingImageId) {
+                UploadedImage::where('id', $this->pendingImageId)
+                    ->where('imageable_type', 'pending')
+                    ->update([
+                        'imageable_id' => $this->post->id,
+                        'imageable_type' => BlogPost::class,
+                    ]);
+            }
+        } elseif ($existingImage) {
+            $existingImage->delete();
         }
 
         session()->flash('message', $this->isEditing ? 'Post updated successfully!' : 'Post created successfully!');
@@ -120,8 +126,12 @@ class BlogPostForm extends Component
         return redirect()->route('admin.blog.index');
     }
 
-    public function render()
+    public function render(): \Illuminate\View\View
     {
-        return view('livewire.admin.blog-post-form');
+        return view('livewire.admin.blog-post-form', [
+            'currentImageBase64' => $this->pendingImageId
+                ? UploadedImage::find($this->pendingImageId)?->base64_data
+                : null,
+        ]);
     }
 }

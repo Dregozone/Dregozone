@@ -138,11 +138,17 @@ test('project form stores base64 image as uploaded image record', function () {
 
     $base64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
 
+    $pendingImage = UploadedImage::create([
+        'imageable_id' => 0,
+        'imageable_type' => 'pending',
+        'base64_data' => $base64,
+    ]);
+
     Livewire::test(ProjectForm::class)
         ->set('title', 'Image Project')
         ->set('description', 'A project with a base64 image attached.')
         ->set('status', 'in_progress')
-        ->set('base64Image', $base64)
+        ->set('pendingImageId', $pendingImage->id)
         ->call('save')
         ->assertHasNoErrors();
 
@@ -161,10 +167,16 @@ test('project form updates uploaded image when editing', function () {
 
     $updated = 'data:image/png;base64,UPDATED';
 
+    $pendingImage = UploadedImage::create([
+        'imageable_id' => 0,
+        'imageable_type' => 'pending',
+        'base64_data' => $updated,
+    ]);
+
     Livewire::test(ProjectForm::class, ['projectId' => $project->id])
         ->set('title', $project->title)
         ->set('description', $project->description)
-        ->set('base64Image', $updated)
+        ->set('pendingImageId', $pendingImage->id)
         ->call('save')
         ->assertHasNoErrors();
 
@@ -180,7 +192,7 @@ test('project form deletes uploaded image when base64 is cleared while editing',
     Livewire::test(ProjectForm::class, ['projectId' => $project->id])
         ->set('title', $project->title)
         ->set('description', $project->description)
-        ->set('base64Image', '')
+        ->set('pendingImageId', null)
         ->call('save')
         ->assertHasNoErrors();
 

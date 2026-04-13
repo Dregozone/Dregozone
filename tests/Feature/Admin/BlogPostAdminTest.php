@@ -18,12 +18,18 @@ test('blog post form stores base64 image as uploaded image record', function () 
 
     $base64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
 
+    $pendingImage = UploadedImage::create([
+        'imageable_id' => 0,
+        'imageable_type' => 'pending',
+        'base64_data' => $base64,
+    ]);
+
     Livewire::test(BlogPostForm::class)
         ->set('title', 'My Base64 Blog Post')
         ->set('excerpt', 'A short excerpt for the blog post that is long enough.')
         ->set('content', str_repeat('Blog content here. ', 5))
         ->set('status', 'draft')
-        ->set('base64Image', $base64)
+        ->set('pendingImageId', $pendingImage->id)
         ->call('save')
         ->assertHasNoErrors();
 
@@ -42,8 +48,14 @@ test('blog post form updates uploaded image when editing', function () {
 
     $updated = 'data:image/png;base64,UPDATED';
 
+    $pendingImage = UploadedImage::create([
+        'imageable_id' => 0,
+        'imageable_type' => 'pending',
+        'base64_data' => $updated,
+    ]);
+
     Livewire::test(BlogPostForm::class, ['postId' => $post->id])
-        ->set('base64Image', $updated)
+        ->set('pendingImageId', $pendingImage->id)
         ->call('save')
         ->assertHasNoErrors();
 
@@ -57,7 +69,7 @@ test('blog post form deletes uploaded image when base64 is cleared while editing
     $post->uploadedImage()->create(['base64_data' => 'data:image/png;base64,SOMEDATA']);
 
     Livewire::test(BlogPostForm::class, ['postId' => $post->id])
-        ->set('base64Image', '')
+        ->set('pendingImageId', null)
         ->call('save')
         ->assertHasNoErrors();
 

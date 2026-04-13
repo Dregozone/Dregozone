@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ImageUploadController;
 use App\Http\Controllers\EmailController;
 use App\Livewire\Admin\BlogPostForm;
 use App\Livewire\Admin\BlogPostList;
@@ -49,6 +50,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/newsletter-subscribers/export', [EmailController::class, 'exportActiveSubscribers'])->name('newsletter-subscribers.export');
 
     Route::get('/image-converter', ImageConverter::class)->name('image-converter');
+
+    Route::post('/images/upload', [ImageUploadController::class, 'store'])->name('images.upload');
 });
 
 // Auth routes
