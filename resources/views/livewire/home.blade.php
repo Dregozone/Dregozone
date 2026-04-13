@@ -20,7 +20,7 @@
                     </h1>
 
                     <p class="text-lg text-stone-600 leading-relaxed mb-8 max-w-lg">
-                        I build things for the web, write honestly about what I'm learning, and find real joy in exploring languages — both human ones and programming ones.
+                        I build things for the web, write honestly about what I'm learning, and find real joy in exploring languages — both human and programming.
                     </p>
 
                     <div class="flex flex-wrap gap-2 mb-10">
@@ -130,11 +130,11 @@
                     @foreach($featuredProjects->merge($completedProjects)->unique('id')->take(6) as $project)
                         <div class="group bg-stone-50 rounded-2xl p-6 border border-stone-100 hover:border-stone-300 hover:shadow-sm transition-all">
                             @if($project->uploadedImage)
-                                <div class="mb-5 rounded-xl overflow-hidden bg-stone-200 aspect-video">
+                                <div class="mb-5 rounded-xl overflow-hidden bg-stone-200 aspect-video shadow-md">
                                     <img src="{{ $project->uploadedImage->base64_data }}" alt="{{ $project->title }}" class="w-full h-full object-cover">
                                 </div>
                             @elseif($project->image)
-                                <div class="mb-5 rounded-xl overflow-hidden bg-stone-200 aspect-video">
+                                <div class="mb-5 rounded-xl overflow-hidden bg-stone-200 aspect-video shadow-md">
                                     <img src="{{ $project->image }}" alt="{{ $project->title }}" class="w-full h-full object-cover">
                                 </div>
                             @endif
