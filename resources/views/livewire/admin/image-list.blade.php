@@ -27,7 +27,7 @@
                 <flux:field>
                     <flux:label>Image File *</flux:label>
                     <flux:input type="file" wire:model="photo" accept="image/*" />
-                    <flux:description>JPEG, PNG, GIF, WebP — max 10 MB</flux:description>
+                    <flux:description>JPEG, PNG, GIF, WebP — max 2 MB. If your image is too large, compress it first at <a href="https://tinypng.com" target="_blank" class="underline">tinypng.com</a> or <a href="https://squoosh.app" target="_blank" class="underline">squoosh.app</a>.</flux:description>
                     <flux:error name="photo" />
                 </flux:field>
                 <div wire:loading wire:target="photo" class="text-sm text-zinc-500">Reading file…</div>

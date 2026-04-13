@@ -25,7 +25,11 @@ class ImageList extends Component
 
     protected array $rules = [
         'name' => 'required|string|max:255',
-        'photo' => 'required|image|max:10240',
+        'photo' => 'required|image|max:2048',
+    ];
+
+    protected array $messages = [
+        'photo.max' => 'The image must be under 2 MB. Please compress it first (e.g. using tinypng.com or squoosh.app).',
     ];
 
     public function updatingSearch(): void
