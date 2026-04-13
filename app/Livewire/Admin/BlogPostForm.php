@@ -4,7 +4,6 @@ namespace App\Livewire\Admin;
 
 use App\Models\BlogPost;
 use App\Models\Tag;
-use App\Models\UploadedImage;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -51,7 +50,7 @@ class BlogPostForm extends Component
         $this->availableTags = Tag::allNames()->toArray();
 
         if ($postId) {
-            $this->post = BlogPost::with('uploadedImage')->findOrFail($postId);
+            $this->post = BlogPost::findOrFail($postId);
             $this->isEditing = true;
             $this->title = $this->post->title;
             $this->excerpt = $this->post->excerpt;
@@ -59,7 +58,7 @@ class BlogPostForm extends Component
             $this->tags = $this->post->tags ?? [];
             $this->status = $this->post->status;
             $this->published_at = $this->post->published_at?->format('Y-m-d\TH:i');
-            $this->pendingImageId = $this->post->uploadedImage?->id;
+            $this->pendingImageId = $this->post->image_id;
         } else {
             $this->post = new BlogPost;
         }
@@ -100,23 +99,8 @@ class BlogPostForm extends Component
         $this->post->status = $this->status;
         $this->post->published_at = $this->status === 'published' ? ($this->published_at ?? now()) : null;
 
+        $this->post->image_id = $this->pendingImageId;
         $this->post->save();
-
-        // Sync the selected library image to this post via the morph relationship.
-        $existingImage = $this->isEditing ? $this->post->uploadedImage()->first() : null;
-
-        if ($this->pendingImageId !== null) {
-            if (! $existingImage || $existingImage->id !== $this->pendingImageId) {
-                $existingImage?->releaseToLibrary();
-
-                UploadedImage::where('id', $this->pendingImageId)->update([
-                    'imageable_id' => $this->post->id,
-                    'imageable_type' => BlogPost::class,
-                ]);
-            }
-        } elseif ($existingImage) {
-            $existingImage->releaseToLibrary();
-        }
 
         session()->flash('message', $this->isEditing ? 'Post updated successfully!' : 'Post created successfully!');
 

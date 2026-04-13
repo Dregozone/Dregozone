@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class BlogPost extends Model
 {
@@ -37,14 +36,14 @@ class BlogPost extends Model
     public function scopePublished($query)
     {
         return $query->where('status', 'published')
-                    ->where('published_at', '<=', now());
+            ->where('published_at', '<=', now());
     }
 
     public function scopeFeatured($query)
     {
         return $query->where('status', 'published')
-                    ->where('published_at', '<=', now())
-                    ->orderBy('published_at', 'desc');
+            ->where('published_at', '<=', now())
+            ->orderBy('published_at', 'desc');
     }
 
     public function getRouteKeyName()
@@ -52,8 +51,8 @@ class BlogPost extends Model
         return 'slug';
     }
 
-    public function uploadedImage(): MorphOne
+    public function image(): BelongsTo
     {
-        return $this->morphOne(UploadedImage::class, 'imageable');
+        return $this->belongsTo(UploadedImage::class, 'image_id');
     }
 }

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Project extends Model
 {
@@ -35,24 +35,24 @@ class Project extends Model
     public function scopeFeatured($query)
     {
         return $query->where('featured', true)
-                    ->where('status', '!=', 'archived')
-                    ->orderBy('order');
+            ->where('status', '!=', 'archived')
+            ->orderBy('order');
     }
 
     public function scopeCompleted($query)
     {
         return $query->where('status', 'completed')
-                    ->orderBy('order');
+            ->orderBy('order');
     }
 
     public function scopeInProgress($query)
     {
         return $query->where('status', 'in_progress')
-                    ->orderBy('order');
+            ->orderBy('order');
     }
 
-    public function uploadedImage(): MorphOne
+    public function uploadedImage(): BelongsTo
     {
-        return $this->morphOne(UploadedImage::class, 'imageable');
+        return $this->belongsTo(UploadedImage::class, 'image_id');
     }
 }

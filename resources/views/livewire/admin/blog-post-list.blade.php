@@ -103,10 +103,10 @@
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                                     <td class="px-6 py-4">
                                         <div class="flex items-center">
-                                            @if ($post->uploadedImage)
+                                            @if ($post->image)
                                                 <div class="flex-shrink-0 h-12 w-12">
                                                     <img class="h-12 w-12 rounded-lg object-cover"
-                                                        src="{{ $post->uploadedImage->base64_data }}" alt="{{ $post->title }}">
+                                                        src="{{ $post->image->base64_data }}" alt="{{ $post->title }}">
                                                 </div>
                                             @else
                                                 <div

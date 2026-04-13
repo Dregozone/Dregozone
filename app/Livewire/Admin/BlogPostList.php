@@ -73,7 +73,7 @@ class BlogPostList extends Component
                 $query->orderBy('created_at', 'desc');
         }
 
-        $posts = $query->with('uploadedImage')->paginate(15);
+        $posts = $query->with('image')->paginate(15);
 
         return view('livewire.admin.blog-post-list', [
             'posts' => $posts,

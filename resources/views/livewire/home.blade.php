@@ -129,7 +129,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($featuredProjects->merge($completedProjects)->unique('id')->take(6) as $project)
                         <div class="group bg-stone-50 rounded-2xl p-6 border border-stone-100 hover:border-stone-300 hover:shadow-sm transition-all">
-                            @if($project->image)
+                            @if($project->uploadedImage)
+                                <div class="mb-5 rounded-xl overflow-hidden bg-stone-200 aspect-video">
+                                    <img src="{{ $project->uploadedImage->base64_data }}" alt="{{ $project->title }}" class="w-full h-full object-cover">
+                                </div>
+                            @elseif($project->image)
                                 <div class="mb-5 rounded-xl overflow-hidden bg-stone-200 aspect-video">
                                     <img src="{{ $project->image }}" alt="{{ $project->title }}" class="w-full h-full object-cover">
                                 </div>
@@ -208,9 +212,9 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @forelse($recentBlogPosts as $post)
                     <article class="group bg-white rounded-2xl overflow-hidden border border-stone-100 hover:border-stone-300 hover:shadow-sm transition-all flex flex-col">
-                        @if($post->featured_image)
+                        @if($post->image)
                             <div class="aspect-video overflow-hidden bg-stone-100">
-                                <img src="{{ $post->featured_image }}" alt="{{ $post->title }}"
+                                <img src="{{ $post->image->base64_data }}" alt="{{ $post->title }}"
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                             </div>
                         @else

@@ -67,9 +67,9 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach ($posts as $post)
                         <article class="group bg-white rounded-2xl overflow-hidden border border-stone-100 hover:border-stone-300 hover:shadow-sm transition-all flex flex-col">
-                            @if ($post->uploadedImage)
+                            @if ($post->image)
                                 <div class="aspect-video overflow-hidden bg-stone-100">
-                                    <img src="{{ $post->uploadedImage->base64_data }}" alt="{{ $post->title }}"
+                                    <img src="{{ $post->image->base64_data }}" alt="{{ $post->title }}"
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 </div>
                             @else

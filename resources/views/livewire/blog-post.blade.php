@@ -49,9 +49,9 @@
     <!-- Article Content -->
     <div class="bg-white">
         <div class="max-w-4xl mx-auto px-6 py-12">
-            @if ($post->uploadedImage)
+            @if ($post->image)
                 <div class="mb-8">
-                    <img src="{{ $post->uploadedImage->base64_data }}" alt="{{ $post->title }}"
+                    <img src="{{ $post->image->base64_data }}" alt="{{ $post->title }}"
                         class="w-full h-64 md:h-96 object-cover rounded-2xl">
                 </div>
             @endif
@@ -117,9 +117,9 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     @foreach ($relatedPosts as $relatedPost)
                         <article class="group bg-white rounded-2xl overflow-hidden border border-stone-100 hover:border-stone-300 hover:shadow-sm transition-all flex flex-col">
-                            @if ($relatedPost->uploadedImage)
+                            @if ($relatedPost->image)
                                 <div class="aspect-video overflow-hidden bg-stone-100">
-                                    <img src="{{ $relatedPost->uploadedImage->base64_data }}" alt="{{ $relatedPost->title }}"
+                                    <img src="{{ $relatedPost->image->base64_data }}" alt="{{ $relatedPost->title }}"
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 </div>
                             @else
