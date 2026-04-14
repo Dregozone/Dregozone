@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BlogPost extends Model
 {
@@ -54,5 +55,15 @@ class BlogPost extends Model
     public function image(): BelongsTo
     {
         return $this->belongsTo(UploadedImage::class, 'image_id');
+    }
+
+    public function viewRecords(): HasMany
+    {
+        return $this->hasMany(UserBlogView::class);
+    }
+
+    public function reads(): HasMany
+    {
+        return $this->hasMany(UserBlogRead::class);
     }
 }
