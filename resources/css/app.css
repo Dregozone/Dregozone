@@ -64,3 +64,52 @@ select:focus[data-flux-control] {
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
+
+/* Auth page entrance animations */
+@keyframes auth-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes auth-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes auth-float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+}
+
+@keyframes auth-pulse-slow {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+}
+
+.animate-auth-enter {
+    animation: auth-fade-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-auth-fade {
+    animation: auth-fade-in 0.6s ease both;
+}
+
+.animate-auth-float {
+    animation: auth-float 6s ease-in-out infinite;
+}
+
+.animate-auth-pulse-slow {
+    animation: auth-pulse-slow 4s ease-in-out infinite;
+}
+
+.auth-stagger-1 { animation-delay: 0.05s; }
+.auth-stagger-2 { animation-delay: 0.10s; }
+.auth-stagger-3 { animation-delay: 0.15s; }
+.auth-stagger-4 { animation-delay: 0.20s; }
+.auth-stagger-5 { animation-delay: 0.25s; }
