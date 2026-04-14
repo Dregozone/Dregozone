@@ -25,6 +25,30 @@
                     <span class="text-xs text-stone-400">· {{ $post->views }} views</span>
                 </div>
 
+                @auth
+                    <div class="flex items-center justify-center gap-3 mb-5">
+                        @if ($isRead)
+                            <div class="inline-flex items-center gap-3 px-4 py-2 bg-green-50 border border-green-200 rounded-full">
+                                <span class="text-sm font-semibold text-green-700">
+                                    ✓ Previously read on {{ $readAt }}
+                                </span>
+                                <button wire:click="markAsUnread"
+                                    class="text-xs font-bold text-green-600 hover:text-green-800 underline transition-colors">
+                                    Mark as unread
+                                </button>
+                            </div>
+                        @else
+                            <button wire:click="markAsRead"
+                                class="inline-flex items-center gap-1.5 px-4 py-2 bg-stone-100 hover:bg-green-50 border border-stone-200 hover:border-green-300 rounded-full text-sm font-semibold text-stone-600 hover:text-green-700 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                Mark as read
+                            </button>
+                        @endif
+                    </div>
+                @endauth
+
                 <h1 class="text-4xl md:text-5xl font-black text-stone-900 tracking-tight mb-5">
                     {{ $post->title }}
                 </h1>

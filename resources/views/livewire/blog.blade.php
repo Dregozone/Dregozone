@@ -66,7 +66,8 @@
             @if ($posts->count() > 0)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach ($posts as $post)
-                        <article class="group bg-white rounded-2xl overflow-hidden border border-stone-100 hover:border-stone-300 hover:shadow-sm transition-all flex flex-col">
+                        @php $isRead = auth()->check() && $post->reads->isNotEmpty(); @endphp
+                        <article class="group bg-white rounded-2xl overflow-hidden border border-stone-100 hover:border-stone-300 hover:shadow-sm transition-all flex flex-col {{ $isRead ? 'opacity-75' : '' }}">
                             @if ($post->image)
                                 <div class="aspect-video overflow-hidden bg-stone-100">
                                     <img src="{{ $post->image->base64_data }}" alt="{{ $post->title }}"
@@ -84,13 +85,18 @@
                                             {{ $post->tags[0] ?? '' }}
                                         </span>
                                     @endif
+                                    @if ($isRead)
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-200">
+                                            ✓ Read
+                                        </span>
+                                    @endif
                                     <span class="text-xs text-stone-400">{{ $post->published_at->format('M j, Y') }}</span>
                                     <span class="text-xs text-stone-400">· {{ $post->views }} views</span>
                                 </div>
-                                <h3 class="font-bold text-stone-900 leading-snug mb-2 group-hover:text-amber-700 transition-colors">
+                                <h3 class="font-bold leading-snug mb-2 group-hover:text-amber-700 transition-colors {{ $isRead ? 'text-stone-500' : 'text-stone-900' }}">
                                     {{ $post->title }}
                                 </h3>
-                                <p class="text-stone-500 text-sm leading-relaxed mb-4 flex-1">
+                                <p class="text-sm leading-relaxed mb-4 flex-1 {{ $isRead ? 'text-stone-400' : 'text-stone-500' }}">
                                     {{ $post->excerpt }}
                                 </p>
                                 <a href="{{ route('blog.post', $post) }}"

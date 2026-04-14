@@ -63,6 +63,12 @@ class Blog extends Component
                 $query->orderBy('published_at', 'desc');
         }
 
+        if (auth()->check()) {
+            $query->with(['reads' => function ($q) {
+                $q->where('user_id', auth()->id());
+            }]);
+        }
+
         $posts = $query->with('image')->paginate(9);
 
         $tags = BlogPost::published()
