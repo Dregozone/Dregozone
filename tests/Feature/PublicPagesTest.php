@@ -9,7 +9,12 @@ use Livewire\Livewire;
 uses(RefreshDatabase::class);
 
 test('home page renders successfully', function () {
-    $this->get('/')->assertSuccessful();
+    $this->get('/')
+        ->assertSuccessful()
+        ->assertSee('Skip to main content', false)
+        ->assertSee('id="main-content"', false)
+        ->assertSee('rel="manifest"', false)
+        ->assertSee('name="theme-color"', false);
 });
 
 test('blog page renders with published posts', function () {

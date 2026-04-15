@@ -76,6 +76,9 @@
             @if ($post->image)
                 <div class="mb-8">
                     <img src="{{ $post->image->base64_data }}" alt="{{ $post->title }}"
+                        loading="eager"
+                        fetchpriority="high"
+                        decoding="async"
                         class="w-full h-64 md:h-96 object-cover rounded-2xl">
                 </div>
             @endif
@@ -144,6 +147,8 @@
                             @if ($relatedPost->image)
                                 <div class="aspect-video overflow-hidden bg-stone-100">
                                     <img src="{{ $relatedPost->image->base64_data }}" alt="{{ $relatedPost->title }}"
+                                        loading="lazy"
+                                        decoding="async"
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 </div>
                             @else
@@ -199,4 +204,3 @@
         </div>
     </section>
 </div>
-

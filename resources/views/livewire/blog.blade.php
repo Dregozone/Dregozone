@@ -71,6 +71,8 @@
                             @if ($post->image)
                                 <div class="aspect-video overflow-hidden bg-stone-100">
                                     <img src="{{ $post->image->base64_data }}" alt="{{ $post->title }}"
+                                        loading="lazy"
+                                        decoding="async"
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 </div>
                             @else
@@ -153,4 +155,3 @@
         </div>
     </section>
 </div>
-
