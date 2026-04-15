@@ -10,7 +10,6 @@
     <meta name="description" content="Personal website of Anders Learmonth — developer portfolio, projects, and technical writing.">
     <meta name="color-scheme" content="light dark">
     <meta name="theme-color" content="#ffffff">
-
     <title>Anders Learmonth — {{ $title }}</title>
     <link rel="manifest" href="/manifest.webmanifest">
 
