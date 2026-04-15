@@ -27,7 +27,7 @@
                         <div class="group bg-white rounded-2xl p-6 border border-amber-100 hover:border-amber-300 hover:shadow-sm transition-all">
                             @if($project->uploadedImage)
                                 <div class="mb-5 rounded-xl overflow-hidden bg-stone-100 aspect-video">
-                                    <img src="{{ $project->uploadedImage->base64_data }}" alt="{{ $project->title }}" class="w-full h-full object-cover">
+                                    <img src="{{ $project->uploadedImage->base64_data }}" alt="{{ $project->title }}" loading="lazy" decoding="async" class="w-full h-full object-cover">
                                 </div>
                             @endif
 
@@ -86,7 +86,7 @@
                         <div class="group bg-stone-50 rounded-2xl p-6 border border-stone-100 hover:border-stone-300 hover:shadow-sm transition-all">
                             @if($project->uploadedImage)
                                 <div class="mb-5 rounded-xl overflow-hidden bg-stone-200 aspect-video">
-                                    <img src="{{ $project->uploadedImage->base64_data }}" alt="{{ $project->title }}" class="w-full h-full object-cover">
+                                    <img src="{{ $project->uploadedImage->base64_data }}" alt="{{ $project->title }}" loading="lazy" decoding="async" class="w-full h-full object-cover">
                                 </div>
                             @endif
 

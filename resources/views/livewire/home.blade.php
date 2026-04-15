@@ -131,11 +131,11 @@
                         <div class="group bg-stone-50 rounded-2xl p-6 border border-stone-100 hover:border-stone-300 hover:shadow-sm transition-all">
                             @if($project->uploadedImage)
                                 <div class="mb-5 rounded-xl overflow-hidden bg-stone-200 aspect-video shadow-md">
-                                    <img src="{{ $project->uploadedImage->base64_data }}" alt="{{ $project->title }}" class="w-full h-full object-cover">
+                                    <img src="{{ $project->uploadedImage->base64_data }}" alt="{{ $project->title }}" loading="lazy" decoding="async" class="w-full h-full object-cover">
                                 </div>
                             @elseif($project->image)
                                 <div class="mb-5 rounded-xl overflow-hidden bg-stone-200 aspect-video shadow-md">
-                                    <img src="{{ $project->image }}" alt="{{ $project->title }}" class="w-full h-full object-cover">
+                                    <img src="{{ $project->image }}" alt="{{ $project->title }}" loading="lazy" decoding="async" class="w-full h-full object-cover">
                                 </div>
                             @endif
 
@@ -216,6 +216,8 @@
                         @if($post->image)
                             <div class="aspect-video overflow-hidden bg-stone-100">
                                 <img src="{{ $post->image->base64_data }}" alt="{{ $post->title }}"
+                                    loading="lazy"
+                                    decoding="async"
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                             </div>
                         @else

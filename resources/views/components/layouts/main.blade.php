@@ -7,8 +7,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="Personal website of Anders Learmonth — developer portfolio, projects, and technical writing.">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#ffffff">
 
     <title>Anders Learmonth — {{ $title }}</title>
+    <link rel="manifest" href="/manifest.webmanifest">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -20,6 +24,9 @@
 </head>
 
 <body class="h-full font-sans antialiased bg-white text-stone-900">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-md focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-stone-900 focus:shadow-lg">
+        Skip to main content
+    </a>
 
     <!-- Navigation -->
     <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-100"
@@ -64,7 +71,9 @@
                 <!-- Mobile hamburger -->
                 <button @click="mobileOpen = !mobileOpen"
                     class="sm:hidden inline-flex items-center justify-center w-9 h-9 rounded-lg text-stone-500 hover:text-stone-900 hover:bg-stone-100 transition-colors"
-                    aria-label="Toggle navigation">
+                    aria-label="Toggle navigation"
+                    aria-controls="mobile-menu"
+                    :aria-expanded="mobileOpen.toString()">
                     <svg x-show="!mobileOpen" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
@@ -77,7 +86,8 @@
         </div>
 
         <!-- Mobile menu -->
-        <div x-show="mobileOpen"
+        <div id="mobile-menu"
+            x-show="mobileOpen"
             x-transition:enter="transition ease-out duration-150"
             x-transition:enter-start="opacity-0 -translate-y-1"
             x-transition:enter-end="opacity-100 translate-y-0"
@@ -119,7 +129,7 @@
     </header>
 
     <!-- Page Content -->
-    <main>
+    <main id="main-content">
         {{ $slot }}
     </main>
 
