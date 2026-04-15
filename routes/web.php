@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ImageUploadController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailController;
 use App\Livewire\Admin\BlogPostForm;
@@ -54,6 +55,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/image-converter', ImageConverter::class)->name('image-converter');
 
     Route::get('/images', ImageList::class)->name('images.index');
+    Route::post('/images/upload', [ImageUploadController::class, 'store'])->name('images.upload');
 });
 
 // Auth routes
