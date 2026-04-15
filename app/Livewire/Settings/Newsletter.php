@@ -21,7 +21,7 @@ class Newsletter extends Component
      */
     public function mount(): void
     {
-        $subscriber = NewsletterSubscriber::where('email', Auth::user()->email)->first();
+        $subscriber = $this->getCurrentSubscriber();
 
         $this->subscriptionStatus = ($subscriber && $subscriber->is_subscribed) ? 'subscribed' : 'unsubscribed';
     }
@@ -31,7 +31,7 @@ class Newsletter extends Component
      */
     public function updatedSubscriptionStatus(string $value): void
     {
-        $subscriber = NewsletterSubscriber::where('email', Auth::user()->email)->first();
+        $subscriber = $this->getCurrentSubscriber();
 
         if ($value === 'subscribed') {
             if ($subscriber) {
@@ -55,5 +55,13 @@ class Newsletter extends Component
         }
 
         $this->saved = true;
+    }
+
+    /**
+     * Retrieve the newsletter subscriber record for the currently authenticated user.
+     */
+    private function getCurrentSubscriber(): ?NewsletterSubscriber
+    {
+        return NewsletterSubscriber::where('email', Auth::user()->email)->first();
     }
 }
