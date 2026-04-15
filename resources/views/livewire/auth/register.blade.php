@@ -83,6 +83,17 @@
             @enderror
         </div>
 
+        <!-- Newsletter opt-in -->
+        <label class="flex items-start gap-2.5 cursor-pointer select-none">
+            <input wire:model="newsletter" type="checkbox" id="newsletter"
+                class="mt-0.5 w-4 h-4 rounded border-stone-300 text-amber-600 focus:ring-amber-500/40 focus:ring-2 transition-colors cursor-pointer flex-shrink-0" />
+            <span class="text-xs text-stone-500 leading-relaxed">
+                Please also sign me up to the newsletter. I consent to the
+                <a href="{{ route('privacy-policy') }}" target="_blank" rel="noopener noreferrer"
+                    class="underline text-stone-600 hover:text-amber-600 transition-colors">privacy policy</a>.
+            </span>
+        </label>
+
         <!-- Submit -->
         <button type="submit"
             class="w-full flex items-center justify-center gap-2 bg-stone-900 hover:bg-stone-700 text-white font-semibold text-sm px-5 py-3 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-stone-900 focus:ring-offset-2 active:scale-[0.98] mt-1"

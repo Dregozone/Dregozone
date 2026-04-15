@@ -70,22 +70,22 @@
                         Building things<br>for the web.
                     </h2>
                     <p class="text-stone-400 text-base xl:text-lg leading-relaxed max-w-xs">
-                        Developer, writer, explorer. Join to unlock comments and connect with the community.
+                        Developer, writer, explorer. Create a free account to get more from the site.
                     </p>
 
                     <!-- Feature pills -->
                     <div class="mt-8 flex flex-wrap gap-3">
                         <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-800 border border-stone-700 text-stone-300 text-xs font-medium">
                             <svg class="w-3.5 h-3.5 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/></svg>
-                            Blog &amp; tutorials
+                            Track read posts
                         </span>
                         <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-800 border border-stone-700 text-stone-300 text-xs font-medium">
                             <svg class="w-3.5 h-3.5 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/></svg>
-                            Open source projects
+                            Members-only posts
                         </span>
                         <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-800 border border-stone-700 text-stone-300 text-xs font-medium">
                             <svg class="w-3.5 h-3.5 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/></svg>
-                            Community comments
+                            Newsletter control
                         </span>
                     </div>
                 </div>
@@ -104,6 +104,13 @@
                         aria-label="LinkedIn">
                         <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                        </svg>
+                    </a>
+                    <a href="https://bsky.app/profile/anderslearmonth.bsky.social" target="_blank" rel="noopener noreferrer"
+                        class="w-8 h-8 flex items-center justify-center rounded-full bg-stone-800 text-stone-400 hover:bg-amber-500 hover:text-white transition-all duration-200"
+                        aria-label="Bluesky">
+                        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 600 530">
+                            <path d="M135.72 44.03C202.216 93.951 273.74 195.17 300 249.49c26.262-54.316 97.782-155.54 164.28-205.46C512.26 8.009 590-19.862 590 68.825c0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.38-3.69-10.832-3.708-7.896-.017-2.936-1.193.516-3.707 7.896-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.45-163.25-81.433C20.15 217.615 10 86.536 10 68.825c0-88.687 77.742-60.816 125.72-24.795z"/>
                         </svg>
                     </a>
                     <span class="text-stone-600 text-xs ml-2">© {{ date('Y') }} Anders Learmonth</span>
