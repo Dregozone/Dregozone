@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailController;
 use App\Livewire\Admin\BlogPostForm;
 use App\Livewire\Admin\BlogPostList;
@@ -17,6 +18,7 @@ use App\Livewire\Home;
 use App\Livewire\PrivacyPolicy;
 use App\Livewire\Projects;
 use App\Livewire\Settings\Appearance;
+use App\Livewire\Settings\Newsletter;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use Illuminate\Support\Facades\Route;
@@ -56,11 +58,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
 // Auth routes
 Route::middleware(['auth'])->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
+    Route::get('dashboard', DashboardController::class)->name('dashboard');
     Route::redirect('settings', 'settings/profile');
     Route::get('settings/profile', Profile::class)->name('settings.profile');
     Route::get('settings/password', Password::class)->name('settings.password');
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
+    Route::get('settings/newsletter', Newsletter::class)->name('settings.newsletter');
 });
 
 require __DIR__.'/auth.php';
