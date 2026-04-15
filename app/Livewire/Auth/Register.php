@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Models\NewsletterSubscriber;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +20,7 @@ class Register extends Component
 
     public string $password = '';
 
-    public string $password_confirmation = '';
+    public bool $newsletter = false;
 
     /**
      * Handle an incoming registration request.
@@ -29,12 +30,19 @@ class Register extends Component
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'string', Rules\Password::defaults()],
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
 
         event(new Registered(($user = User::create($validated))));
+
+        if ($this->newsletter) {
+            NewsletterSubscriber::firstOrCreate(
+                ['email' => $user->email],
+                ['name' => $user->name, 'subscribed_at' => now()]
+            );
+        }
 
         Auth::login($user);
 
