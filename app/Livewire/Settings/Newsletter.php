@@ -24,13 +24,17 @@ class Newsletter extends Component
         $subscriber = $this->getCurrentSubscriber();
 
         $this->subscriptionStatus = ($subscriber && $subscriber->is_subscribed) ? 'subscribed' : 'unsubscribed';
+
+        // dd($this->subscriptionStatus);
     }
 
     /**
      * Update the newsletter subscription status in real-time whenever the radio selection changes.
      */
-    public function updatedSubscriptionStatus(string $value): void
+    public function updateSubscriptionStatus(): void
     {
+        $value = $this->subscriptionStatus;
+
         $subscriber = $this->getCurrentSubscriber();
 
         if ($value === 'subscribed') {

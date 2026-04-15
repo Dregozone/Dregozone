@@ -192,7 +192,7 @@
     <!-- Cookie Consent Banner -->
     <x-cookie-banner />
 
-    @livewireScripts
+    @fluxScripts
 </body>
 
 </html>
