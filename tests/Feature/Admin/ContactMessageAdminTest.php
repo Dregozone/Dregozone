@@ -10,7 +10,7 @@ uses(RefreshDatabase::class);
 
 function contactAdminUser(): User
 {
-    return User::factory()->create();
+    return User::factory()->create(['email' => 'aclearmonth@gmail.com']);
 }
 
 function makeContactMessage(array $attributes = []): ContactMessage
@@ -29,7 +29,13 @@ test('guests are redirected from admin contact messages', function () {
     $this->get('/admin/contact-messages')->assertRedirect('/login');
 });
 
-test('authenticated user can view admin contact messages', function () {
+test('non-admin authenticated user is forbidden from admin contact messages', function () {
+    $this->actingAs(User::factory()->create(['email' => 'user@example.com']));
+
+    $this->get('/admin/contact-messages')->assertForbidden();
+});
+
+test('admin can view admin contact messages', function () {
     $this->actingAs(contactAdminUser());
 
     $this->get('/admin/contact-messages')->assertSuccessful();

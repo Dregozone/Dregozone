@@ -37,7 +37,7 @@ Route::get('/privacy-policy', PrivacyPolicy::class)->name('privacy-policy');
 Route::get('/emails/unsubscribe', [EmailController::class, 'unsubscribe'])->name('emails.unsubscribe');
 
 // Admin routes (protected)
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/blog', BlogPostList::class)->name('blog.index');
     Route::get('/blog/create', BlogPostForm::class)->name('blog.create');
     Route::get('/blog/{postId}/edit', BlogPostForm::class)->name('blog.edit');

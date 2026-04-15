@@ -10,14 +10,20 @@ uses(RefreshDatabase::class);
 
 function newsletterAdminUser(): User
 {
-    return User::factory()->create();
+    return User::factory()->create(['email' => 'aclearmonth@gmail.com']);
 }
 
 test('guests are redirected from admin newsletter subscribers', function () {
     $this->get('/admin/newsletter-subscribers')->assertRedirect('/login');
 });
 
-test('authenticated user can view admin newsletter subscribers', function () {
+test('non-admin authenticated user is forbidden from admin newsletter subscribers', function () {
+    $this->actingAs(User::factory()->create(['email' => 'user@example.com']));
+
+    $this->get('/admin/newsletter-subscribers')->assertForbidden();
+});
+
+test('admin can view admin newsletter subscribers', function () {
     $this->actingAs(newsletterAdminUser());
 
     $this->get('/admin/newsletter-subscribers')->assertSuccessful();
@@ -115,4 +121,10 @@ test('export json contains only subscribed emails', function () {
 
 test('export guest is redirected to login', function () {
     $this->get('/admin/newsletter-subscribers/export')->assertRedirect('/login');
+});
+
+test('non-admin authenticated user is forbidden from newsletter export', function () {
+    $this->actingAs(User::factory()->create(['email' => 'user@example.com']));
+
+    $this->get('/admin/newsletter-subscribers/export')->assertForbidden();
 });

@@ -10,14 +10,20 @@ uses(RefreshDatabase::class);
 
 function blogListUser(): User
 {
-    return User::factory()->create();
+    return User::factory()->create(['email' => 'aclearmonth@gmail.com']);
 }
 
 test('guests are redirected from admin blog list', function () {
     $this->get('/admin/blog')->assertRedirect('/login');
 });
 
-test('authenticated user can view admin blog list', function () {
+test('non-admin authenticated user is forbidden from admin blog list', function () {
+    $this->actingAs(User::factory()->create(['email' => 'user@example.com']));
+
+    $this->get('/admin/blog')->assertForbidden();
+});
+
+test('admin can view admin blog list', function () {
     $this->actingAs(blogListUser());
 
     $this->get('/admin/blog')->assertSuccessful();

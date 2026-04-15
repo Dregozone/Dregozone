@@ -2,7 +2,7 @@
 
 ## 1. Overview
 
-Dregozone is a Laravel 12 + Livewire 4 personal portfolio and blog website. It supports three roles: unauthenticated visitors, authenticated users, and admins. The testing approach combines **unit tests** (model logic, scopes, helpers) and **feature tests** (HTTP routes, Livewire component interactions, form validation), using Pest 3 with `RefreshDatabase` to ensure a clean DB state per test.
+Dregozone is a Laravel 12 + Livewire 4 personal portfolio and blog website. It supports four roles: unauthenticated visitors, authenticated users (including subscribers), and the single admin. The testing approach combines **unit tests** (model logic, scopes, helpers) and **feature tests** (HTTP routes, Livewire component interactions, form validation), using Pest 3 with `RefreshDatabase` to ensure a clean DB state per test.
 
 ---
 
@@ -11,8 +11,8 @@ Dregozone is a Laravel 12 + Livewire 4 personal portfolio and blog website. It s
 | Role | Description |
 |---|---|
 | **Unauthenticated User** | Any visitor who is not logged in. Can browse public pages, submit contact forms, sign up for the newsletter, and unsubscribe. |
-| **Authenticated User** | A registered, logged-in user. Can access all public pages plus personal settings and admin-protected routes (admin routes only require `auth` middleware). |
-| **Admin User** | Authenticated user whose email is `aclearmonth@gmail.com`. Redirected to admin blog index via the dashboard. |
+| **Authenticated User (Subscriber)** | A registered, logged-in user. Can access public pages and personal settings (profile, password, appearance, newsletter). Has **no** access to any admin routes. A subscriber is specifically an authenticated user who has opted in to the newsletter. |
+| **Admin User** | The single authenticated user whose email is `aclearmonth@gmail.com`. Exclusively has access to all admin routes (blog, projects, contact messages, newsletter subscribers, image library). All other authenticated users receive `403 Forbidden` on admin routes. |
 
 ---
 
@@ -40,21 +40,32 @@ Dregozone is a Laravel 12 + Livewire 4 personal portfolio and blog website. It s
 - As an unauthenticated user, I want to view the privacy policy page so that I understand how my data is used.
 - As an unauthenticated user, I want to be redirected to login when accessing admin routes so that protected areas are secured.
 
-### Authenticated User
+### Authenticated User (Subscriber)
 
-- As an authenticated user, I want to access admin blog management so that I can manage blog content.
-- As an authenticated user, I want to search and filter blog posts in the admin list so that I can find posts quickly.
-- As an authenticated user, I want to delete a blog post so that outdated content can be removed.
-- As an authenticated user, I want to toggle a blog post's publish status so that I can control visibility.
-- As an authenticated user, I want to view and filter contact messages so that I can respond to inquiries.
-- As an authenticated user, I want to update a contact message's status so that I can track follow-up.
-- As an authenticated user, I want to view newsletter subscribers so that I can manage the mailing list.
-- As an authenticated user, I want to export active subscribers as JSON so that I can use the data in other tools.
-- As an authenticated user, I want to access the image library and converter so that I can manage media.
+- As an authenticated user, I want to access my profile settings so that I can update my personal information.
+- As an authenticated user, I want to access my password settings so that I can change my password.
+- As an authenticated user, I want to access the newsletter settings page so that I can manage my subscription.
+- As a subscriber, I want to see my active subscription status on the settings page so that I know I am subscribed.
+- As a subscriber, I want to unsubscribe via the settings page so that I can opt out of newsletters.
+- As a subscriber, I want to re-subscribe via the settings page so that I can opt back in.
+- As an authenticated user, I want to be redirected to the home page from the dashboard so that I know I have no admin access.
+- As an authenticated user (non-admin), I want to receive 403 Forbidden when accessing any admin route so that unauthorised access is blocked.
 
 ### Admin User
 
 - As an admin user, I want to be redirected to the admin blog index from the dashboard so that I land in the right place.
+- As an admin user, I want to access admin blog management so that I can manage blog content.
+- As an admin user, I want to search and filter blog posts in the admin list so that I can find posts quickly.
+- As an admin user, I want to delete a blog post so that outdated content can be removed.
+- As an admin user, I want to toggle a blog post's publish status so that I can control visibility.
+- As an admin user, I want to create and edit blog posts so that I can publish new content.
+- As an admin user, I want to preview a draft blog post so that I can review it before publishing.
+- As an admin user, I want to create and edit projects so that I can manage my portfolio.
+- As an admin user, I want to view and filter contact messages so that I can respond to inquiries.
+- As an admin user, I want to update a contact message's status so that I can track follow-up.
+- As an admin user, I want to view newsletter subscribers so that I can manage the mailing list.
+- As an admin user, I want to export active subscribers as JSON so that I can use the data in other tools.
+- As an admin user, I want to access the image library and converter so that I can manage media.
 
 ---
 
@@ -117,7 +128,8 @@ Dregozone is a Laravel 12 + Livewire 4 personal portfolio and blog website. It s
 | Scenario | Type |
 |---|---|
 | Guests redirect to login | Special |
-| Authenticated user can access | Normal |
+| Non-admin authenticated user gets 403 Forbidden | Special |
+| Admin can access | Normal |
 | Posts are listed | Normal |
 | Search by title filters results | Normal |
 | Search by excerpt filters results | Normal |
@@ -133,7 +145,8 @@ Dregozone is a Laravel 12 + Livewire 4 personal portfolio and blog website. It s
 | Scenario | Type |
 |---|---|
 | Guests redirect to login | Special |
-| Authenticated user can view | Normal |
+| Non-admin authenticated user gets 403 Forbidden | Special |
+| Admin can view | Normal |
 | Messages are listed | Normal |
 | Search filters by name | Normal |
 | Search filters by email | Normal |
@@ -150,7 +163,8 @@ Dregozone is a Laravel 12 + Livewire 4 personal portfolio and blog website. It s
 | Scenario | Type |
 |---|---|
 | Guests redirect to login | Special |
-| Authenticated user can view | Normal |
+| Non-admin authenticated user gets 403 Forbidden | Special |
+| Admin can view | Normal |
 | Subscribers are listed | Normal |
 | Search by email works | Normal |
 | Active stats shown | Normal |
@@ -159,17 +173,47 @@ Dregozone is a Laravel 12 + Livewire 4 personal portfolio and blog website. It s
 | Export returns JSON | Normal |
 | Export contains only subscribed emails | Normal |
 | Export guest redirect | Special |
+| Non-admin user export forbidden | Special |
 
 ### 4.7 Admin Image Library & Converter
 
 | Scenario | Type |
 |---|---|
 | Guests redirect from image library | Special |
-| Authenticated user views image library | Normal |
-| Authenticated user views image converter | Normal |
+| Non-admin authenticated user gets 403 from image library | Special |
+| Admin views image library | Normal |
+| Non-admin authenticated user gets 403 from image converter | Special |
+| Admin views image converter | Normal |
 | Guests redirect from image converter | Special |
+| Guests cannot upload images | Special |
+| Non-admin authenticated user forbidden from image upload | Special |
+| Admin can upload a pending image | Normal |
+| Upload rejects non-image data | Invalid |
+| Upload requires base64_data field | Invalid |
 
-### 4.8 User Model (Unit)
+### 4.8 Subscriber User
+
+| Scenario | Type |
+|---|---|
+| Subscriber sees subscribed status on settings page | Normal |
+| Subscriber can unsubscribe via settings | Normal |
+| Subscriber can re-subscribe via settings | Normal |
+| Non-subscribed user sees unsubscribed status by default | Normal |
+| Subscriber is forbidden from admin blog list | Special |
+| Subscriber is forbidden from admin blog create | Special |
+| Subscriber is forbidden from admin projects list | Special |
+| Subscriber is forbidden from admin contact messages | Special |
+| Subscriber is forbidden from admin newsletter subscribers | Special |
+| Subscriber is forbidden from newsletter export | Special |
+| Subscriber is forbidden from image library | Special |
+| Subscriber is forbidden from image converter | Special |
+| Subscriber is forbidden from image upload | Special |
+| Subscriber can access profile settings | Normal |
+| Subscriber can access password settings | Normal |
+| Subscriber can access newsletter settings | Normal |
+| Subscriber is redirected to home from dashboard | Normal |
+
+### 4.9 User Model (Unit)
 
 | Scenario | Type |
 |---|---|
@@ -179,7 +223,7 @@ Dregozone is a Laravel 12 + Livewire 4 personal portfolio and blog website. It s
 | initials() single name → one letter | Edge |
 | initials() triple name → first two letters | Edge |
 
-### 4.9 NewsletterSubscriber Model (Unit)
+### 4.10 NewsletterSubscriber Model (Unit)
 
 | Scenario | Type |
 |---|---|
@@ -188,7 +232,7 @@ Dregozone is a Laravel 12 + Livewire 4 personal portfolio and blog website. It s
 | unsubscribe() sets is_subscribed=false and unsubscribed_at | Normal |
 | subscribed() scope returns only subscribed | Normal |
 
-### 4.10 ContactMessage Model (Unit)
+### 4.11 ContactMessage Model (Unit)
 
 | Scenario | Type |
 |---|---|
@@ -199,7 +243,7 @@ Dregozone is a Laravel 12 + Livewire 4 personal portfolio and blog website. It s
 | new() scope returns only new | Normal |
 | unread() scope returns new and read | Normal |
 
-### 4.11 Tag Model (Unit)
+### 4.12 Tag Model (Unit)
 
 | Scenario | Type |
 |---|---|
@@ -255,60 +299,88 @@ Dregozone is a Laravel 12 + Livewire 4 personal portfolio and blog website. It s
 | T39 | Newsletter | Already unsubscribed | Edge | 200 with already-unsubscribed message | `unsubscribe when already unsubscribed shows message` |
 | T40 | Newsletter | Non-existent email | Invalid | 200 with error message | `unsubscribe with non-existent email shows error` |
 | T41 | Admin Blog List | Guest redirect | Special | Redirect to /login | `guests are redirected from admin blog list` |
-| T42 | Admin Blog List | Auth user can access | Normal | 200 OK | `authenticated user can view admin blog list` |
-| T43 | Admin Blog List | Posts displayed | Normal | Post titles visible | `admin blog list shows posts` |
-| T44 | Admin Blog List | Search by title | Normal | Matching post visible | `admin blog list search by title works` |
-| T45 | Admin Blog List | Search by excerpt | Normal | Matching post visible | `admin blog list search by excerpt works` |
-| T46 | Admin Blog List | Filter by status | Normal | Only filtered status posts | `admin blog list filter by status works` |
-| T47 | Admin Blog List | Sort by oldest | Normal | Ascending order | `admin blog list sort by oldest works` |
-| T48 | Admin Blog List | Sort by title | Normal | Alphabetical order | `admin blog list sort by title works` |
-| T49 | Admin Blog List | Sort by views | Normal | Descending views order | `admin blog list sort by views works` |
-| T50 | Admin Blog List | Delete post | Normal | Post removed from DB | `admin blog post can be deleted` |
-| T51 | Admin Blog List | Toggle draft→published | Normal | status=published, published_at set | `admin blog post toggle status draft to published sets published_at` |
-| T52 | Admin Blog List | Toggle published→draft | Normal | status=draft, published_at null | `admin blog post toggle status published to draft clears published_at` |
-| T53 | Admin Blog List | Delete flash | Normal | Flash message shown | `admin blog post delete shows success flash` |
-| T54 | Admin Contact | Guest redirect | Special | Redirect to /login | `guests are redirected from admin contact messages` |
-| T55 | Admin Contact | Auth user can view | Normal | 200 OK | `authenticated user can view admin contact messages` |
-| T56 | Admin Contact | Messages listed | Normal | Message visible in list | `admin contact messages list shows messages` |
-| T57 | Admin Contact | Search by name | Normal | Matching message shown | `admin contact messages search by name filters results` |
-| T58 | Admin Contact | Search by email | Normal | Matching message shown | `admin contact messages search by email filters results` |
-| T59 | Admin Contact | Search by subject | Normal | Matching message shown | `admin contact messages search by subject filters results` |
-| T60 | Admin Contact | Filter by status | Normal | Only matching status | `admin contact messages filter by status works` |
-| T61 | Admin Contact | Filter by type | Normal | Only matching type | `admin contact messages filter by type works` |
-| T62 | Admin Contact | Update status replied | Normal | status=replied | `admin contact message status can be updated to replied` |
-| T63 | Admin Contact | Update status ignored | Normal | status=ignored | `admin contact message status can be updated to ignored` |
-| T64 | Admin Contact | Update status actioned | Normal | status=actioned | `admin contact message status can be updated to actioned` |
-| T65 | Admin Contact | Update shows flash | Normal | Flash message shown | `admin contact message update status shows flash message` |
-| T66 | Admin Newsletter | Guest redirect | Special | Redirect to /login | `guests are redirected from admin newsletter subscribers` |
-| T67 | Admin Newsletter | Auth user can view | Normal | 200 OK | `authenticated user can view admin newsletter subscribers` |
-| T68 | Admin Newsletter | Subscribers listed | Normal | Subscriber email visible | `admin newsletter list shows subscribers` |
-| T69 | Admin Newsletter | Search by email | Normal | Matching subscriber shown | `admin newsletter list can search by email` |
-| T70 | Admin Newsletter | Active stats shown | Normal | View contains stats | `admin newsletter list shows active subscription stats` |
-| T71 | Admin Newsletter | Filter subscribed | Normal | Only subscribed shown | `admin newsletter list filters by subscribed status` |
-| T72 | Admin Newsletter | Filter unsubscribed | Normal | Only unsubscribed shown | `admin newsletter list filters by unsubscribed status` |
-| T73 | Admin Newsletter | Export JSON | Normal | JSON response | `export active subscribers returns json response` |
-| T74 | Admin Newsletter | Export only subscribed | Normal | JSON excludes unsubscribed | `export json contains only subscribed emails` |
-| T75 | Admin Newsletter | Export guest redirect | Special | Redirect to /login | `export guest is redirected to login` |
-| T76 | Admin Images | Guest redirect image library | Special | Redirect to /login | `guests are redirected from image library` |
-| T77 | Admin Images | Auth user image library | Normal | 200 OK | `authenticated user can view image library` |
-| T78 | Admin Images | Auth user image converter | Normal | 200 OK | `authenticated user can view image converter` |
-| T79 | Admin Images | Guest redirect image converter | Special | Redirect to /login | `guests are redirected from image converter` |
-| T80 | User Model | isAdmin true | Normal | returns true | `isAdmin returns true for admin email` |
-| T81 | User Model | isAdmin false | Normal | returns false | `isAdmin returns false for non-admin email` |
-| T82 | User Model | initials full name | Normal | Two-letter string | `initials returns correct initials for full name` |
-| T83 | User Model | initials single name | Edge | One-letter string | `initials returns single initial for single name` |
-| T84 | User Model | initials triple name | Edge | First two letters | `initials handles triple names` |
-| T85 | NewsletterSubscriber | secret_key generated | Normal | Not empty after create | `secret key is auto generated on create` |
-| T86 | NewsletterSubscriber | secret_key not overridden | Normal | Preset value preserved | `secret key is not overridden if already set` |
-| T87 | NewsletterSubscriber | unsubscribe() | Normal | is_subscribed=false, unsubscribed_at set | `unsubscribe sets is subscribed to false and sets unsubscribed at` |
-| T88 | NewsletterSubscriber | subscribed() scope | Normal | Excludes unsubscribed | `subscribed scope returns only subscribed subscribers` |
-| T89 | ContactMessage | markAsRead | Normal | status=read | `markAsRead sets status to read` |
-| T90 | ContactMessage | markAsReplied | Normal | status=replied, status_changed_at set | `markAsReplied sets status to replied and sets status changed at` |
-| T91 | ContactMessage | markAsIgnored | Normal | status=ignored, status_changed_at set | `markAsIgnored sets status to ignored and sets status changed at` |
-| T92 | ContactMessage | markAsActioned | Normal | status=actioned, status_changed_at set | `markAsActioned sets status to actioned and sets status changed at` |
-| T93 | ContactMessage | new() scope | Normal | Only new messages | `new scope returns only new messages` |
-| T94 | ContactMessage | unread() scope | Normal | New and read messages | `unread scope returns new and read messages` |
-| T95 | Tag Model | createFromName new | Normal | Tag created with slug | `createFromName creates new tag with correct slug` |
-| T96 | Tag Model | createFromName idempotent | Edge | Returns existing tag | `createFromName returns existing tag if slug already exists` |
-| T97 | Tag Model | allNames alphabetical | Normal | Alphabetically sorted | `allNames returns all tag names ordered alphabetically` |
-| T98 | Tag Model | topByUsage | Normal | Sorted by post count | `topByUsage returns tags sorted by published post usage count` |
+| T42 | Admin Blog List | Non-admin user forbidden | Special | 403 Forbidden | `non-admin authenticated user is forbidden from admin blog list` |
+| T43 | Admin Blog List | Admin can access | Normal | 200 OK | `admin can view admin blog list` |
+| T44 | Admin Blog List | Posts displayed | Normal | Post titles visible | `admin blog list shows posts` |
+| T45 | Admin Blog List | Search by title | Normal | Matching post visible | `admin blog list search by title works` |
+| T46 | Admin Blog List | Search by excerpt | Normal | Matching post visible | `admin blog list search by excerpt works` |
+| T47 | Admin Blog List | Filter by status | Normal | Only filtered status posts | `admin blog list filter by status works` |
+| T48 | Admin Blog List | Sort by oldest | Normal | Ascending order | `admin blog list sort by oldest works` |
+| T49 | Admin Blog List | Sort by title | Normal | Alphabetical order | `admin blog list sort by title works` |
+| T50 | Admin Blog List | Sort by views | Normal | Descending views order | `admin blog list sort by views works` |
+| T51 | Admin Blog List | Delete post | Normal | Post removed from DB | `admin blog post can be deleted` |
+| T52 | Admin Blog List | Toggle draft→published | Normal | status=published, published_at set | `admin blog post toggle status draft to published sets published_at` |
+| T53 | Admin Blog List | Toggle published→draft | Normal | status=draft, published_at null | `admin blog post toggle status published to draft clears published_at` |
+| T54 | Admin Blog List | Delete flash | Normal | Flash message shown | `admin blog post delete shows success flash` |
+| T55 | Admin Contact | Guest redirect | Special | Redirect to /login | `guests are redirected from admin contact messages` |
+| T56 | Admin Contact | Non-admin user forbidden | Special | 403 Forbidden | `non-admin authenticated user is forbidden from admin contact messages` |
+| T57 | Admin Contact | Admin can view | Normal | 200 OK | `admin can view admin contact messages` |
+| T58 | Admin Contact | Messages listed | Normal | Message visible in list | `admin contact messages list shows messages` |
+| T59 | Admin Contact | Search by name | Normal | Matching message shown | `admin contact messages search by name filters results` |
+| T60 | Admin Contact | Search by email | Normal | Matching message shown | `admin contact messages search by email filters results` |
+| T61 | Admin Contact | Search by subject | Normal | Matching message shown | `admin contact messages search by subject filters results` |
+| T62 | Admin Contact | Filter by status | Normal | Only matching status | `admin contact messages filter by status works` |
+| T63 | Admin Contact | Filter by type | Normal | Only matching type | `admin contact messages filter by type works` |
+| T64 | Admin Contact | Update status replied | Normal | status=replied | `admin contact message status can be updated to replied` |
+| T65 | Admin Contact | Update status ignored | Normal | status=ignored | `admin contact message status can be updated to ignored` |
+| T66 | Admin Contact | Update status actioned | Normal | status=actioned | `admin contact message status can be updated to actioned` |
+| T67 | Admin Contact | Update shows flash | Normal | Flash message shown | `admin contact message update status shows flash message` |
+| T68 | Admin Newsletter | Guest redirect | Special | Redirect to /login | `guests are redirected from admin newsletter subscribers` |
+| T69 | Admin Newsletter | Non-admin user forbidden | Special | 403 Forbidden | `non-admin authenticated user is forbidden from admin newsletter subscribers` |
+| T70 | Admin Newsletter | Admin can view | Normal | 200 OK | `admin can view admin newsletter subscribers` |
+| T71 | Admin Newsletter | Subscribers listed | Normal | Subscriber email visible | `admin newsletter list shows subscribers` |
+| T72 | Admin Newsletter | Search by email | Normal | Matching subscriber shown | `admin newsletter list can search by email` |
+| T73 | Admin Newsletter | Active stats shown | Normal | View contains stats | `admin newsletter list shows active subscription stats` |
+| T74 | Admin Newsletter | Filter subscribed | Normal | Only subscribed shown | `admin newsletter list filters by subscribed status` |
+| T75 | Admin Newsletter | Filter unsubscribed | Normal | Only unsubscribed shown | `admin newsletter list filters by unsubscribed status` |
+| T76 | Admin Newsletter | Export JSON | Normal | JSON response | `export active subscribers returns json response` |
+| T77 | Admin Newsletter | Export only subscribed | Normal | JSON excludes unsubscribed | `export json contains only subscribed emails` |
+| T78 | Admin Newsletter | Export guest redirect | Special | Redirect to /login | `export guest is redirected to login` |
+| T79 | Admin Newsletter | Export non-admin forbidden | Special | 403 Forbidden | `non-admin authenticated user is forbidden from newsletter export` |
+| T80 | Admin Images | Guest redirect image library | Special | Redirect to /login | `guests are redirected from image library` |
+| T81 | Admin Images | Non-admin forbidden image library | Special | 403 Forbidden | `non-admin authenticated user is forbidden from image library` |
+| T82 | Admin Images | Admin views image library | Normal | 200 OK | `admin can view image library` |
+| T83 | Admin Images | Non-admin forbidden image converter | Special | 403 Forbidden | `non-admin authenticated user is forbidden from image converter` |
+| T84 | Admin Images | Admin views image converter | Normal | 200 OK | `admin can view image converter` |
+| T85 | Admin Images | Guest redirect image converter | Special | Redirect to /login | `guests are redirected from image converter` |
+| T86 | Admin Images | Guest image upload rejected | Special | 401 Unauthorized | `guests cannot upload images` |
+| T87 | Admin Images | Non-admin image upload forbidden | Special | 403 Forbidden | `non-admin authenticated user is forbidden from uploading images` |
+| T88 | Admin Images | Admin can upload image | Normal | 200 OK, record created | `authenticated admin can upload a pending image` |
+| T89 | Admin Images | Upload rejects non-image data | Invalid | 422 Unprocessable | `image upload rejects non-image base64 data` |
+| T90 | Admin Images | Upload requires base64_data | Invalid | 422 Unprocessable | `image upload requires base64_data field` |
+| T91 | Subscriber User | Sees subscribed status | Normal | subscriptionStatus=subscribed | `subscriber can see their subscribed status on the settings page` |
+| T92 | Subscriber User | Can unsubscribe via settings | Normal | is_subscribed=false | `subscriber can unsubscribe via settings page` |
+| T93 | Subscriber User | Can re-subscribe via settings | Normal | is_subscribed=true | `subscriber can re-subscribe via settings page` |
+| T94 | Subscriber User | Unsub user default unsubscribed | Normal | subscriptionStatus=unsubscribed | `non-subscribed authenticated user sees unsubscribed status by default` |
+| T95 | Subscriber User | Forbidden admin blog list | Special | 403 Forbidden | `subscriber is forbidden from admin blog list` |
+| T96 | Subscriber User | Forbidden admin blog create | Special | 403 Forbidden | `subscriber is forbidden from admin blog create` |
+| T97 | Subscriber User | Forbidden admin projects | Special | 403 Forbidden | `subscriber is forbidden from admin projects list` |
+| T98 | Subscriber User | Forbidden admin contact | Special | 403 Forbidden | `subscriber is forbidden from admin contact messages` |
+| T99 | Subscriber User | Forbidden admin newsletter | Special | 403 Forbidden | `subscriber is forbidden from admin newsletter subscribers` |
+| T100 | Subscriber User | Forbidden newsletter export | Special | 403 Forbidden | `subscriber is forbidden from newsletter export` |
+| T101 | Subscriber User | Forbidden image library | Special | 403 Forbidden | `subscriber is forbidden from image library` |
+| T102 | Subscriber User | Forbidden image converter | Special | 403 Forbidden | `subscriber is forbidden from image converter` |
+| T103 | Subscriber User | Forbidden image upload | Special | 403 Forbidden | `subscriber is forbidden from uploading images` |
+| T104 | Subscriber User | Can access profile settings | Normal | 200 OK | `subscriber can access their profile settings` |
+| T105 | Subscriber User | Can access password settings | Normal | 200 OK | `subscriber can access password settings` |
+| T106 | Subscriber User | Can access newsletter settings | Normal | 200 OK | `subscriber can access newsletter settings` |
+| T107 | Subscriber User | Redirected to home from dashboard | Normal | Redirect to / | `subscriber is redirected to home from the dashboard` |
+| T108 | User Model | isAdmin true | Normal | returns true | `isAdmin returns true for admin email` |
+| T109 | User Model | isAdmin false | Normal | returns false | `isAdmin returns false for non-admin email` |
+| T110 | User Model | initials full name | Normal | Two-letter string | `initials returns correct initials for full name` |
+| T111 | User Model | initials single name | Edge | One-letter string | `initials returns single initial for single name` |
+| T112 | User Model | initials triple name | Edge | First two letters | `initials handles triple names` |
+| T113 | NewsletterSubscriber | secret_key generated | Normal | Not empty after create | `secret key is auto generated on create` |
+| T114 | NewsletterSubscriber | secret_key not overridden | Normal | Preset value preserved | `secret key is not overridden if already set` |
+| T115 | NewsletterSubscriber | unsubscribe() | Normal | is_subscribed=false, unsubscribed_at set | `unsubscribe sets is subscribed to false and sets unsubscribed at` |
+| T116 | NewsletterSubscriber | subscribed() scope | Normal | Excludes unsubscribed | `subscribed scope returns only subscribed subscribers` |
+| T117 | ContactMessage | markAsRead | Normal | status=read | `markAsRead sets status to read` |
+| T118 | ContactMessage | markAsReplied | Normal | status=replied, status_changed_at set | `markAsReplied sets status to replied and sets status changed at` |
+| T119 | ContactMessage | markAsIgnored | Normal | status=ignored, status_changed_at set | `markAsIgnored sets status to ignored and sets status changed at` |
+| T120 | ContactMessage | markAsActioned | Normal | status=actioned, status_changed_at set | `markAsActioned sets status to actioned and sets status changed at` |
+| T121 | ContactMessage | new() scope | Normal | Only new messages | `new scope returns only new messages` |
+| T122 | ContactMessage | unread() scope | Normal | New and read messages | `unread scope returns new and read messages` |
+| T123 | Tag Model | createFromName new | Normal | Tag created with slug | `createFromName creates new tag with correct slug` |
+| T124 | Tag Model | createFromName idempotent | Edge | Returns existing tag | `createFromName returns existing tag if slug already exists` |
+| T125 | Tag Model | allNames alphabetical | Normal | Alphabetically sorted | `allNames returns all tag names ordered alphabetically` |
+| T126 | Tag Model | topByUsage | Normal | Sorted by post count | `topByUsage returns tags sorted by published post usage count` |
