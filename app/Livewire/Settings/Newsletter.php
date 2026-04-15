@@ -29,6 +29,15 @@ class Newsletter extends Component
     }
 
     /**
+     * Livewire lifecycle hook: called automatically when subscriptionStatus changes.
+     * Delegates to updateSubscriptionStatus so wire:change and test ->set() both work.
+     */
+    public function updatedSubscriptionStatus(): void
+    {
+        $this->updateSubscriptionStatus();
+    }
+
+    /**
      * Update the newsletter subscription status in real-time whenever the radio selection changes.
      */
     public function updateSubscriptionStatus(): void

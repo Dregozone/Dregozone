@@ -2,13 +2,23 @@
 
 use App\Models\UploadedImage;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 test('guests cannot upload images', function () {
     $this->postJson(route('admin.images.upload'), [
         'base64_data' => 'data:image/png;base64,abc123',
     ])->assertUnauthorized();
+});
+
+test('non-admin authenticated user is forbidden from uploading images', function () {
+    $user = User::factory()->create(['email' => 'user@example.com']);
+    $this->actingAs($user);
+
+    $this->postJson(route('admin.images.upload'), [
+        'base64_data' => 'data:image/png;base64,abc123',
+    ])->assertForbidden();
 });
 
 test('authenticated admin can upload a pending image', function () {

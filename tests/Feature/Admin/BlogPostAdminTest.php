@@ -4,9 +4,10 @@ use App\Livewire\Admin\BlogPostForm;
 use App\Models\BlogPost;
 use App\Models\UploadedImage;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 function blogAdminUser(): User
 {
@@ -44,7 +45,8 @@ test('blog post form updates uploaded image when editing', function () {
 
     $post = BlogPost::factory()->draft()->create();
     $original = 'data:image/png;base64,ORIGINAL';
-    $post->uploadedImage()->create(['base64_data' => $original]);
+    $image = UploadedImage::create(['imageable_type' => 'library', 'imageable_id' => 0, 'base64_data' => $original]);
+    $post->update(['image_id' => $image->id]);
 
     $updated = 'data:image/png;base64,UPDATED';
 
@@ -66,7 +68,8 @@ test('blog post form deletes uploaded image when base64 is cleared while editing
     $this->actingAs(blogAdminUser());
 
     $post = BlogPost::factory()->draft()->create();
-    $post->uploadedImage()->create(['base64_data' => 'data:image/png;base64,SOMEDATA']);
+    $image = UploadedImage::create(['imageable_type' => 'library', 'imageable_id' => 0, 'base64_data' => 'data:image/png;base64,SOMEDATA']);
+    $post->update(['image_id' => $image->id]);
 
     Livewire::test(BlogPostForm::class, ['postId' => $post->id])
         ->set('pendingImageId', null)

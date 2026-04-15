@@ -57,6 +57,11 @@ class BlogPost extends Model
         return $this->belongsTo(UploadedImage::class, 'image_id');
     }
 
+    public function uploadedImage(): BelongsTo
+    {
+        return $this->belongsTo(UploadedImage::class, 'image_id');
+    }
+
     public function viewRecords(): HasMany
     {
         return $this->hasMany(UserBlogView::class);

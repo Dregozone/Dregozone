@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ImageUploadController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailController;
 use App\Livewire\Admin\BlogPostForm;
@@ -36,7 +37,7 @@ Route::get('/privacy-policy', PrivacyPolicy::class)->name('privacy-policy');
 Route::get('/emails/unsubscribe', [EmailController::class, 'unsubscribe'])->name('emails.unsubscribe');
 
 // Admin routes (protected)
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/blog', BlogPostList::class)->name('blog.index');
     Route::get('/blog/create', BlogPostForm::class)->name('blog.create');
     Route::get('/blog/{postId}/edit', BlogPostForm::class)->name('blog.edit');
@@ -54,6 +55,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/image-converter', ImageConverter::class)->name('image-converter');
 
     Route::get('/images', ImageList::class)->name('images.index');
+    Route::post('/images/upload', [ImageUploadController::class, 'store'])->name('images.upload');
 });
 
 // Auth routes
