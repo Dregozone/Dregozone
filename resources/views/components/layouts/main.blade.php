@@ -47,7 +47,9 @@
                             <a href="{{ route('admin.blog.index') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Admin</a>
                         @endif
 
-                        {{-- <a href="{{ route('dashboard') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Dashboard</a> --}}
+                        <a href="{{ route('settings.profile') }}" class="text-stone-400 hover:text-stone-700 transition-colors" title="{{ __('Settings') }}" aria-label="{{ __('Settings') }}">
+                            <flux:icon.cog-6-tooth class="w-5 h-5" />
+                        </a>
 
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -99,6 +101,8 @@
                             <a href="{{ route('admin.blog.index') }}" @click="mobileOpen = false"
                                 class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Admin</a>
                         @endif
+                        <a href="{{ route('settings.profile') }}" @click="mobileOpen = false"
+                            class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Settings</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-stone-400 hover:text-stone-600 hover:bg-stone-50 transition-colors cursor-pointer">Logout</button>

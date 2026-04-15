@@ -171,7 +171,13 @@
             <h2>7. Newsletter Unsubscribe</h2>
             <p>
                 Every newsletter email I send contains an <strong>unsubscribe link</strong> at the bottom. Clicking
-                this link will immediately remove you from the mailing list. You can also request removal by
+                this link will immediately remove you from the mailing list.
+            </p>
+            <p>
+                If you have a registered account on this website, you can also manage your newsletter subscription
+                at any time via your
+                <a href="{{ route('settings.newsletter') }}" class="text-amber-600 hover:text-amber-700">account settings</a>
+                (Settings → Newsletter). You can also request removal by
                 <a href="{{ route('contact') }}" class="text-amber-600 hover:text-amber-700">contacting me directly</a>.
             </p>
 

@@ -8,8 +8,14 @@ test('guests are redirected to the login page', function () {
     $this->get('/dashboard')->assertRedirect('/login');
 });
 
-test('authenticated users can visit the dashboard', function () {
-    $this->actingAs($user = User::factory()->create());
+test('authenticated non-admin users are redirected to home', function () {
+    $this->actingAs(User::factory()->create(['email' => 'user@example.com']));
 
-    $this->get('/dashboard')->assertStatus(200);
+    $this->get('/dashboard')->assertRedirect('/');
+});
+
+test('authenticated admin users are redirected to admin blog index', function () {
+    $this->actingAs(User::factory()->create(['email' => 'aclearmonth@gmail.com']));
+
+    $this->get('/dashboard')->assertRedirect(route('admin.blog.index'));
 });
