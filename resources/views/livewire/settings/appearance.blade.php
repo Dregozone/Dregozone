@@ -1,4 +1,4 @@
-<section class="w-full">
+<section class="w-full md:max-w-3xl mx-auto pb-10">
     @include('partials.settings-heading')
 
     <x-settings.layout :heading="__('Appearance')" :subheading=" __('Update the appearance settings for your account')">
