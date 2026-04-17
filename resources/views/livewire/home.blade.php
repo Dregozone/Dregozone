@@ -125,9 +125,9 @@
                 </div>
             </div>
 
-            @if($featuredProjects->isNotEmpty() || $completedProjects->isNotEmpty())
+            @if($featuredProjects->isNotEmpty() /*|| $completedProjects->isNotEmpty()*/)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach($featuredProjects->merge($completedProjects)->unique('id')->take(6) as $project)
+                    @foreach($featuredProjects/*->merge($completedProjects)*/->unique('id')->take(6) as $project)
                         <div class="group bg-stone-50 rounded-2xl p-6 border border-stone-100 hover:border-stone-300 hover:shadow-sm transition-all">
                             @if($project->uploadedImage)
                                 <div class="mb-5 rounded-xl overflow-hidden bg-stone-200 aspect-video shadow-md">

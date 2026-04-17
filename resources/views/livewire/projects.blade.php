@@ -80,9 +80,9 @@
                 <h2 class="text-2xl font-black text-stone-900 tracking-tight">Completed Projects</h2>
             </div>
 
-            @if($featuredProjects->isNotEmpty() || $completedProjects->isNotEmpty())
+            @if(/*$featuredProjects->isNotEmpty() ||*/ $completedProjects->isNotEmpty())
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach($featuredProjects->merge($completedProjects)->unique('id') as $project)
+                    @foreach(/*$featuredProjects->merge(*/$completedProjects/*)*/->unique('id') as $project)
                         <div class="group bg-stone-50 rounded-2xl p-6 border border-stone-100 hover:border-stone-300 hover:shadow-sm transition-all">
                             @if($project->uploadedImage)
                                 <div class="mb-5 rounded-xl overflow-hidden bg-stone-200 aspect-video">
