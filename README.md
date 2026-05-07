@@ -22,6 +22,7 @@ Building reproducible, agentic workflows and beautifully crafted, innovative web
 
 | Project | Description |
 |--------|-------------|
+| [**Synthera-Coder**](https://github.com/Dregozone/synthera-coder) | Locally running laravel agentic coding app that uses your local Ollama models |
 | [**Gatekeeper‑AI**](https://github.com/Dregozone/gatekeeper) | A unified interface for all my projects to request AI responses from a single, managed endpoint layer |
 | [**Atlas‑Fit**](https://github.com/Dregozone/atlas-fit) | Fitness & nutrition logger with macro tracking, workout logging, and progress insights |
 | [**ExclusionZone**](https://github.com/Dregozone/ExclusionZone) | A browser‑based MMORPG set in a post‑apocalyptic world inspired by *Roadside Picnic* |
