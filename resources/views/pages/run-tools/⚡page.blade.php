@@ -49,7 +49,7 @@ new #[Layout('components.layouts.main')] class extends Component
 
         <flux:text class="mt-6 text-center text-3xl">
             @if ($requiredPace != '')
-                Required Pace <span class="font-bold">{{ $requiredPace }}</span> seconds per km
+                Required Pace <span class="font-bold">{{ $requiredPace }}</span>
             @endif
         </flux:text>
     </div>
