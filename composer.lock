@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d3d0e099dcd888484aed9dd226886645",
+    "content-hash": "1ff94a003d281d5477364bc53daf1d2f",
     "packages": [
         {
             "name": "brick/math",
@@ -440,6 +440,53 @@
                 }
             ],
             "time": "2025-10-31T18:51:33+00:00"
+        },
+        {
+            "name": "dregozone/run-tools",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Dregozone/run-tools.git",
+                "reference": "c51f1b793a1b13a3f8b3055fb1b9ee5f9f81ab93"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Dregozone/run-tools/zipball/c51f1b793a1b13a3f8b3055fb1b9ee5f9f81ab93",
+                "reference": "c51f1b793a1b13a3f8b3055fb1b9ee5f9f81ab93",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Dregozone\\RunTools\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andreas Learmonth",
+                    "email": "dregozone@googlemail.com"
+                }
+            ],
+            "description": "A simple running pace calculator package",
+            "keywords": [
+                "PACE",
+                "calculator",
+                "fitness",
+                "running",
+                "sport"
+            ],
+            "support": {
+                "issues": "https://github.com/Dregozone/run-tools/issues",
+                "source": "https://github.com/Dregozone/run-tools/tree/v1.0.0"
+            },
+            "time": "2026-05-07T12:52:37+00:00"
         },
         {
             "name": "egulias/email-validator",

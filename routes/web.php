@@ -31,6 +31,8 @@ Route::get('/blog/{post:slug}', BlogPost::class)->name('blog.post');
 Route::get('/contact', Contact::class)->name('contact');
 Route::get('/projects', Projects::class)->name('projects');
 
+Route::livewire('/run-tools', 'pages::run-tools.page')->name('run-tools');
+
 Route::get('/privacy-policy', PrivacyPolicy::class)->name('privacy-policy');
 
 // Email management routes
