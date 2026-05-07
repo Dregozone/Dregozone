@@ -6,17 +6,23 @@ use Livewire\Component;
 
 new #[Layout('components.layouts.main')] class extends Component
 {
-    public int $distanceMeters = 0;
-    public int $timeSeconds = 0;
+    public int $distanceKm = 0;
+    public int $distanceM = 0;
+    public int $timeHours = 0;
+    public int $timeMinutes = 0;
+    public int $timeSecs = 0;
     public string $paceUnit = 'km';
 
     public string $requiredPace = '';
 
     public function calculate(): void
     {
+        $totalMeters  = ($this->distanceKm * 1000) + $this->distanceM;
+        $totalSeconds = ($this->timeHours * 3600) + ($this->timeMinutes * 60) + $this->timeSecs;
+
         $this->requiredPace = PaceCalculator::calculatePace(
-            distance: $this->distanceMeters,
-            time: $this->timeSeconds,
+            distance: $totalMeters,
+            time: $totalSeconds,
             unit: $this->paceUnit
         );
     }
@@ -54,34 +60,78 @@ new #[Layout('components.layouts.main')] class extends Component
                 <fieldset class="space-y-6">
                     <legend class="sr-only">Pace calculator inputs</legend>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <flux:field>
-                            <flux:label for="distanceMeters">Distance <span class="text-stone-400 font-normal">(metres)</span></flux:label>
-                            <flux:input
-                                id="distanceMeters"
-                                wire:model="distanceMeters"
-                                wire:change="valueChanged"
-                                type="number"
-                                min="1"
-                                placeholder="e.g. 5000"
-                                aria-describedby="distance-hint"
-                            />
-                            <flux:description id="distance-hint">5 km = 5000 m, half marathon = 21 097 m</flux:description>
-                        </flux:field>
+                    <!-- Distance -->
+                    <div>
+                        <p class="text-sm font-medium text-stone-700 mb-2" id="distance-group-label">Distance</p>
+                        <div class="grid grid-cols-2 gap-4" role="group" aria-labelledby="distance-group-label">
+                            <flux:field>
+                                <flux:label for="distanceKm">Kilometres</flux:label>
+                                <flux:input
+                                    id="distanceKm"
+                                    wire:model="distanceKm"
+                                    wire:change="valueChanged"
+                                    type="number"
+                                    min="0"
+                                    placeholder="0"
+                                />
+                            </flux:field>
+                            <flux:field>
+                                <flux:label for="distanceM">Metres</flux:label>
+                                <flux:input
+                                    id="distanceM"
+                                    wire:model="distanceM"
+                                    wire:change="valueChanged"
+                                    type="number"
+                                    min="0"
+                                    max="999"
+                                    placeholder="0"
+                                />
+                            </flux:field>
+                        </div>
+                        <p class="mt-1.5 text-xs text-stone-400">e.g. 2 km + 400 m = 2.4 km &nbsp;|&nbsp; half marathon = 21 km + 97 m</p>
+                    </div>
 
-                        <flux:field>
-                            <flux:label for="timeSeconds">Time <span class="text-stone-400 font-normal">(seconds)</span></flux:label>
-                            <flux:input
-                                id="timeSeconds"
-                                wire:model="timeSeconds"
-                                wire:change="valueChanged"
-                                type="number"
-                                min="1"
-                                placeholder="e.g. 1800"
-                                aria-describedby="time-hint"
-                            />
-                            <flux:description id="time-hint">30 min = 1800 s, 1 hour = 3600 s</flux:description>
-                        </flux:field>
+                    <!-- Time -->
+                    <div>
+                        <p class="text-sm font-medium text-stone-700 mb-2" id="time-group-label">Time</p>
+                        <div class="grid grid-cols-3 gap-4" role="group" aria-labelledby="time-group-label">
+                            <flux:field>
+                                <flux:label for="timeHours">Hours</flux:label>
+                                <flux:input
+                                    id="timeHours"
+                                    wire:model="timeHours"
+                                    wire:change="valueChanged"
+                                    type="number"
+                                    min="0"
+                                    placeholder="0"
+                                />
+                            </flux:field>
+                            <flux:field>
+                                <flux:label for="timeMinutes">Minutes</flux:label>
+                                <flux:input
+                                    id="timeMinutes"
+                                    wire:model="timeMinutes"
+                                    wire:change="valueChanged"
+                                    type="number"
+                                    min="0"
+                                    max="59"
+                                    placeholder="0"
+                                />
+                            </flux:field>
+                            <flux:field>
+                                <flux:label for="timeSecs">Seconds</flux:label>
+                                <flux:input
+                                    id="timeSecs"
+                                    wire:model="timeSecs"
+                                    wire:change="valueChanged"
+                                    type="number"
+                                    min="0"
+                                    max="59"
+                                    placeholder="0"
+                                />
+                            </flux:field>
+                        </div>
+                        <p class="mt-1.5 text-xs text-stone-400">e.g. 1 hr + 35 min + 30 sec</p>
                     </div>
 
                     <flux:field>
