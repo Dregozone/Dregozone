@@ -43,11 +43,17 @@ class ToolList extends Component
         }
 
         switch ($this->sortBy) {
-            case 'latest': $query->orderBy('created_at', 'desc');
+            case 'latest': {
+                $query->orderBy('created_at', 'desc');
                 break;
-            case 'title':  $query->orderBy('title', 'asc');
+            }
+            case 'title': {
+                $query->orderBy('title', 'asc');
                 break;
-            default:       $query->orderBy('order', 'asc');
+            }
+            default: {
+                $query->orderBy('order', 'asc');
+            }
         }
 
         return view('livewire.admin.tool-list', ['tools' => $query->with('uploadedImage')->paginate(15)]);
