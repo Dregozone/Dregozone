@@ -3,9 +3,10 @@
 use App\Livewire\Settings\Newsletter;
 use App\Models\NewsletterSubscriber;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 test('newsletter settings page is displayed', function () {
     $this->actingAs(User::factory()->create());

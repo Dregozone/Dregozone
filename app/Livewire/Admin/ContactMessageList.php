@@ -36,7 +36,7 @@ class ContactMessageList extends Component
             default => null,
         };
 
-        session()->flash('message', 'Status updated to "' . $newStatus . '".');
+        session()->flash('message', 'Status updated to "'.$newStatus.'".');
     }
 
     public function render()
@@ -45,9 +45,9 @@ class ContactMessageList extends Component
 
         if ($this->search) {
             $query->where(function ($q) {
-                $q->where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('email', 'like', '%' . $this->search . '%')
-                    ->orWhere('subject', 'like', '%' . $this->search . '%');
+                $q->where('name', 'like', '%'.$this->search.'%')
+                    ->orWhere('email', 'like', '%'.$this->search.'%')
+                    ->orWhere('subject', 'like', '%'.$this->search.'%');
             });
         }
 

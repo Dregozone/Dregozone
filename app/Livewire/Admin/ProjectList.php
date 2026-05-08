@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Project;
+use Illuminate\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -39,7 +40,7 @@ class ProjectList extends Component
         session()->flash('message', 'Project updated!');
     }
 
-    public function render(): \Illuminate\View\View
+    public function render(): View
     {
         $query = Project::query();
 

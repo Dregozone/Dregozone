@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\UploadedImage;
+use Illuminate\View\View;
 use Livewire\Attributes\Modelable;
 use Livewire\Component;
 
@@ -32,7 +33,7 @@ class ImagePicker extends Component
         $this->selectedImageId = null;
     }
 
-    public function render(): \Illuminate\View\View
+    public function render(): View
     {
         $images = $this->open
             ? UploadedImage::library()

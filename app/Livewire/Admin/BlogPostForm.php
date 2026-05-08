@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use App\Models\BlogPost;
 use App\Models\Tag;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -107,7 +108,7 @@ class BlogPostForm extends Component
         $this->redirect(route('admin.blog.index'), navigate: true);
     }
 
-    public function render(): \Illuminate\View\View
+    public function render(): View
     {
         return view('livewire.admin.blog-post-form');
     }

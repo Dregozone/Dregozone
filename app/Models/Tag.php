@@ -59,7 +59,7 @@ class Tag extends Model
         }
 
         return $top->map(fn ($count, $name) => (object) [
-            'name'  => $name,
+            'name' => $name,
             'count' => $count,
         ])->values();
     }

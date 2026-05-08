@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\UploadedImage;
+use Illuminate\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -76,7 +77,7 @@ class ImageList extends Component
         session()->flash('message', 'Image deleted.');
     }
 
-    public function render(): \Illuminate\View\View
+    public function render(): View
     {
         $images = UploadedImage::library()
             ->when($this->search, fn ($q) => $q->search($this->search))

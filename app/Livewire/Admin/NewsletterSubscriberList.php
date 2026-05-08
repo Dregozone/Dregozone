@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\NewsletterSubscriber;
+use Illuminate\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -28,7 +29,7 @@ class NewsletterSubscriberList extends Component
         $this->resetPage();
     }
 
-    public function render(): \Illuminate\View\View
+    public function render(): View
     {
         $threeMonthsAgo = now()->subMonths(3);
 
@@ -46,7 +47,7 @@ class NewsletterSubscriberList extends Component
         $query = NewsletterSubscriber::query();
 
         if ($this->search) {
-            $query->where('email', 'like', '%' . $this->search . '%');
+            $query->where('email', 'like', '%'.$this->search.'%');
         }
 
         if ($this->status === 'subscribed') {

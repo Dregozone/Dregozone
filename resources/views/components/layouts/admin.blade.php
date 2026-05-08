@@ -1,5 +1,53 @@
 @props(['title' => 'Admin'])
 
+@php
+    $primaryNavigation = [
+        [
+            'label' => 'Blog Posts',
+            'route' => 'admin.blog.index',
+            'pattern' => 'admin.blog.*',
+            'icon' => 'document-text',
+        ],
+        [
+            'label' => 'Projects',
+            'route' => 'admin.projects.index',
+            'pattern' => 'admin.projects.*',
+            'icon' => 'briefcase',
+        ],
+        [
+            'label' => 'Contact Messages',
+            'route' => 'admin.contact-messages.index',
+            'pattern' => 'admin.contact-messages.*',
+            'icon' => 'envelope',
+        ],
+        [
+            'label' => 'Blog Engagement',
+            'route' => 'admin.blog-engagement.index',
+            'pattern' => 'admin.blog-engagement.*',
+            'icon' => 'chart-bar',
+        ],
+    ];
+
+    $secondaryNavigation = [
+        [
+            'label' => 'Newsletter',
+            'route' => 'admin.newsletter-subscribers.index',
+            'pattern' => 'admin.newsletter-subscribers.*',
+            'icon' => 'user-group',
+        ],
+        [
+            'label' => 'Images',
+            'route' => 'admin.images.index',
+            'pattern' => 'admin.images.*',
+            'icon' => 'photo',
+        ],
+    ];
+
+    $secondaryNavigationActive = collect($secondaryNavigation)->contains(
+        fn (array $item): bool => request()->routeIs($item['pattern'])
+    );
+@endphp
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 
@@ -25,60 +73,97 @@
         <nav class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700"
             x-data="{ open: false }">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-16">
-                    <div class="flex">
-                        <div class="flex-shrink-0 flex items-center">
-                            <a href="{{ route('home') }}" class="text-2xl font-bold text-gray-900 dark:text-white">
+                <div class="flex h-16 items-center gap-4">
+                    <div class="flex min-w-0 items-center gap-4">
+                        <a href="{{ route('admin.blog.index') }}" wire:navigate class="flex items-center gap-4 min-w-0">
+                            <span class="truncate text-2xl font-bold text-gray-900 dark:text-white">
                                 <span class="text-amber-500">Anders</span>Learmonth
-                            </a>
-                            <span class="ml-4 text-sm text-gray-500 dark:text-gray-400">Admin</span>
-                        </div>
-                        <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                            <a href="{{ route('admin.blog.index') }}"
-                                class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium {{ request()->routeIs('admin.blog.*') ? 'border-blue-500 text-gray-900 dark:text-white' : '' }}">
-                                Blog Posts
-                            </a>
-                            <a href="{{ route('admin.projects.index') }}"
-                                class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium {{ request()->routeIs('admin.projects.*') ? 'border-blue-500 text-gray-900 dark:text-white' : '' }}">
-                                Projects
-                            </a>
-                            <a href="{{ route('admin.contact-messages.index') }}"
-                                class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium {{ request()->routeIs('admin.contact-messages.*') ? 'border-blue-500 text-gray-900 dark:text-white' : '' }}">
-                                Contact Messages
-                            </a>
-                            <a href="{{ route('admin.newsletter-subscribers.index') }}"
-                                class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium {{ request()->routeIs('admin.newsletter-subscribers.*') ? 'border-blue-500 text-gray-900 dark:text-white' : '' }}">
-                                Newsletter
-                            </a>
-                            {{-- <a href="{{ route('admin.image-converter') }}"
-                                class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium {{ request()->routeIs('admin.image-converter') ? 'border-blue-500 text-gray-900 dark:text-white' : '' }}">
-                                Image Converter
-                            </a> --}}
-                            <a href="{{ route('admin.images.index') }}"
-                                class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium {{ request()->routeIs('admin.images.*') ? 'border-blue-500 text-gray-900 dark:text-white' : '' }}">
-                                Images
-                            </a>
-                            <a href="{{ route('home') }}"
-                                class="border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                                View Site
-                            </a>
-                        </div>
+                            </span>
+                            <span class="hidden rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300 lg:inline-flex">
+                                Admin
+                            </span>
+                        </a>
+
+                        <div class="hidden h-8 w-px bg-gray-200 dark:bg-gray-700 lg:block"></div>
+
+                        <flux:navbar class="hidden lg:flex lg:items-center lg:gap-1">
+                            @foreach ($primaryNavigation as $item)
+                                <flux:tooltip :content="$item['label']" position="bottom">
+                                    <flux:navbar.item
+                                        class="h-10 [&>div>svg]:size-5"
+                                        :href="route($item['route'])"
+                                        :current="request()->routeIs($item['pattern'])"
+                                        :label="$item['label']"
+                                        icon="{{ $item['icon'] }}"
+                                        wire:navigate
+                                    />
+                                </flux:tooltip>
+                            @endforeach
+                        </flux:navbar>
                     </div>
-                    <div class="hidden sm:ml-6 sm:flex sm:items-center">
-                        <div class="ml-3 relative">
-                            <div class="flex items-center space-x-4">
-                                <span class="text-sm text-gray-500 dark:text-gray-300">
-                                    Welcome, {{ auth()->user()->name }}
-                                </span>
-                                <form method="POST" action="{{ route('logout') }}">
+
+                    <div class="hidden flex-1 items-center justify-end gap-2 sm:flex">
+                        <flux:dropdown class="max-lg:hidden" position="bottom" align="end">
+                            <flux:button variant="{{ $secondaryNavigationActive ? 'primary' : 'ghost' }}" icon="ellipsis-horizontal">
+                                More
+                            </flux:button>
+
+                            <flux:menu>
+                                @foreach ($secondaryNavigation as $item)
+                                    <flux:menu.item :href="route($item['route'])" icon="{{ $item['icon'] }}" wire:navigate>
+                                        {{ $item['label'] }}
+                                    </flux:menu.item>
+                                @endforeach
+
+                                <flux:menu.separator />
+
+                                <flux:menu.item :href="route('home')" icon="arrow-top-right-on-square" wire:navigate>
+                                    View Site
+                                </flux:menu.item>
+                            </flux:menu>
+                        </flux:dropdown>
+
+                        <flux:tooltip content="View Site" position="bottom">
+                            <flux:navbar.item
+                                class="hidden h-10 xl:flex [&>div>svg]:size-5"
+                                :href="route('home')"
+                                icon="arrow-top-right-on-square"
+                                label="View Site"
+                                wire:navigate
+                            />
+                        </flux:tooltip>
+
+                        <flux:dropdown position="bottom" align="end">
+                            <flux:profile class="cursor-pointer" :initials="auth()->user()->initials()" />
+
+                            <flux:menu>
+                                <flux:menu.radio.group>
+                                    <div class="p-0 text-sm font-normal">
+                                        <div class="flex items-center gap-3 px-1 py-1.5 text-start text-sm">
+                                            <span class="relative flex h-9 w-9 shrink-0 overflow-hidden rounded-xl">
+                                                <span class="flex h-full w-full items-center justify-center rounded-xl bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
+                                                    {{ auth()->user()->initials() }}
+                                                </span>
+                                            </span>
+
+                                            <div class="grid flex-1 text-start text-sm leading-tight">
+                                                <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
+                                                <span class="truncate text-xs text-gray-500 dark:text-gray-400">{{ auth()->user()->email }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </flux:menu.radio.group>
+
+                                <flux:menu.separator />
+
+                                <form method="POST" action="{{ route('logout') }}" class="w-full">
                                     @csrf
-                                    <button type="submit"
-                                        class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 text-sm font-medium">
+                                    <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">
                                         Logout
-                                    </button>
+                                    </flux:menu.item>
                                 </form>
-                            </div>
-                        </div>
+                            </flux:menu>
+                        </flux:dropdown>
                     </div>
 
                     <!-- Mobile hamburger button -->
@@ -108,18 +193,27 @@
             <div x-show="open" x-transition id="mobile-menu" class="sm:hidden">
                 <div class="pt-2 pb-3 space-y-1 border-t border-gray-200 dark:border-gray-700">
                     <a href="{{ route('admin.blog.index') }}"
+                        @click="open = false"
                         class="block pl-3 pr-4 py-2 text-base font-medium border-l-4 {{ request()->routeIs('admin.blog.*') ? 'border-blue-500 text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20' : 'border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200' }}">
                         Blog Posts
                     </a>
                     <a href="{{ route('admin.projects.index') }}"
+                        @click="open = false"
                         class="block pl-3 pr-4 py-2 text-base font-medium border-l-4 {{ request()->routeIs('admin.projects.*') ? 'border-blue-500 text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20' : 'border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200' }}">
                         Projects
                     </a>
                     <a href="{{ route('admin.contact-messages.index') }}"
+                        @click="open = false"
                         class="block pl-3 pr-4 py-2 text-base font-medium border-l-4 {{ request()->routeIs('admin.contact-messages.*') ? 'border-blue-500 text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20' : 'border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200' }}">
                         Contact Messages
                     </a>
+                    <a href="{{ route('admin.blog-engagement.index') }}"
+                        @click="open = false"
+                        class="block pl-3 pr-4 py-2 text-base font-medium border-l-4 {{ request()->routeIs('admin.blog-engagement.*') ? 'border-blue-500 text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20' : 'border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200' }}">
+                        Blog Engagement
+                    </a>
                     <a href="{{ route('admin.newsletter-subscribers.index') }}"
+                        @click="open = false"
                         class="block pl-3 pr-4 py-2 text-base font-medium border-l-4 {{ request()->routeIs('admin.newsletter-subscribers.*') ? 'border-blue-500 text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20' : 'border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200' }}">
                         Newsletter
                     </a>
@@ -128,10 +222,12 @@
                         Image Converter
                     </a> --}}
                     <a href="{{ route('admin.images.index') }}"
+                        @click="open = false"
                         class="block pl-3 pr-4 py-2 text-base font-medium border-l-4 {{ request()->routeIs('admin.images.*') ? 'border-blue-500 text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20' : 'border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200' }}">
                         Images
                     </a>
                     <a href="{{ route('home') }}"
+                        @click="open = false"
                         class="block pl-3 pr-4 py-2 text-base font-medium border-l-4 border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200">
                         View Site
                     </a>

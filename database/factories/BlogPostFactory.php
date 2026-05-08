@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\BlogPost;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\BlogPost>
+ * @extends Factory<BlogPost>
  */
 class BlogPostFactory extends Factory
 {
@@ -20,7 +22,7 @@ class BlogPostFactory extends Factory
 
         return [
             'title' => $title,
-            'slug' => \Illuminate\Support\Str::slug($title).'-'.$this->faker->unique()->numberBetween(1, 99999),
+            'slug' => Str::slug($title).'-'.$this->faker->unique()->numberBetween(1, 99999),
             'excerpt' => $this->faker->paragraph(2),
             'content' => '<p>'.implode('</p><p>', $this->faker->paragraphs(3)).'</p>',
             'featured_image' => null,

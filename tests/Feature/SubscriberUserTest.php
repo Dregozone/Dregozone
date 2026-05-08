@@ -109,6 +109,14 @@ test('subscriber is forbidden from admin contact messages', function () {
     $this->get('/admin/contact-messages')->assertForbidden();
 });
 
+test('subscriber is forbidden from admin blog engagement', function () {
+    /** @var User $user */
+    $user = User::factory()->create(['email' => 'subscriber@example.com']);
+    $this->actingAs($user);
+
+    $this->get('/admin/blog-engagement')->assertForbidden();
+});
+
 test('subscriber is forbidden from admin newsletter subscribers', function () {
     $user = User::factory()->create(['email' => 'subscriber@example.com']);
     $this->actingAs($user);

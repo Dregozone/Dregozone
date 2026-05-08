@@ -6,9 +6,10 @@ use App\Models\BlogPost;
 use App\Models\User;
 use App\Models\UserBlogRead;
 use App\Models\UserBlogView;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 test('viewing a blog post as authenticated user creates a view record', function () {
     $user = User::factory()->create();

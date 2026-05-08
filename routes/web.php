@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\ImageUploadController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailController;
+use App\Livewire\Admin\BlogEngagement;
 use App\Livewire\Admin\BlogPostForm;
 use App\Livewire\Admin\BlogPostList;
 use App\Livewire\Admin\BlogPostPreview;
@@ -44,6 +45,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/blog/create', BlogPostForm::class)->name('blog.create');
     Route::get('/blog/{postId}/edit', BlogPostForm::class)->name('blog.edit');
     Route::get('/blog/{postId}/preview', BlogPostPreview::class)->name('blog.preview');
+    Route::get('/blog-engagement', BlogEngagement::class)->name('blog-engagement.index');
 
     Route::get('/projects', ProjectList::class)->name('projects.index');
     Route::get('/projects/create', ProjectForm::class)->name('projects.create');

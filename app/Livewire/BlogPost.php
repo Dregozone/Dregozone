@@ -100,4 +100,3 @@ class BlogPost extends Component
         ]);
     }
 }
-

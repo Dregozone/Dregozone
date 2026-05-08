@@ -42,8 +42,8 @@ return new class extends Migration
 
         DB::table('tags')->insertOrIgnore(
             array_map(fn (string $name) => [
-                'name'       => $name,
-                'slug'       => Str::slug($name),
+                'name' => $name,
+                'slug' => Str::slug($name),
                 'created_at' => $now,
                 'updated_at' => $now,
             ], $tags)

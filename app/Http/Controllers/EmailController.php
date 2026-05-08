@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\NewsletterSubscriber;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class EmailController extends Controller
@@ -43,7 +44,7 @@ class EmailController extends Controller
         ]);
     }
 
-    public function exportActiveSubscribers(): \Illuminate\Http\JsonResponse
+    public function exportActiveSubscribers(): JsonResponse
     {
         $emails = NewsletterSubscriber::where('is_subscribed', true)
             ->orderBy('subscribed_at', 'desc')

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\ContactMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -12,7 +13,7 @@ Route::get('/{apiKey}/contactMessages', function (string $apiKey) {
         return response()->json(['message' => 'Unauthorized'], 401);
     }
 
-    $contactMessages = \App\Models\ContactMessage::query()
+    $contactMessages = ContactMessage::query()
         ->whereNotIn('status', ['ignored', 'actioned', 'replied'])
         ->latest()
         ->get();
