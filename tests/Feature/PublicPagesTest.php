@@ -134,3 +134,26 @@ test('contact page renders', function () {
 test('privacy policy page renders', function () {
     $this->get('/privacy-policy')->assertSuccessful();
 });
+
+test('tools page renders', function () {
+    $this->get('/tools')->assertSuccessful();
+});
+
+test('tools page shows tools from database', function () {
+    \App\Models\Tool::factory()->create(['title' => 'Running Pace Calculator', 'url' => '/run-tools']);
+
+    Livewire::test(\App\Livewire\Tools::class)
+        ->assertSee('Running Pace Calculator');
+});
+
+test('tools page shows empty state when no tools exist', function () {
+    Livewire::test(\App\Livewire\Tools::class)
+        ->assertSee('Tools coming soon');
+});
+
+test('home page displays tools section', function () {
+    \App\Models\Tool::factory()->create(['title' => 'My Handy Tool', 'url' => '/my-tool']);
+
+    Livewire::test(\App\Livewire\Home::class)
+        ->assertSee('My Handy Tool');
+});

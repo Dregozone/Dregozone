@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\BlogPost;
 use App\Models\Project;
 use App\Models\Tag;
+use App\Models\Tool;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -19,6 +20,7 @@ class Home extends Component
         $completedProjects = Project::completed()->with('uploadedImage')->take(6)->get();
         $inProgressProjects = Project::inProgress()->take(3)->get();
         $topTags = Tag::topByUsage(10);
+        $tools = Tool::ordered()->with('uploadedImage')->take(3)->get();
 
         $blogPostQuery = BlogPost::featured()->with('image');
 
@@ -36,6 +38,7 @@ class Home extends Component
             'completedProjects' => $completedProjects,
             'inProgressProjects' => $inProgressProjects,
             'topTags' => $topTags,
+            'tools' => $tools,
         ]);
     }
 }

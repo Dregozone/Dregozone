@@ -13,12 +13,15 @@ use App\Livewire\Admin\ImageList;
 use App\Livewire\Admin\NewsletterSubscriberList;
 use App\Livewire\Admin\ProjectForm;
 use App\Livewire\Admin\ProjectList;
+use App\Livewire\Admin\ToolForm;
+use App\Livewire\Admin\ToolList;
 use App\Livewire\Blog;
 use App\Livewire\BlogPost;
 use App\Livewire\Contact;
 use App\Livewire\Home;
 use App\Livewire\PrivacyPolicy;
 use App\Livewire\Projects;
+use App\Livewire\Tools;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Newsletter;
 use App\Livewire\Settings\Password;
@@ -31,6 +34,7 @@ Route::get('/blog', Blog::class)->name('blog');
 Route::get('/blog/{post:slug}', BlogPost::class)->name('blog.post');
 Route::get('/contact', Contact::class)->name('contact');
 Route::get('/projects', Projects::class)->name('projects');
+Route::get('/tools', Tools::class)->name('tools');
 
 Route::livewire('/run-tools', 'pages::run-tools.page')->name('run-tools');
 
@@ -50,6 +54,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/projects', ProjectList::class)->name('projects.index');
     Route::get('/projects/create', ProjectForm::class)->name('projects.create');
     Route::get('/projects/{projectId}/edit', ProjectForm::class)->name('projects.edit');
+
+    Route::get('/tools', ToolList::class)->name('tools.index');
+    Route::get('/tools/create', ToolForm::class)->name('tools.create');
+    Route::get('/tools/{toolId}/edit', ToolForm::class)->name('tools.edit');
 
     Route::get('/contact-messages', ContactMessageList::class)->name('contact-messages.index');
 

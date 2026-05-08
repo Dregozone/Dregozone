@@ -15,6 +15,12 @@
             'icon' => 'briefcase',
         ],
         [
+            'label' => 'Tools',
+            'route' => 'admin.tools.index',
+            'pattern' => 'admin.tools.*',
+            'icon' => 'wrench-screwdriver',
+        ],
+        [
             'label' => 'Contact Messages',
             'route' => 'admin.contact-messages.index',
             'pattern' => 'admin.contact-messages.*',
@@ -201,6 +207,11 @@
                         @click="open = false"
                         class="block pl-3 pr-4 py-2 text-base font-medium border-l-4 {{ request()->routeIs('admin.projects.*') ? 'border-blue-500 text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20' : 'border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200' }}">
                         Projects
+                    </a>
+                    <a href="{{ route('admin.tools.index') }}"
+                        @click="open = false"
+                        class="block pl-3 pr-4 py-2 text-base font-medium border-l-4 {{ request()->routeIs('admin.tools.*') ? 'border-blue-500 text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20' : 'border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200' }}">
+                        Tools
                     </a>
                     <a href="{{ route('admin.contact-messages.index') }}"
                         @click="open = false"

@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             BlogPostSeeder::class,
             ProjectSeeder::class,
+            ToolSeeder::class,
         ]);
     }
 }
