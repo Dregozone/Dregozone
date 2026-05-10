@@ -3,7 +3,7 @@
         <div>
             <flux:heading size="xl">Blog Engagement</flux:heading>
             <flux:text class="mt-2 max-w-3xl text-sm sm:text-base">
-                Review every authenticated view and read across your posts. Filters apply first, then each table sorts the full result set before showing the top 25 records.
+                Review every view and read across your posts. Filters apply first, then each table sorts the full result set before showing the top 25 records.
             </flux:text>
         </div>
 
@@ -213,8 +213,8 @@
                             @foreach ($viewRecords as $viewRecord)
                                 <tr class="transition hover:bg-gray-50 dark:hover:bg-gray-700/40">
                                     <td class="px-6 py-4 align-top">
-                                        <div class="text-sm font-semibold text-gray-900 dark:text-white">{{ $viewRecord->user->name }}</div>
-                                        <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ $viewRecord->user->email }}</div>
+                                        <div class="text-sm font-semibold text-gray-900 dark:text-white">{{ $viewRecord->user?->name ?? 'Guest' }}</div>
+                                        <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ $viewRecord->user?->email ?? '—' }}</div>
                                     </td>
                                     <td class="px-6 py-4 align-top">
                                         <div class="text-sm font-semibold text-gray-900 dark:text-white">{{ $viewRecord->blogPost->title }}</div>
@@ -234,7 +234,7 @@
             @else
                 <div class="px-6 py-14 text-center">
                     <p class="text-sm font-medium text-gray-900 dark:text-white">No view activity found</p>
-                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Try broadening your filters or wait for more authenticated readers to browse the blog.</p>
+                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Try broadening your filters or wait for more readers to browse the blog.</p>
                 </div>
             @endif
         </section>

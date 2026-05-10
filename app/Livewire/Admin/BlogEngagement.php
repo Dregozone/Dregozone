@@ -106,7 +106,7 @@ class BlogEngagement extends Component
 
         return $query
             ->select($table.'.*')
-            ->join('users', 'users.id', '=', $table.'.user_id')
+            ->leftJoin('users', 'users.id', '=', $table.'.user_id')
             ->join('blog_posts', 'blog_posts.id', '=', $table.'.blog_post_id')
             ->with([
                 'user:id,name,email',

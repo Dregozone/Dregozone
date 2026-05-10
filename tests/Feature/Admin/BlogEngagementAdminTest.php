@@ -28,6 +28,18 @@ function createBlogView(?User $user = null, ?BlogPost $post = null, array $attri
     ], $attributes));
 }
 
+function createGuestBlogView(?BlogPost $post = null, array $attributes = []): UserBlogView
+{
+    $post ??= BlogPost::factory()->published()->create();
+
+    return UserBlogView::query()->forceCreate(array_merge([
+        'user_id' => null,
+        'blog_post_id' => $post->id,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ], $attributes));
+}
+
 function createBlogRead(?User $user = null, ?BlogPost $post = null, array $attributes = []): UserBlogRead
 {
     $user ??= User::factory()->create();
@@ -148,4 +160,51 @@ test('read sorting happens before the top 25 limit is applied', function () {
     Livewire::test(BlogEngagement::class)
         ->call('sortReadsBy', 'reader')
         ->assertSee('Amber Reader');
+});
+
+test('guest views are recorded and appear in the view activity table', function () {
+    $this->actingAs(blogEngagementAdminUser());
+
+    $post = BlogPost::factory()->published()->create(['title' => 'Popular Post']);
+    createGuestBlogView($post);
+
+    Livewire::test(BlogEngagement::class)
+        ->assertSee('Guest')
+        ->assertViewHas('viewStats', fn (array $stats): bool => $stats['total'] === 1);
+});
+
+test('guest views are counted in total views but not in unique viewers', function () {
+    $this->actingAs(blogEngagementAdminUser());
+
+    $post = BlogPost::factory()->published()->create();
+    $user = User::factory()->create();
+
+    createBlogView($user, $post);
+    createGuestBlogView($post);
+    createGuestBlogView($post);
+
+    Livewire::test(BlogEngagement::class)
+        ->assertViewHas('viewStats', fn (array $stats): bool => $stats['total'] === 3 && $stats['users'] === 1);
+});
+
+test('guest views appear when filtering by post', function () {
+    $this->actingAs(blogEngagementAdminUser());
+
+    $post = BlogPost::factory()->published()->create();
+    createGuestBlogView($post);
+
+    Livewire::test(BlogEngagement::class)
+        ->set('postId', (string) $post->id)
+        ->assertViewHas('viewStats', fn (array $stats): bool => $stats['total'] === 1);
+});
+
+test('guest views appear when searching by post title', function () {
+    $this->actingAs(blogEngagementAdminUser());
+
+    $post = BlogPost::factory()->published()->create(['title' => 'Searchable Title']);
+    createGuestBlogView($post);
+
+    Livewire::test(BlogEngagement::class)
+        ->set('search', 'Searchable Title')
+        ->assertSee('Guest');
 });
