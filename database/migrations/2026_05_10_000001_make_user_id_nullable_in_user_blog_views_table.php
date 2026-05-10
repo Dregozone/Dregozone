@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('user_blog_views', function (Blueprint $table) {
-            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete()->change();
+            $table->dropForeign(['user_id']);
+            $table->unsignedBigInteger('user_id')->nullable()->change();
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
         });
     }
 
@@ -22,7 +24,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('user_blog_views', function (Blueprint $table) {
-            $table->foreignId('user_id')->nullable(false)->constrained()->cascadeOnDelete()->change();
+            $table->dropForeign(['user_id']);
+            $table->unsignedBigInteger('user_id')->nullable(false)->change();
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
         });
     }
 };
