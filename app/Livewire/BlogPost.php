@@ -24,13 +24,13 @@ class BlogPost extends Component
         // Increment view count
         $this->post->increment('views');
 
-        // Record authenticated user view
-        if (auth()->check()) {
-            UserBlogView::create([
-                'user_id' => auth()->id(),
-                'blog_post_id' => $this->post->id,
-            ]);
+        // Record view for all visitors (user_id is null for guests)
+        UserBlogView::create([
+            'user_id' => auth()->id(),
+            'blog_post_id' => $this->post->id,
+        ]);
 
+        if (auth()->check()) {
             $read = UserBlogRead::where('user_id', auth()->id())
                 ->where('blog_post_id', $this->post->id)
                 ->first();
