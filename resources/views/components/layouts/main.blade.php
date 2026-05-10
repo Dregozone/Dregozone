@@ -43,6 +43,7 @@
                     <a href="{{ route('home') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Home</a>
                     <a href="{{ route('blog') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Blog</a>
                     <a href="{{ route('projects') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Projects</a>
+                    <a href="{{ route('tools') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Tools</a>
                     <a href="{{ route('contact') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Contact</a>
                 </nav>
 
@@ -101,6 +102,8 @@
                     class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Blog</a>
                 <a href="{{ route('projects') }}" @click="mobileOpen = false"
                     class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Projects</a>
+                <a href="{{ route('tools') }}" @click="mobileOpen = false"
+                    class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Tools</a>
                 <a href="{{ route('contact') }}" @click="mobileOpen = false"
                     class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Contact</a>
 
@@ -171,6 +174,7 @@
                         <li><a href="{{ route('home') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Home</a></li>
                         <li><a href="{{ route('blog') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Blog</a></li>
                         <li><a href="{{ route('projects') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Projects</a></li>
+                        <li><a href="{{ route('tools') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Tools</a></li>
                         <li><a href="{{ route('contact') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Contact</a></li>
                         <li><a href="{{ route('privacy-policy') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Privacy Policy</a></li>
                     </ul>
