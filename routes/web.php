@@ -21,11 +21,11 @@ use App\Livewire\Contact;
 use App\Livewire\Home;
 use App\Livewire\PrivacyPolicy;
 use App\Livewire\Projects;
-use App\Livewire\Tools;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Newsletter;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
+use App\Livewire\Tools;
 use Illuminate\Support\Facades\Route;
 
 // Public routes

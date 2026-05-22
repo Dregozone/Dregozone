@@ -20,7 +20,7 @@ class ToolFactory extends Factory
         return [
             'title' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph(2),
-            'url' => '/' . $this->faker->slug(2),
+            'url' => '/'.$this->faker->slug(2),
             'image_id' => null,
             'order' => $this->faker->numberBetween(1, 10),
         ];

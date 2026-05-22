@@ -62,6 +62,11 @@
                 and accessible only to me.
             </p>
 
+            <p>
+                The personal data described above may also be included in operational database backups created for
+                disaster recovery, service continuity, and restoration of the website after an incident.
+            </p>
+
             <h3>c) Technical / Usage Data</h3>
             <ul>
                 <li><strong>Blog post view counts</strong> — individual page views are counted anonymously to understand which content is most popular. No personally identifiable information is stored alongside view counts.</li>
@@ -91,6 +96,10 @@
                         <td>Anonymous page view counting</td>
                         <td>Legitimate interests (Art. 6(1)(f))</td>
                     </tr>
+                    <tr>
+                        <td>Maintaining operational backups and restoring the website after an incident</td>
+                        <td>Legitimate interests (Art. 6(1)(f))</td>
+                    </tr>
                 </tbody>
             </table>
 
@@ -100,6 +109,7 @@
             <ul>
                 <li><strong>Newsletter subscribers</strong> — your email address is retained while your subscription is active. If you unsubscribe, your record is marked inactive and will be deleted within 30 days of a deletion request.</li>
                 <li><strong>Contact messages</strong> — kept for up to 2 years from receipt, or until the enquiry is fully resolved and no longer required.</li>
+                <li><strong>Operational database backups</strong> — retained on a rolling schedule for disaster recovery purposes: all backups are kept for 7 days, daily backups for 16 days, weekly backups for 8 weeks, monthly backups for 4 months, and yearly backups for up to 2 years. Older backups may be deleted sooner where storage limits require cleanup.</li>
             </ul>
 
             <hr class="border-stone-200 my-10">
@@ -189,15 +199,23 @@
                 or loss. The website is served over HTTPS. Access to stored contact messages and subscriber data is
                 restricted to authenticated administrators only.
             </p>
+            <p>
+                Operational database backups are stored on restricted server storage with access limited to authorised
+                administrators. When a backup archive is emailed for continuity or disaster recovery purposes, it is
+                sent only to a designated administrator address, should be stored securely once archived, and should
+                be deleted from the mailbox after archival. Where configured, backup archives may also be protected
+                with archive encryption.
+            </p>
 
             <hr class="border-stone-200 my-10">
 
             <h2>9. Third Parties</h2>
             <p>
-                I do not sell, trade, or otherwise transfer your personal data to third parties. Your data may be
-                processed by the hosting provider infrastructure in the course of delivering the website. The hosting
-                provider acts as a data processor and is contractually bound to handle your data in accordance with
-                applicable data protection law.
+                I do not sell, trade, or otherwise transfer your personal data for marketing purposes. Your data may
+                be processed by service providers that support the operation of the website, including the hosting
+                provider and the transactional email provider used to deliver site emails and operational backup
+                messages. These providers act as data processors and are required to handle personal data in
+                accordance with applicable data protection law.
             </p>
 
             <hr class="border-stone-200 my-10">
