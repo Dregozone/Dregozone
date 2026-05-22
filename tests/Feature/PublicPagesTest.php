@@ -2,7 +2,10 @@
 
 use App\Livewire\Blog;
 use App\Livewire\BlogPost as BlogPostComponent;
+use App\Livewire\Home;
+use App\Livewire\Tools;
 use App\Models\BlogPost;
+use App\Models\Tool;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 
@@ -140,20 +143,20 @@ test('tools page renders', function () {
 });
 
 test('tools page shows tools from database', function () {
-    \App\Models\Tool::factory()->create(['title' => 'Running Pace Calculator', 'url' => '/run-tools']);
+    Tool::factory()->create(['title' => 'Running Pace Calculator', 'url' => '/run-tools']);
 
-    Livewire::test(\App\Livewire\Tools::class)
+    Livewire::test(Tools::class)
         ->assertSee('Running Pace Calculator');
 });
 
 test('tools page shows empty state when no tools exist', function () {
-    Livewire::test(\App\Livewire\Tools::class)
+    Livewire::test(Tools::class)
         ->assertSee('Tools coming soon');
 });
 
 test('home page displays tools section', function () {
-    \App\Models\Tool::factory()->create(['title' => 'My Handy Tool', 'url' => '/my-tool']);
+    Tool::factory()->create(['title' => 'My Handy Tool', 'url' => '/my-tool']);
 
-    Livewire::test(\App\Livewire\Home::class)
+    Livewire::test(Home::class)
         ->assertSee('My Handy Tool');
 });
