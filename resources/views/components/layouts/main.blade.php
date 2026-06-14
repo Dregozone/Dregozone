@@ -41,6 +41,7 @@
                 <!-- Primary nav -->
                 <nav class="hidden sm:flex items-center gap-8">
                     <a href="{{ route('home') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Home</a>
+                    <a href="{{ route('now') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Now</a>
                     <a href="{{ route('blog') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Blog</a>
                     <a href="{{ route('projects') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Projects</a>
                     <a href="{{ route('tools') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Tools</a>
@@ -98,6 +99,8 @@
             <nav class="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-1">
                 <a href="{{ route('home') }}" @click="mobileOpen = false"
                     class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Home</a>
+                <a href="{{ route('now') }}" @click="mobileOpen = false"
+                    class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Now</a>
                 <a href="{{ route('blog') }}" @click="mobileOpen = false"
                     class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Blog</a>
                 <a href="{{ route('projects') }}" @click="mobileOpen = false"
@@ -172,6 +175,7 @@
                     <p class="text-xs font-bold uppercase tracking-widest text-stone-400 mb-4">Pages</p>
                     <ul class="space-y-3">
                         <li><a href="{{ route('home') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Home</a></li>
+                        <li><a href="{{ route('now') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Now</a></li>
                         <li><a href="{{ route('blog') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Blog</a></li>
                         <li><a href="{{ route('projects') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Projects</a></li>
                         <li><a href="{{ route('tools') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Tools</a></li>
