@@ -3,6 +3,7 @@
 use App\Livewire\Blog;
 use App\Livewire\BlogPost as BlogPostComponent;
 use App\Livewire\Home;
+use App\Models\Project;
 use App\Livewire\Tools;
 use App\Models\BlogPost;
 use App\Models\Tool;
@@ -128,6 +129,35 @@ test('blog post detail page increments view count', function () {
 
 test('projects page renders', function () {
     $this->get('/projects')->assertSuccessful();
+});
+
+test('now page renders with professional profile content', function () {
+    BlogPost::factory()->published()->create([
+        'title' => 'Shipping Better Laravel Apps',
+        'views' => 725,
+    ]);
+    Project::factory()->create([
+        'title' => 'Current Client Portal',
+        'description' => 'Improving a Livewire-powered workflow for day-to-day operational use.',
+        'status' => 'in_progress',
+    ]);
+    Project::factory()->create([
+        'title' => 'Reporting Dashboard Refresh',
+        'description' => 'A finished project focused on clearer reporting and better internal visibility.',
+        'status' => 'completed',
+    ]);
+
+    $this->get('/now')
+        ->assertSuccessful()
+        ->assertSee('Now / Brag page')
+        ->assertSee('Current Client Portal')
+        ->assertSee('Reporting Dashboard Refresh')
+        ->assertSee('Intermediate to Advanced SQL')
+        ->assertSee('725');
+});
+
+test('brag page redirects to now page', function () {
+    $this->get('/brag')->assertRedirect('/now');
 });
 
 test('contact page renders', function () {
