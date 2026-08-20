@@ -62,6 +62,37 @@
             <flux:error name="technologies" />
         </flux:field>
 
+        <!-- Add New Technology -->
+        <div class="rounded-md border border-dashed border-gray-300 dark:border-gray-600 p-4">
+            @if ($showNewTechnologyInput)
+                <div class="flex items-center gap-3">
+                    <input type="text" wire:model="newTechnologyName"
+                        placeholder="New technology name..."
+                        class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                        wire:keydown.enter.prevent="addTechnology" />
+                    <button type="button" wire:click="addTechnology"
+                        class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-md font-medium transition-colors duration-200">
+                        Add Technology
+                    </button>
+                    <button type="button" wire:click="$set('showNewTechnologyInput', false)"
+                        class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                        Cancel
+                    </button>
+                </div>
+                @error('newTechnologyName')
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                @enderror
+            @else
+                <button type="button" wire:click="$set('showNewTechnologyInput', true)"
+                    class="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Create a new technology
+                </button>
+            @endif
+        </div>
+
         <!-- URLs -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>

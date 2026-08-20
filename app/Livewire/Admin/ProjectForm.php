@@ -39,6 +39,10 @@ class ProjectForm extends Component
         'WebSockets',
     ];
 
+    public string $newTechnologyName = '';
+
+    public bool $showNewTechnologyInput = false;
+
     protected array $rules = [
         'title' => 'required|min:3|max:255',
         'description' => 'required|min:10',
@@ -48,6 +52,7 @@ class ProjectForm extends Component
         'github_url' => 'nullable|url|max:255',
         'order' => 'integer|min:0',
         'featured' => 'boolean',
+        'newTechnologyName' => 'nullable|string|max:100',
     ];
 
     public function mount(?int $projectId = null): void
@@ -67,6 +72,28 @@ class ProjectForm extends Component
         } else {
             $this->project = new Project;
         }
+    }
+
+    public function addTechnology(): void
+    {
+        $name = trim($this->newTechnologyName);
+        $this->newTechnologyName = $name;
+
+        $this->validateOnly('newTechnologyName', [
+            'newTechnologyName' => 'required|string|min:2|max:100',
+        ]);
+
+        if (! in_array($name, $this->availableTechnologies)) {
+            $this->availableTechnologies[] = $name;
+            sort($this->availableTechnologies);
+        }
+
+        if (! in_array($name, $this->technologies)) {
+            $this->technologies[] = $name;
+        }
+
+        $this->newTechnologyName = '';
+        $this->showNewTechnologyInput = false;
     }
 
     public function save(): void
