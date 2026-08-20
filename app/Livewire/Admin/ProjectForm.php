@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Project;
+use App\Models\Technology;
 use Illuminate\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -32,12 +33,7 @@ class ProjectForm extends Component
 
     public bool $isEditing = false;
 
-    public array $availableTechnologies = [
-        'Alpine.js', 'Bootstrap', 'FFmpeg', 'JavaScript', 'jQuery',
-        'Laravel', 'Livewire', 'MySQL', 'PHP', 'PostgreSQL',
-        'Redis', 'Swagger', 'Tailwind CSS', 'TypeScript', 'Vue.js',
-        'WebSockets',
-    ];
+    public array $availableTechnologies = [];
 
     public string $newTechnologyName = '';
 
@@ -57,6 +53,8 @@ class ProjectForm extends Component
 
     public function mount(?int $projectId = null): void
     {
+        $this->availableTechnologies = Technology::allNames()->toArray();
+
         if ($projectId) {
             $this->project = Project::findOrFail($projectId);
             $this->isEditing = true;
@@ -83,13 +81,15 @@ class ProjectForm extends Component
             'newTechnologyName' => 'required|string|min:2|max:100',
         ]);
 
-        if (! in_array($name, $this->availableTechnologies)) {
-            $this->availableTechnologies[] = $name;
+        $technology = Technology::createFromName($name);
+
+        if (! in_array($technology->name, $this->availableTechnologies)) {
+            $this->availableTechnologies[] = $technology->name;
             sort($this->availableTechnologies);
         }
 
-        if (! in_array($name, $this->technologies)) {
-            $this->technologies[] = $name;
+        if (! in_array($technology->name, $this->technologies)) {
+            $this->technologies[] = $technology->name;
         }
 
         $this->newTechnologyName = '';

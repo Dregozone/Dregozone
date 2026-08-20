@@ -3,6 +3,7 @@
 use App\Livewire\Admin\ProjectForm;
 use App\Livewire\Admin\ProjectList;
 use App\Models\Project;
+use App\Models\Technology;
 use App\Models\UploadedImage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -222,6 +223,8 @@ test('project form can add a custom technology', function () {
         ->assertSet('showNewTechnologyInput', false)
         ->assertSet('newTechnologyName', '')
         ->assertSet('technologies', ['Python']);
+
+    expect(Technology::where('name', 'Python')->exists())->toBeTrue();
 });
 
 test('project form custom technology is added to available list', function () {
@@ -236,6 +239,8 @@ test('project form custom technology is added to available list', function () {
 
 test('project form custom technology is not duplicated in available list', function () {
     $this->actingAs(adminUser());
+
+    Technology::createFromName('Laravel');
 
     $component = Livewire::test(ProjectForm::class)
         ->set('newTechnologyName', 'Laravel')
@@ -252,4 +257,17 @@ test('project form add technology validates minimum length', function () {
         ->set('newTechnologyName', 'X')
         ->call('addTechnology')
         ->assertHasErrors(['newTechnologyName']);
+});
+
+test('project form loads available technologies from database on mount', function () {
+    $this->actingAs(adminUser());
+
+    Technology::createFromName('Rust');
+    Technology::createFromName('Go');
+
+    $component = Livewire::test(ProjectForm::class);
+
+    expect($component->get('availableTechnologies'))
+        ->toContain('Rust')
+        ->toContain('Go');
 });
