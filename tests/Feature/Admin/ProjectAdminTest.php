@@ -3,6 +3,7 @@
 use App\Livewire\Admin\ProjectForm;
 use App\Livewire\Admin\ProjectList;
 use App\Models\Project;
+use App\Models\Technology;
 use App\Models\UploadedImage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -210,4 +211,63 @@ test('authenticated admin can access image converter page', function () {
 
 test('guests are redirected to login from image converter route', function () {
     $this->get('/admin/image-converter')->assertRedirect('/login');
+});
+
+test('project form can add a custom technology', function () {
+    $this->actingAs(adminUser());
+
+    Livewire::test(ProjectForm::class)
+        ->set('showNewTechnologyInput', true)
+        ->set('newTechnologyName', 'Python')
+        ->call('addTechnology')
+        ->assertSet('showNewTechnologyInput', false)
+        ->assertSet('newTechnologyName', '')
+        ->assertSet('technologies', ['Python']);
+
+    expect(Technology::where('name', 'Python')->exists())->toBeTrue();
+});
+
+test('project form custom technology is added to available list', function () {
+    $this->actingAs(adminUser());
+
+    $component = Livewire::test(ProjectForm::class)
+        ->set('newTechnologyName', 'AI')
+        ->call('addTechnology');
+
+    expect($component->get('availableTechnologies'))->toContain('AI');
+});
+
+test('project form custom technology is not duplicated in available list', function () {
+    $this->actingAs(adminUser());
+
+    Technology::createFromName('Laravel');
+
+    $component = Livewire::test(ProjectForm::class)
+        ->set('newTechnologyName', 'Laravel')
+        ->call('addTechnology');
+
+    $techs = $component->get('availableTechnologies');
+    expect(array_count_values($techs)['Laravel'])->toBe(1);
+});
+
+test('project form add technology validates minimum length', function () {
+    $this->actingAs(adminUser());
+
+    Livewire::test(ProjectForm::class)
+        ->set('newTechnologyName', 'X')
+        ->call('addTechnology')
+        ->assertHasErrors(['newTechnologyName']);
+});
+
+test('project form loads available technologies from database on mount', function () {
+    $this->actingAs(adminUser());
+
+    Technology::createFromName('Rust');
+    Technology::createFromName('Go');
+
+    $component = Livewire::test(ProjectForm::class);
+
+    expect($component->get('availableTechnologies'))
+        ->toContain('Rust')
+        ->toContain('Go');
 });
