@@ -22,12 +22,13 @@ test('viewing a blog post as authenticated user creates a view record', function
     expect(UserBlogView::where('user_id', $user->id)->where('blog_post_id', $post->id)->count())->toBe(1);
 });
 
-test('viewing a blog post as guest does not create a view record', function () {
+test('viewing a blog post as guest records a view without a user', function () {
     $post = BlogPost::factory()->published()->create();
 
     Livewire::test(BlogPostComponent::class, ['post' => $post]);
 
-    expect(UserBlogView::count())->toBe(0);
+    expect(UserBlogView::count())->toBe(1)
+        ->and(UserBlogView::first()->user_id)->toBeNull();
 });
 
 test('authenticated user can mark a blog post as read', function () {
