@@ -23,6 +23,10 @@ return [
         ],
     ],
 
+    'stats' => [
+        'token' => env('STATS_TOKEN'),
+    ],
+
     'api' => [
         'key' => env('API_KEY'),
     ],
