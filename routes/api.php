@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DailyStatsController;
 use App\Models\ContactMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,3 +21,6 @@ Route::get('/{apiKey}/contactMessages', function (string $apiKey) {
 
     return response()->json(['contactMessages' => $contactMessages]);
 });
+
+Route::get('/stats/daily', DailyStatsController::class)
+    ->middleware(['throttle:30,1', 'stats.token']);
