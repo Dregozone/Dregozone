@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use App\Models\ContactMessage;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -14,6 +15,7 @@ class ContactMessageList extends Component
 {
     use WithPagination;
 
+    #[Url]
     public $search = '';
 
     public $status = '';

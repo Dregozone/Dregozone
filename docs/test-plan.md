@@ -66,6 +66,7 @@ Dregozone is a Laravel 12 + Livewire 4 personal portfolio and blog website. It s
 - As an admin user, I want to view newsletter subscribers so that I can manage the mailing list.
 - As an admin user, I want to export active subscribers as JSON so that I can use the data in other tools.
 - As an admin user, I want to access the image library and converter so that I can manage media.
+- As an admin user, I want an email for each new sign-up and contact message, with bursts summarised, so that I hear about them without opening the admin area.
 
 ---
 
@@ -252,6 +253,23 @@ Dregozone is a Laravel 12 + Livewire 4 personal portfolio and blog website. It s
 | allNames() returns alphabetical names | Normal |
 | topByUsage() returns tags by published post count | Normal |
 
+### 4.13 Admin Notification Emails
+
+| Scenario | Type |
+|---|---|
+| Sign-up emails the admin with the user and total users | Normal |
+| Sign-up email shows name, email, London time and referrer | Normal |
+| Referrer captured when the register form opened is passed on | Normal |
+| Contact message emails the admin with reply-to set to the sender | Normal |
+| Contact email shows sender, subject, message text and admin link | Normal |
+| No emails when ADMIN_NOTIFY_EMAIL is empty | Edge |
+| Mail failure does not break sign-up | Invalid |
+| Mail failure does not break the contact form | Invalid |
+| More than 5 sign-ups in 10 minutes become one summary | Edge |
+| More than 5 contact messages in 10 minutes become one summary | Edge |
+| Individual emails resume after the burst window | Edge |
+| Sign-ups and contact messages are guarded separately | Edge |
+
 ---
 
 ## 5. Test Plan Table
@@ -384,3 +402,15 @@ Dregozone is a Laravel 12 + Livewire 4 personal portfolio and blog website. It s
 | T124 | Tag Model | createFromName idempotent | Edge | Returns existing tag | `createFromName returns existing tag if slug already exists` |
 | T125 | Tag Model | allNames alphabetical | Normal | Alphabetically sorted | `allNames returns all tag names ordered alphabetically` |
 | T126 | Tag Model | topByUsage | Normal | Sorted by post count | `topByUsage returns tags sorted by published post usage count` |
+| T127 | Admin Notifications | Sign-up email sent | Normal | NewUserSignedUp to admin, total users counted | `a sign-up emails the admin with the user details and total users` |
+| T128 | Admin Notifications | Sign-up email body | Normal | Name, email, London time, total, referrer shown | `the sign-up email shows the name, email, London time and referrer` |
+| T129 | Admin Notifications | Sign-up referrer | Normal | Referer header passed to the email | `a sign-up passes on the referrer captured when the form opened` |
+| T130 | Admin Notifications | Contact email sent | Normal | NewContactMessage to admin, reply-to is sender | `a contact message emails the admin, replying to the sender` |
+| T131 | Admin Notifications | Contact email body | Normal | Sender, subject, message text, admin link shown | `the contact email shows the sender, subject, message text and admin link` |
+| T132 | Admin Notifications | No admin address | Edge | Nothing sent | `no emails are sent when no admin address is set` |
+| T133 | Admin Notifications | Sign-up mail failure | Invalid | User registered, exception reported | `a mail failure does not break sign-up` |
+| T134 | Admin Notifications | Contact mail failure | Invalid | Message saved, exception reported | `a mail failure does not break the contact form` |
+| T135 | Admin Notifications | Sign-up burst | Edge | 5 emails then one summary | `more than five sign-ups in ten minutes become one summary` |
+| T136 | Admin Notifications | Contact burst | Edge | 5 emails then one summary | `more than five contact messages in ten minutes become one summary` |
+| T137 | Admin Notifications | Burst window expiry | Edge | Individual email sent after 10 minutes | `individual emails resume once the burst window has passed` |
+| T138 | Admin Notifications | Separate guards | Edge | Sign-up email sent during a contact burst | `sign-ups and contact messages are guarded separately` |
