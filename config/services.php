@@ -23,6 +23,10 @@ return [
         ],
     ],
 
+    'admin_notify' => [
+        'email' => env('ADMIN_NOTIFY_EMAIL'),
+    ],
+
     'stats' => [
         'token' => env('STATS_TOKEN'),
     ],

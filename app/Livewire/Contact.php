@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Mail\AdminNotifier;
 use App\Models\ContactMessage;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -35,7 +36,7 @@ class Contact extends Component
         'type' => 'required|in:work_request,general,partnership',
     ];
 
-    public function submit()
+    public function submit(AdminNotifier $adminNotifier)
     {
         $this->validate();
 
@@ -49,7 +50,7 @@ class Contact extends Component
             ];
         }
 
-        ContactMessage::create([
+        $contactMessage = ContactMessage::create([
             'name' => $this->name,
             'email' => $this->email,
             'subject' => $this->subject,
@@ -57,6 +58,8 @@ class Contact extends Component
             'type' => $this->type,
             'metadata' => $metadata,
         ]);
+
+        $adminNotifier->notifyOfContactMessage($contactMessage);
 
         $this->reset(['name', 'email', 'subject', 'message', 'budget', 'timeline', 'projectType']);
         $this->type = 'general';
