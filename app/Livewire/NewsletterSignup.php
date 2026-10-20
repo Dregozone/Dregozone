@@ -2,11 +2,14 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Concerns\VerifiesTurnstile;
 use App\Models\NewsletterSubscriber;
 use Livewire\Component;
 
 class NewsletterSignup extends Component
 {
+    use VerifiesTurnstile;
+
     public $email = '';
 
     public $name = '';
@@ -21,6 +24,7 @@ class NewsletterSignup extends Component
     public function subscribe()
     {
         $this->validate();
+        $this->verifyTurnstile();
 
         NewsletterSubscriber::create([
             'email' => $this->email,

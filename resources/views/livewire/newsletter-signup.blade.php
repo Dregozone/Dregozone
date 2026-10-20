@@ -48,6 +48,14 @@
                     @enderror
                 </div>
             @endif
+            @if (filled(config('services.turnstile.site_key')))
+                <div>
+                    <x-turnstile theme="dark" />
+                    @error('turnstileToken')
+                        <p class="mt-1 text-xs text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+            @endif
             <p class="text-xs text-stone-500">No spam, ever. Unsubscribe any time.</p>
         </form>
     @endif
