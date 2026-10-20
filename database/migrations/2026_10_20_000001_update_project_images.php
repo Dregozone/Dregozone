@@ -17,6 +17,7 @@ return new class extends Migration
         'Personal Assistant' => 'personal-assistant.jpg',
         'Atlas Fit' => 'atlas-fit.jpg',
         'Exclusion Zone' => 'exclusion-zone.jpg',
+        'Synthera Coder' => 'synthera-coder.jpg',
         'Roulette Helper' => 'roulette-helper.jpg',
         'Dregozone' => 'dregozone.jpg',
         'Glacial Studio' => 'glacial-studio.jpg',
