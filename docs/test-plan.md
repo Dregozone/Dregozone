@@ -270,6 +270,21 @@ Dregozone is a Laravel 12 + Livewire 4 personal portfolio and blog website. It s
 | Individual emails resume after the burst window | Edge |
 | Sign-ups and contact messages are guarded separately | Edge |
 
+### 4.14 Cloudflare Turnstile
+
+| Scenario | Type |
+|---|---|
+| Contact page and newsletter signup show the widget when configured | Normal |
+| Widget and script left out when not configured | Edge |
+| Contact form sends when the check passes | Normal |
+| Contact form rejected when the check fails | Invalid |
+| Contact form rejected without a token | Invalid |
+| No check made while other contact fields are invalid | Edge |
+| Newsletter signup subscribes when the check passes | Normal |
+| Newsletter signup rejected when the check fails | Invalid |
+| Rule fails when Cloudflare cannot be reached | Invalid |
+| Rule passes without a check when no secret key is set | Edge |
+
 ---
 
 ## 5. Test Plan Table
@@ -414,3 +429,13 @@ Dregozone is a Laravel 12 + Livewire 4 personal portfolio and blog website. It s
 | T136 | Admin Notifications | Contact burst | Edge | 5 emails then one summary | `more than five contact messages in ten minutes become one summary` |
 | T137 | Admin Notifications | Burst window expiry | Edge | Individual email sent after 10 minutes | `individual emails resume once the burst window has passed` |
 | T138 | Admin Notifications | Separate guards | Edge | Sign-up email sent during a contact burst | `sign-ups and contact messages are guarded separately` |
+| T139 | Turnstile | Widget shown when configured | Normal | Script and site key on the contact page, widget in newsletter signup | `the contact form and newsletter signup show the turnstile widget when it is configured` |
+| T140 | Turnstile | Widget left out when not configured | Edge | No Cloudflare script on the page | `the turnstile widget is left out when it is not configured` |
+| T141 | Turnstile | Contact check passes | Normal | ContactMessage created, token sent with the secret, widget reset | `the contact form sends when the turnstile check passes` |
+| T142 | Turnstile | Contact check fails | Invalid | Error on turnstileToken, nothing saved | `the contact form is rejected when the turnstile check fails` |
+| T143 | Turnstile | Contact without token | Invalid | Error on turnstileToken, no request to Cloudflare | `the contact form is rejected without a turnstile token` |
+| T144 | Turnstile | Other fields invalid | Edge | No request to Cloudflare, token kept | `the turnstile check is not made while other contact fields are invalid` |
+| T145 | Turnstile | Newsletter check passes | Normal | Subscriber created | `the newsletter signup subscribes when the turnstile check passes` |
+| T146 | Turnstile | Newsletter check fails | Invalid | Error on turnstileToken, nothing saved | `the newsletter signup is rejected when the turnstile check fails` |
+| T147 | Turnstile | Cloudflare unreachable | Invalid | Validation fails | `the turnstile rule fails when cloudflare cannot be reached` |
+| T148 | Turnstile | No secret key | Edge | Validation passes, no request sent | `the turnstile rule passes without a check when no secret key is set` |

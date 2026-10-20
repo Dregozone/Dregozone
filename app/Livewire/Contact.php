@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Concerns\VerifiesTurnstile;
 use App\Mail\AdminNotifier;
 use App\Models\ContactMessage;
 use Livewire\Attributes\Layout;
@@ -12,6 +13,8 @@ use Livewire\Component;
 #[Title('Contact')]
 class Contact extends Component
 {
+    use VerifiesTurnstile;
+
     public $name = '';
 
     public $email = '';
@@ -39,6 +42,7 @@ class Contact extends Component
     public function submit(AdminNotifier $adminNotifier)
     {
         $this->validate();
+        $this->verifyTurnstile();
 
         $metadata = [];
 

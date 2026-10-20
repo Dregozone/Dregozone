@@ -215,6 +215,16 @@
                             @enderror
                         </div>
 
+                        <!-- Security Check -->
+                        @if (filled(config('services.turnstile.site_key')))
+                            <div>
+                                <x-turnstile theme="light" />
+                                @error('turnstileToken')
+                                    <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        @endif
+
                         <!-- Submit Button -->
                         <div>
                             <button type="submit"

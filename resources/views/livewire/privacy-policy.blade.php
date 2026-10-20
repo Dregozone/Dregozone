@@ -217,6 +217,12 @@
                 messages. These providers act as data processors and are required to handle personal data in
                 accordance with applicable data protection law.
             </p>
+            <p>
+                The contact form and newsletter signup are protected by Cloudflare Turnstile, which checks that a
+                real person is submitting them. To do this, Cloudflare processes technical information about your
+                browser and device, such as your IP address, when the check runs. It is used only to prevent spam
+                and abuse.
+            </p>
 
             <hr class="border-stone-200 my-10">
 
