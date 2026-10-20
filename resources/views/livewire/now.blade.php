@@ -15,8 +15,8 @@
 
                 <p class="max-w-2xl text-lg leading-relaxed text-stone-600">
                     This is a living snapshot for hiring managers, collaborators, and anyone curious about the kind
-                    of work I do best: thoughtful Laravel builds, strong written communication, and steady
-                    professional growth through practical shipping and continuous learning.
+                    of work I do best: thoughtful Laravel builds, AI-powered workflows that multiply what one
+                    developer can ship, strong written communication, and steady growth through continuous learning.
                 </p>
 
                 <div class="mt-8 flex flex-wrap gap-3">
@@ -50,7 +50,7 @@
                 <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
                     <p class="text-xs font-bold uppercase tracking-widest text-stone-400">Total blog views</p>
                     <p class="mt-3 text-3xl font-black tracking-tight text-stone-900">{{ number_format($totalBlogViews) }}</p>
-                    <p class="mt-2 text-sm text-stone-500">Useful social proof if you want this page to double as a living CV.</p>
+                    <p class="mt-2 text-sm text-stone-500">Reads across everything I have published so far.</p>
                 </div>
 
                 <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
@@ -63,6 +63,72 @@
                     <p class="text-xs font-bold uppercase tracking-widest text-stone-400">Recent completions</p>
                     <p class="mt-3 text-3xl font-black tracking-tight text-stone-900">{{ number_format($recentlyCompletedProjectsCount) }}</p>
                     <p class="mt-2 text-sm text-stone-500">Recent shipped work that helps show delivery momentum.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-stone-900 py-16 text-white lg:py-24">
+        <div class="mx-auto max-w-6xl px-6">
+            <div class="mb-12 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+                <div>
+                    <div class="mb-6 flex items-center gap-3">
+                        <span class="inline-block h-0.5 w-8 bg-amber-400"></span>
+                        <span class="text-xs font-bold uppercase tracking-widest text-amber-400">Main focus right now</span>
+                    </div>
+                    <h2 class="text-[clamp(2rem,5vw,3.25rem)] leading-[1.05] font-black tracking-tight">
+                        AI-powered development,<br>
+                        locally and at scale.
+                    </h2>
+                </div>
+                <p class="text-base leading-relaxed text-stone-300">
+                    Most of my time outside day-to-day delivery goes into making AI genuinely useful for building
+                    software: running models on my own hardware, wiring them into Laravel apps, and orchestrating
+                    many coding agents at once without losing track of the work.
+                </p>
+            </div>
+
+            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                @foreach ($aiHighlights as $highlight)
+                    <div class="rounded-3xl border border-stone-700 bg-stone-800 p-6">
+                        <h3 class="text-lg font-bold text-white">{{ $highlight['title'] }}</h3>
+                        <p class="mt-3 text-sm leading-relaxed text-stone-300">{{ $highlight['description'] }}</p>
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="mt-16 grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-widest text-amber-400">Life OS</p>
+                    <h3 class="mt-3 text-3xl font-black tracking-tight">A 3D world for running a team of agents</h3>
+                    <p class="mt-4 text-sm leading-relaxed text-stone-300">
+                        To handle many agents at once, I built Life OS: a first-person 3D world with an office where
+                        each pod of desks is assigned to a project. Every desk runs its own agent session in its own
+                        git worktree, so agents never trip over each other's changes. Outstanding work and progress
+                        are tracked on custom-built kanban boards inside the world, updating in real time.
+                    </p>
+
+                    <dl class="mt-8 grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+                        @foreach ($lifeOsStats as $stat)
+                            <div class="rounded-2xl border border-stone-700 bg-stone-800 px-5 py-4">
+                                <dt class="text-xs font-semibold uppercase tracking-widest text-stone-400">{{ $stat['label'] }}</dt>
+                                <dd class="mt-1 text-3xl font-black tracking-tight text-amber-400">{{ $stat['value'] }}</dd>
+                            </div>
+                        @endforeach
+                    </dl>
+                </div>
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                    @foreach ($lifeOsImages as $image)
+                        <figure @class(['overflow-hidden rounded-2xl border border-stone-700 bg-stone-800', 'sm:col-span-2' => $loop->first])>
+                            <img src="{{ asset('images/now/'.$image['file']) }}"
+                                alt="{{ $image['caption'] }}"
+                                width="1600" height="900"
+                                loading="lazy"
+                                class="aspect-video w-full object-cover">
+                            <figcaption class="px-4 py-3 text-xs leading-relaxed text-stone-400">{{ $image['caption'] }}</figcaption>
+                        </figure>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -120,6 +186,7 @@
                             <li class="rounded-2xl bg-white px-4 py-3">I like owning problems end to end, from shaping an idea to polishing the final UX.</li>
                             <li class="rounded-2xl bg-white px-4 py-3">I value readable code, calm collaboration, and clear written thinking.</li>
                             <li class="rounded-2xl bg-white px-4 py-3">I am intentionally strengthening both product delivery and data fluency, especially with SQL.</li>
+                            <li class="rounded-2xl bg-white px-4 py-3">I look for repeated work to automate, and build the systems that let a team ship more with less friction.</li>
                         </ul>
                     </div>
 
@@ -190,8 +257,8 @@
                 <p class="mb-2 text-xs font-bold uppercase tracking-widest text-stone-400">Learning and qualifications</p>
                 <h2 class="text-3xl font-black tracking-tight text-stone-900">Courses and structured learning</h2>
                 <p class="mt-4 text-sm leading-relaxed text-stone-600">
-                    This section is designed to grow over time. It already includes your recent SQL study and makes
-                    room for the Laracasts and other extracurricular learning you want to surface.
+                    What I am studying alongside my work right now, with a strong lean towards database
+                    performance, Livewire, and AI.
                 </p>
             </div>
 
@@ -226,21 +293,59 @@
         </div>
     </section>
 
+    <section class="border-t border-stone-100 bg-stone-50 py-16 lg:py-20">
+        <div class="mx-auto grid max-w-6xl gap-6 px-6 lg:grid-cols-2">
+            <div class="rounded-3xl border border-stone-200 bg-white p-7">
+                <p class="text-xs font-bold uppercase tracking-widest text-stone-400">Reading</p>
+                <h2 class="mt-2 text-2xl font-black tracking-tight text-stone-900">On my bookshelf</h2>
+                <div class="mt-5 grid gap-4">
+                    @foreach ($readingList as $book)
+                        <div class="rounded-2xl border border-stone-100 bg-stone-50 p-5">
+                            <h3 class="text-lg font-bold text-stone-900">{{ $book['title'] }}</h3>
+                            <p class="text-sm font-semibold text-amber-700">{{ $book['author'] }}</p>
+                            <p class="mt-2 text-sm leading-relaxed text-stone-600">{{ $book['reason'] }}</p>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <div class="rounded-3xl border border-stone-200 bg-white p-7">
+                <p class="text-xs font-bold uppercase tracking-widest text-stone-400">Side projects</p>
+                <h2 class="mt-2 text-2xl font-black tracking-tight text-stone-900">Hardware and tinkering</h2>
+                <div class="mt-5 grid gap-3 sm:grid-cols-2">
+                    @foreach ($sideProjects as $sideProject)
+                        <div class="rounded-2xl border border-stone-100 bg-stone-50 p-5">
+                            <h3 class="text-base font-bold text-stone-900">{{ $sideProject['title'] }}</h3>
+                            <p class="mt-1 text-sm leading-relaxed text-stone-600">{{ $sideProject['description'] }}</p>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="bg-stone-900 py-16 text-white lg:py-20">
         <div class="mx-auto grid max-w-6xl gap-8 px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
             <div>
-                <p class="mb-2 text-xs font-bold uppercase tracking-widest text-stone-400">Still to personalise</p>
-                <h2 class="text-3xl font-black tracking-tight">A few high-value details to fill in next.</h2>
+                <p class="mb-2 text-xs font-bold uppercase tracking-widest text-stone-400">Goals</p>
+                <h2 class="text-3xl font-black tracking-tight">Where I am heading next.</h2>
                 <p class="mt-4 max-w-xl text-sm leading-relaxed text-stone-300">
-                    The page is live and professional already, but these additions would make it even more convincing
-                    as a hiring-manager-facing summary.
+                    I am most energised by making teams faster: better workflows, less repetitive work, and
+                    systems that let good people focus on what matters.
                 </p>
+                <a href="{{ route('contact') }}"
+                    class="mt-8 inline-flex items-center gap-2 rounded-full bg-amber-400 px-6 py-3.5 text-sm font-bold text-stone-900 transition-colors hover:bg-amber-300">
+                    Talk to me about a role
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                </a>
             </div>
 
             <div class="grid gap-4">
-                @foreach ($fillInPrompts as $prompt)
-                    <div class="rounded-2xl border border-stone-700 bg-stone-800 px-5 py-4 text-sm leading-relaxed text-stone-200">
-                        {{ $prompt }}
+                @foreach ($goals as $goal)
+                    <div class="rounded-2xl border border-stone-700 bg-stone-800 px-5 py-4">
+                        <p class="text-xs font-bold uppercase tracking-widest text-amber-400">{{ $goal['label'] }}</p>
+                        <h3 class="mt-1 text-lg font-bold text-white">{{ $goal['title'] }}</h3>
+                        <p class="mt-1 text-sm leading-relaxed text-stone-300">{{ $goal['description'] }}</p>
                     </div>
                 @endforeach
             </div>
