@@ -3,9 +3,9 @@
 use App\Livewire\Blog;
 use App\Livewire\BlogPost as BlogPostComponent;
 use App\Livewire\Home;
-use App\Models\Project;
 use App\Livewire\Tools;
 use App\Models\BlogPost;
+use App\Models\Project;
 use App\Models\Tool;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -154,6 +154,33 @@ test('now page renders with professional profile content', function () {
         ->assertSee('Reporting Dashboard Refresh')
         ->assertSee('Intermediate to Advanced SQL')
         ->assertSee('725');
+});
+
+test('now page highlights ai work, reading, side projects and goals', function () {
+    $this->get('/now')
+        ->assertSuccessful()
+        ->assertSee('AI-powered development')
+        ->assertSee('A 3D world for running a team of agents')
+        ->assertSee('images/now/office-floor.jpg')
+        ->assertSee('Engineering Management for the Rest of Us')
+        ->assertSee('Hedgehog camera')
+        ->assertSee('Run the Brighton Marathon')
+        ->assertDontSee('Still to personalise');
+});
+
+test('now page images exist as jpegs', function () {
+    $html = $this->get('/now')->getContent();
+
+    preg_match_all('#images/now/([a-z-]+\.jpg)#', $html, $matches);
+
+    expect($matches[1])->not->toBeEmpty();
+
+    foreach (array_unique($matches[1]) as $file) {
+        $path = public_path('images/now/'.$file);
+
+        expect($path)->toBeFile()
+            ->and(getimagesize($path)['mime'])->toBe('image/jpeg');
+    }
 });
 
 test('brag page redirects to now page', function () {
