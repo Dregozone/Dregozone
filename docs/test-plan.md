@@ -2,7 +2,7 @@
 
 ## 1. Overview
 
-Dregozone is a Laravel 12 + Livewire 4 personal portfolio and blog website. It supports four roles: unauthenticated visitors, authenticated users (including subscribers), and the single admin. The testing approach combines **unit tests** (model logic, scopes, helpers) and **feature tests** (HTTP routes, Livewire component interactions, form validation), using Pest 3 with `RefreshDatabase` to ensure a clean DB state per test.
+Dregozone is a Laravel 13 + Livewire 4 personal portfolio and blog website. It supports four roles: unauthenticated visitors, authenticated users (including subscribers), and the single admin. The testing approach combines **unit tests** (model logic, scopes, helpers) and **feature tests** (HTTP routes, Livewire component interactions, form validation), using Pest 5 with `RefreshDatabase` to ensure a clean DB state per test.
 
 ---
 
