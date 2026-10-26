@@ -1,6 +1,6 @@
 # Professional Developer Portfolio Website
 
-A modern, professional portfolio website built with Laravel 12 and Livewire, designed to showcase web development skills and attract potential clients.
+A modern, professional portfolio website built with Laravel 13 and Livewire, designed to showcase web development skills and attract potential clients.
 
 ## Features
 
@@ -45,7 +45,7 @@ A modern, professional portfolio website built with Laravel 12 and Livewire, des
 
 ## Technology Stack
 
-- **Backend**: Laravel 12
+- **Backend**: Laravel 13
 - **Frontend**: Livewire 3, Alpine.js
 - **Styling**: Tailwind CSS
 - **Database**: SQLite (development), MySQL/PostgreSQL (production)
@@ -155,7 +155,7 @@ A modern, professional portfolio website built with Laravel 12 and Livewire, des
 ## Deployment
 
 ### Production Requirements
-- PHP 8.2+
+- PHP 8.4+
 - Composer
 - Node.js & npm
 - Web server (Apache/Nginx)
