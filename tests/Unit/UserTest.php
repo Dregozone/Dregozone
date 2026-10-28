@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 test('isAdmin returns true for admin email', function () {
-    $user = User::factory()->make(['email' => 'aclearmonth@gmail.com']);
+    $user = User::factory()->make(['email' => 'anders@dregozone.com']);
 
     expect($user->isAdmin())->toBeTrue();
 });

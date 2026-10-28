@@ -22,7 +22,7 @@ test('non-admin authenticated user is forbidden from uploading images', function
 });
 
 test('authenticated admin can upload a pending image', function () {
-    $user = User::factory()->create(['email' => 'aclearmonth@gmail.com']);
+    $user = User::factory()->create(['email' => 'anders@dregozone.com']);
     $this->actingAs($user);
 
     $base64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
@@ -43,7 +43,7 @@ test('authenticated admin can upload a pending image', function () {
 });
 
 test('image upload rejects non-image base64 data', function () {
-    $user = User::factory()->create(['email' => 'aclearmonth@gmail.com']);
+    $user = User::factory()->create(['email' => 'anders@dregozone.com']);
     $this->actingAs($user);
 
     $this->postJson(route('admin.images.upload'), [
@@ -52,7 +52,7 @@ test('image upload rejects non-image base64 data', function () {
 });
 
 test('image upload requires base64_data field', function () {
-    $user = User::factory()->create(['email' => 'aclearmonth@gmail.com']);
+    $user = User::factory()->create(['email' => 'anders@dregozone.com']);
     $this->actingAs($user);
 
     $this->postJson(route('admin.images.upload'), [])->assertUnprocessable();

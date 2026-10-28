@@ -16,7 +16,7 @@ test('authenticated non-admin users are redirected to home', function () {
 });
 
 test('authenticated admin users are redirected to admin blog index', function () {
-    $this->actingAs(User::factory()->create(['email' => 'aclearmonth@gmail.com']));
+    $this->actingAs(User::factory()->create(['email' => 'anders@dregozone.com']));
 
     $this->get('/dashboard')->assertRedirect(route('admin.blog.index'));
 });

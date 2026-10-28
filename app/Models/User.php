@@ -65,7 +65,7 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return $this->email === 'aclearmonth@gmail.com';
+        return $this->email === 'anders@dregozone.com';
     }
 
     public function blogViews(): HasMany

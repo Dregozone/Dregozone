@@ -10,7 +10,7 @@ uses(RefreshDatabase::class);
 
 function blogListUser(): User
 {
-    return User::factory()->create(['email' => 'aclearmonth@gmail.com']);
+    return User::factory()->create(['email' => 'anders@dregozone.com']);
 }
 
 test('guests are redirected from admin blog list', function () {

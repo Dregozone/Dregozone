@@ -12,7 +12,7 @@ uses(RefreshDatabase::class);
 
 function blogEngagementAdminUser(): User
 {
-    return User::factory()->create(['email' => 'aclearmonth@gmail.com']);
+    return User::factory()->create(['email' => 'anders@dregozone.com']);
 }
 
 function createBlogView(?User $user = null, ?BlogPost $post = null, array $attributes = []): UserBlogView

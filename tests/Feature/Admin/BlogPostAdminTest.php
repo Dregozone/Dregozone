@@ -11,7 +11,7 @@ uses(RefreshDatabase::class);
 
 function blogAdminUser(): User
 {
-    return User::factory()->create(['email' => 'aclearmonth@gmail.com']);
+    return User::factory()->create(['email' => 'anders@dregozone.com']);
 }
 
 test('blog post form stores base64 image as uploaded image record', function () {

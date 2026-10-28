@@ -12,7 +12,7 @@ Dregozone is a Laravel 13 + Livewire 4 personal portfolio and blog website. It s
 |---|---|
 | **Unauthenticated User** | Any visitor who is not logged in. Can browse public pages, submit contact forms, sign up for the newsletter, and unsubscribe. |
 | **Authenticated User (Subscriber)** | A registered, logged-in user. Can access public pages and personal settings (profile, password, appearance, newsletter). Has **no** access to any admin routes. A subscriber is specifically an authenticated user who has opted in to the newsletter. |
-| **Admin User** | The single authenticated user whose email is `aclearmonth@gmail.com`. Exclusively has access to all admin routes (blog, projects, contact messages, newsletter subscribers, image library). All other authenticated users receive `403 Forbidden` on admin routes. |
+| **Admin User** | The single authenticated user whose email is `anders@dregozone.com`. Exclusively has access to all admin routes (blog, projects, contact messages, newsletter subscribers, image library). All other authenticated users receive `403 Forbidden` on admin routes. |
 
 ---
 

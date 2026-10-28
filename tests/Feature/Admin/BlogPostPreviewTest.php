@@ -24,7 +24,7 @@ test('non-admin authenticated user is forbidden from the preview page', function
 });
 
 test('admin can access the preview page', function () {
-    $user = User::factory()->create(['email' => 'aclearmonth@gmail.com']);
+    $user = User::factory()->create(['email' => 'anders@dregozone.com']);
     $post = BlogPost::factory()->draft()->create();
 
     $this->actingAs($user)
@@ -33,7 +33,7 @@ test('admin can access the preview page', function () {
 });
 
 test('preview page shows the preview banner', function () {
-    $user = User::factory()->create(['email' => 'aclearmonth@gmail.com']);
+    $user = User::factory()->create(['email' => 'anders@dregozone.com']);
     $post = BlogPost::factory()->draft()->create();
 
     Livewire::actingAs($user)
@@ -43,7 +43,7 @@ test('preview page shows the preview banner', function () {
 });
 
 test('preview page shows the post title and excerpt', function () {
-    $user = User::factory()->create(['email' => 'aclearmonth@gmail.com']);
+    $user = User::factory()->create(['email' => 'anders@dregozone.com']);
     $post = BlogPost::factory()->draft()->create([
         'title' => 'My Draft Post Title',
         'excerpt' => 'A short summary of the draft.',
@@ -56,7 +56,7 @@ test('preview page shows the post title and excerpt', function () {
 });
 
 test('preview page does not increment views', function () {
-    $user = User::factory()->create(['email' => 'aclearmonth@gmail.com']);
+    $user = User::factory()->create(['email' => 'anders@dregozone.com']);
     $post = BlogPost::factory()->draft()->create(['views' => 5]);
 
     Livewire::actingAs($user)
@@ -66,7 +66,7 @@ test('preview page does not increment views', function () {
 });
 
 test('preview works for published posts too', function () {
-    $user = User::factory()->create(['email' => 'aclearmonth@gmail.com']);
+    $user = User::factory()->create(['email' => 'anders@dregozone.com']);
     $post = BlogPost::factory()->published()->create();
 
     Livewire::actingAs($user)

@@ -13,7 +13,7 @@ uses(RefreshDatabase::class);
 
 function adminUser(): User
 {
-    return User::factory()->create(['email' => 'aclearmonth@gmail.com']);
+    return User::factory()->create(['email' => 'anders@dregozone.com']);
 }
 
 test('guests are redirected to login from project admin routes', function () {

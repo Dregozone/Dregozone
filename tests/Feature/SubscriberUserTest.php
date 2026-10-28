@@ -13,7 +13,7 @@ uses(RefreshDatabase::class);
  *
  * A "subscriber" is an authenticated user who has opted in to the newsletter.
  * Subscribers can manage their subscription via settings but have no access
- * to any admin routes — only the single admin (aclearmonth@gmail.com) may do so.
+ * to any admin routes — only the single admin (anders@dregozone.com) may do so.
  */
 
 // ── Newsletter subscription management ────────────────────────────────────────

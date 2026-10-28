@@ -16,7 +16,7 @@ test('non-admin authenticated user is forbidden from image library', function ()
 });
 
 test('admin can view image library', function () {
-    $user = User::factory()->create(['email' => 'aclearmonth@gmail.com']);
+    $user = User::factory()->create(['email' => 'anders@dregozone.com']);
     $this->actingAs($user);
 
     $this->get('/admin/images')->assertSuccessful();
@@ -30,7 +30,7 @@ test('non-admin authenticated user is forbidden from image converter', function 
 });
 
 test('admin can view image converter', function () {
-    $user = User::factory()->create(['email' => 'aclearmonth@gmail.com']);
+    $user = User::factory()->create(['email' => 'anders@dregozone.com']);
     $this->actingAs($user);
 
     $this->get('/admin/image-converter')->assertSuccessful();
