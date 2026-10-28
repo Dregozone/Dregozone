@@ -56,7 +56,7 @@
                             </div>
                             <div>
                                 <h3 class="font-bold text-stone-900">Email</h3>
-                                <p class="text-stone-500 text-sm">aclearmonth@gmail.com</p>
+                                <p class="text-stone-500 text-sm">anders@dregozone.com</p>
                             </div>
                         </div>
 
