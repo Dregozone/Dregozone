@@ -217,3 +217,35 @@ test('home page displays tools section', function () {
     Livewire::test(Home::class)
         ->assertSee('My Handy Tool');
 });
+
+test('home page renders the nordic design direction', function () {
+    Project::factory()->create(['title' => 'Fjord Project', 'featured' => true, 'status' => 'completed']);
+
+    $this->get('/?design=nordic')
+        ->assertSuccessful()
+        ->assertSee('design-nordic', false)
+        ->assertSee('images/home/hero-fjord.webp', false)
+        ->assertSee('A local AI studio')
+        ->assertSee('Life OS')
+        ->assertSee('Fjord Project');
+});
+
+test('home page renders the aurora design direction', function () {
+    Project::factory()->create(['title' => 'Aurora Project', 'featured' => true, 'status' => 'completed']);
+
+    $this->get('/?design=aurora')
+        ->assertSuccessful()
+        ->assertSee('design-aurora', false)
+        ->assertSee('images/home/hero-aurora.webp', false)
+        ->assertSee('data-aurora', false)
+        ->assertSee('A local AI lab')
+        ->assertSee('Aurora Project');
+});
+
+test('home page falls back to the current design for unknown directions', function () {
+    Livewire::withQueryParams(['design' => 'unknown'])
+        ->test(Home::class)
+        ->assertSee("Things I've built", false)
+        ->assertDontSee('design-nordic', false)
+        ->assertDontSee('design-aurora', false);
+});
