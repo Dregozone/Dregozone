@@ -1,23 +1,26 @@
 /**
- * Landing page motion engine.
+ * Site-wide motion engine for the Aurora design system.
  *
  * Small, dependency-free behaviours wired up through data attributes so the
  * Blade templates stay declarative:
  *
  *  data-reveal            fade/translate in once the element enters the viewport
  *  data-progress          exposes --p (0 → 1) as the element travels through the viewport
- *  data-parallax="0.25"   translates the element against scroll inside the hero
- *  data-tilt              pointer-driven depth shift for the hero plate
+ *  data-parallax="0.25"   translates the element against scroll near the top of the page
+ *  data-tilt              pointer-driven depth shift for hero plates
  *  data-spotlight         cursor-following light (--mx/--my) on glass surfaces
  *  data-count="30"        counts up to the value once visible
  *  data-typed="whoami"    types the text once visible
  *  data-aurora            renders the live aurora on a <canvas>
- *  data-landing-header    marks the page so the site header can react to scroll
+ *  data-plate-frame       gains .is-loaded once its plate image (if any) has loaded
+ *  data-site-header       condenses into glass once the page scrolls
  *
- * Everything degrades to its final state when the visitor prefers reduced motion.
+ * Every binder is idempotent, so the engine can safely re-run after Livewire
+ * navigations. Everything degrades to its final state under reduced motion.
  */
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const canHover = window.matchMedia('(hover: hover)').matches;
 const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
 const smoothstep = (edge0, edge1, x) => {
     const t = clamp((x - edge0) / (edge1 - edge0));
@@ -25,68 +28,98 @@ const smoothstep = (edge0, edge1, x) => {
     return t * t * (3 - 2 * t);
 };
 
-function initReveal() {
-    const elements = document.querySelectorAll('[data-reveal]');
+/**
+ * Classes added by the engine, remembered per element so a Livewire morph
+ * (which syncs attributes back to the server's HTML) never un-reveals content.
+ */
+const engineClasses = new WeakMap();
 
-    if (reduceMotion || !('IntersectionObserver' in window)) {
-        elements.forEach((element) => element.classList.add('is-in'));
+function addEngineClass(element, className) {
+    element.classList.add(className);
+    engineClasses.set(element, new Set([...(engineClasses.get(element) ?? []), className]));
+}
+
+/**
+ * Returns the elements matching the selector that have not yet been bound for this behaviour.
+ */
+function unbound(selector, behaviour) {
+    return [...document.querySelectorAll(selector)].filter((element) => {
+        const key = `motion${behaviour}`;
+
+        if (element.dataset[key]) {
+            return false;
+        }
+
+        element.dataset[key] = '1';
+
+        return true;
+    });
+}
+
+const revealObserver = 'IntersectionObserver' in window
+    ? new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                addEngineClass(entry.target, 'is-in');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 })
+    : null;
+
+function bindReveal() {
+    unbound('[data-reveal]', 'Reveal').forEach((element) => {
+        if (reduceMotion || !revealObserver) {
+            addEngineClass(element, 'is-in');
+        } else {
+            revealObserver.observe(element);
+        }
+    });
+}
+
+function runCounter(element) {
+    const target = Number(element.dataset.count);
+    const format = (value) => value.toLocaleString('en-GB');
+
+    if (reduceMotion || Number.isNaN(target)) {
+        element.textContent = Number.isNaN(target) ? element.dataset.count : format(target);
 
         return;
     }
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-in');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    const started = performance.now();
+    const duration = 1400;
+    const tick = (now) => {
+        const t = clamp((now - started) / duration);
+        element.textContent = format(Math.round(target * (1 - Math.pow(1 - t, 4))));
 
-    elements.forEach((element) => observer.observe(element));
-}
-
-function initCounters() {
-    const counters = document.querySelectorAll('[data-count]');
-
-    const run = (element) => {
-        const target = Number(element.dataset.count);
-
-        if (reduceMotion || Number.isNaN(target)) {
-            element.textContent = element.dataset.count;
-
-            return;
+        if (t < 1) {
+            requestAnimationFrame(tick);
         }
-
-        const started = performance.now();
-        const duration = 1400;
-        const tick = (now) => {
-            const t = clamp((now - started) / duration);
-            const eased = 1 - Math.pow(1 - t, 4);
-            element.textContent = Math.round(target * eased).toString();
-
-            if (t < 1) {
-                requestAnimationFrame(tick);
-            }
-        };
-
-        requestAnimationFrame(tick);
     };
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                run(entry.target);
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.6 });
-
-    counters.forEach((counter) => observer.observe(counter));
+    requestAnimationFrame(tick);
 }
 
-function initTyped() {
-    document.querySelectorAll('[data-typed]').forEach((element) => {
+const counterObserver = 'IntersectionObserver' in window
+    ? new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                runCounter(entry.target);
+                counterObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.6 })
+    : null;
+
+function bindCounters() {
+    unbound('[data-count]', 'Count').forEach((element) => {
+        counterObserver ? counterObserver.observe(element) : runCounter(element);
+    });
+}
+
+function bindTyped() {
+    unbound('[data-typed]', 'Typed').forEach((element) => {
         const text = element.dataset.typed;
 
         if (reduceMotion) {
@@ -97,7 +130,6 @@ function initTyped() {
 
         element.textContent = '';
         let index = 0;
-        const delay = Number(element.dataset.typedDelay ?? 900);
 
         setTimeout(function type() {
             element.textContent = text.slice(0, ++index);
@@ -105,16 +137,16 @@ function initTyped() {
             if (index < text.length) {
                 setTimeout(type, 55 + Math.random() * 70);
             }
-        }, delay);
+        }, Number(element.dataset.typedDelay ?? 900));
     });
 }
 
-function initSpotlight() {
-    if (reduceMotion || !window.matchMedia('(hover: hover)').matches) {
+function bindSpotlight() {
+    if (reduceMotion || !canHover) {
         return;
     }
 
-    document.querySelectorAll('[data-spotlight]').forEach((element) => {
+    unbound('[data-spotlight]', 'Spotlight').forEach((element) => {
         element.addEventListener('pointermove', (event) => {
             const rect = element.getBoundingClientRect();
             element.style.setProperty('--mx', `${event.clientX - rect.left}px`);
@@ -123,77 +155,95 @@ function initSpotlight() {
     });
 }
 
+function bindPlateFrames() {
+    unbound('[data-plate-frame]', 'Plate').forEach((frame) => {
+        const image = frame.querySelector('img[data-plate]');
+        const reveal = () => requestAnimationFrame(() => addEngineClass(frame, 'is-loaded'));
+
+        if (!image || image.complete) {
+            reveal();
+        } else {
+            image.addEventListener('load', reveal, { once: true });
+            image.addEventListener('error', reveal, { once: true });
+        }
+    });
+}
+
 /**
- * Scroll-linked effects share one rAF loop so we never read layout more than once per frame.
+ * Scroll-linked effects share one rAF loop and re-query lazily, so they survive page swaps.
  */
-function initScrollEffects() {
-    const header = document.querySelector('body > header');
-    const marker = document.querySelector('[data-landing-header]');
-    const progressElements = [...document.querySelectorAll('[data-progress]')];
-    const parallaxElements = reduceMotion ? [] : [...document.querySelectorAll('[data-parallax]')];
-    const tiltElements = reduceMotion || !window.matchMedia('(hover: hover)').matches ? [] : [...document.querySelectorAll('[data-tilt]')];
+let scrollBound = false;
+let pointerX = 0;
+let pointerY = 0;
+let currentX = 0;
+let currentY = 0;
 
-    let pointerX = 0;
-    let pointerY = 0;
-    let currentX = 0;
-    let currentY = 0;
-    let ticking = false;
+function updateScrollEffects() {
+    const viewport = window.innerHeight;
+    const scrollY = window.scrollY;
 
-    const update = () => {
-        ticking = false;
-        const viewport = window.innerHeight;
-        const scrollY = window.scrollY;
+    document.querySelector('[data-site-header]')?.classList.toggle('is-scrolled', scrollY > 24);
 
-        if (header && marker) {
-            header.classList.toggle('landing-header--scrolled', scrollY > 24);
+    document.querySelectorAll('[data-progress]').forEach((element) => {
+        const stages = Number(element.dataset.stages ?? 1);
+
+        if (reduceMotion) {
+            element.style.setProperty('--p', '1');
+            element.dataset.stage = String(stages);
+
+            return;
         }
 
-        progressElements.forEach((element) => {
-            if (reduceMotion) {
-                element.style.setProperty('--p', '1');
-                element.dataset.stage = element.dataset.stages ?? '1';
+        const rect = element.getBoundingClientRect();
+        // 0 when the element's top reaches 85% of the viewport, 1 when its bottom passes 75%.
+        const start = viewport * 0.85;
+        const end = viewport * 0.75 - rect.height;
+        const progress = clamp((start - rect.top) / (start - end));
+        element.style.setProperty('--p', progress.toFixed(4));
+        // Stage n lights once the progress line reaches the nth column.
+        element.dataset.stage = Math.ceil(progress * stages - 0.0001).toString();
+    });
 
-                return;
-            }
-
-            const rect = element.getBoundingClientRect();
-            // 0 when the top of the element reaches 85% of the viewport, 1 when its bottom passes 75%.
-            const start = viewport * 0.85;
-            const end = viewport * 0.75 - rect.height;
-            const progress = clamp((start - rect.top) / (start - end));
-            element.style.setProperty('--p', progress.toFixed(4));
-            // Stage n lights once the progress line reaches the nth column.
-            element.dataset.stage = Math.ceil(progress * Number(element.dataset.stages ?? 1) - 0.0001).toString();
+    if (!reduceMotion && scrollY < viewport * 1.2) {
+        document.querySelectorAll('[data-parallax]').forEach((element) => {
+            element.style.transform = `translate3d(0, ${(scrollY * Number(element.dataset.parallax)).toFixed(2)}px, 0)`;
         });
+    }
+}
 
-        parallaxElements.forEach((element) => {
-            if (scrollY > viewport * 1.2) {
-                return;
-            }
+function bindScrollEffects() {
+    updateScrollEffects();
 
-            const factor = Number(element.dataset.parallax);
-            element.style.transform = `translate3d(0, ${(scrollY * factor).toFixed(2)}px, 0)`;
-        });
-    };
+    if (scrollBound) {
+        return;
+    }
 
-    const requestUpdate = () => {
+    scrollBound = true;
+    let ticking = false;
+    const request = () => {
         if (!ticking) {
             ticking = true;
-            requestAnimationFrame(update);
+            requestAnimationFrame(() => {
+                ticking = false;
+                updateScrollEffects();
+            });
         }
     };
 
-    if (tiltElements.length) {
+    window.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', request);
+
+    if (!reduceMotion && canHover) {
         window.addEventListener('pointermove', (event) => {
             pointerX = event.clientX / window.innerWidth - 0.5;
             pointerY = event.clientY / window.innerHeight - 0.5;
         }, { passive: true });
 
         const settle = () => {
-            // Critically-damped follow so the plate drifts rather than snaps.
+            // Damped follow so the plate drifts rather than snaps.
             currentX += (pointerX - currentX) * 0.06;
             currentY += (pointerY - currentY) * 0.06;
-            tiltElements.forEach((element) => {
+            document.querySelectorAll('[data-tilt]').forEach((element) => {
                 const depth = Number(element.dataset.tilt || 12);
                 element.style.translate = `${(-currentX * depth).toFixed(2)}px ${(-currentY * depth).toFixed(2)}px`;
             });
@@ -202,18 +252,14 @@ function initScrollEffects() {
 
         requestAnimationFrame(settle);
     }
-
-    window.addEventListener('scroll', requestUpdate, { passive: true });
-    window.addEventListener('resize', requestUpdate);
-    update();
 }
 
 /**
  * Live aurora: layered curtains of light drawn at low resolution (the browser's
  * upscale gives the soft, diffuse glow for free) and blended additively.
  */
-function initAurora() {
-    document.querySelectorAll('canvas[data-aurora]').forEach((canvas) => {
+function bindAurora() {
+    unbound('canvas[data-aurora]', 'Aurora').forEach((canvas) => {
         const context = canvas.getContext('2d');
         const scale = 0.25;
         const curtains = [
@@ -222,6 +268,7 @@ function initAurora() {
             { hue: 268, base: 0.2, amplitude: 0.06, frequency: 1.1, speed: 0.00006, height: 0.3, alpha: 0.38, phase: 4.2 },
         ];
         const horizon = Number(canvas.dataset.horizon ?? 0);
+        const baseline = Number(canvas.dataset.baseline ?? 0.18);
         const envelopeStart = Number(canvas.dataset.envelopeStart ?? 0.2);
         const envelopeEnd = Number(canvas.dataset.envelopeEnd ?? 0.75);
         const fpsElement = canvas.dataset.fps ? document.querySelector(canvas.dataset.fps) : null;
@@ -235,6 +282,8 @@ function initAurora() {
             height = Math.max(1, Math.round(rect.height * scale));
             canvas.width = width;
             canvas.height = height;
+            // Observers don't always re-fire on viewport changes, so re-derive visibility here too.
+            visible = rect.bottom > 0 && rect.top < window.innerHeight;
         };
 
         const draw = (time) => {
@@ -253,7 +302,7 @@ function initAurora() {
                 const step = 2;
                 for (let x = 0; x < width; x += step) {
                     const u = x / width;
-                    // Keep the left third calm so the headline always reads cleanly.
+                    // Keep one side calm so headlines always read cleanly.
                     const envelope = 0.18 + 0.82 * smoothstep(envelopeStart, envelopeEnd, u);
                     const wave = Math.sin(u * Math.PI * curtain.frequency + time * curtain.speed * 6 + curtain.phase)
                         + 0.5 * Math.sin(u * Math.PI * curtain.frequency * 3.1 - time * curtain.speed * 9 + curtain.phase * 1.7);
@@ -262,7 +311,7 @@ function initAurora() {
                     const flicker = 0.55 + 0.45 * Math.sin(x * 0.37 + time * 0.0011 + curtain.phase) * Math.sin(x * 0.11 - time * 0.0007);
                     context.globalAlpha = clamp(flicker, 0.1, 1) * envelope;
                     context.save();
-                    context.translate(x, y + height * 0.18);
+                    context.translate(x, y + height * baseline);
                     context.fillRect(0, -height * curtain.height, step + 0.5, height * curtain.height);
                     context.restore();
                 }
@@ -288,6 +337,10 @@ function initAurora() {
         let lastSample = performance.now();
 
         const loop = (time) => {
+            if (!canvas.isConnected) {
+                return;
+            }
+
             if (visible) {
                 draw(time);
                 frames++;
@@ -319,27 +372,15 @@ function initAurora() {
     });
 }
 
-function initHeroPlate() {
-    document.querySelectorAll('img[data-plate]').forEach((image) => {
-        const reveal = () => image.closest('[data-plate-frame]')?.classList.add('is-loaded');
-
-        if (image.complete) {
-            reveal();
-        } else {
-            image.addEventListener('load', reveal, { once: true });
-        }
-    });
-}
-
 function boot() {
     document.documentElement.classList.add('js-motion');
-    initHeroPlate();
-    initReveal();
-    initCounters();
-    initTyped();
-    initSpotlight();
-    initScrollEffects();
-    initAurora();
+    bindPlateFrames();
+    bindReveal();
+    bindCounters();
+    bindTyped();
+    bindSpotlight();
+    bindScrollEffects();
+    bindAurora();
 }
 
 if (document.readyState === 'loading') {
@@ -347,3 +388,17 @@ if (document.readyState === 'loading') {
 } else {
     boot();
 }
+
+document.addEventListener('livewire:navigated', boot);
+
+document.addEventListener('livewire:init', () => {
+    // Restore engine classes synchronously during the morph, before the browser paints.
+    window.Livewire.hook('morph.updated', ({ el }) => {
+        engineClasses.get(el)?.forEach((className) => el.classList.add(className));
+    });
+
+    // Bind anything new that a Livewire update brought in (search results, pagination…).
+    window.Livewire.hook('commit', ({ succeed }) => {
+        succeed(() => queueMicrotask(boot));
+    });
+});

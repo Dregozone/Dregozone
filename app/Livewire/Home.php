@@ -4,30 +4,20 @@ namespace App\Livewire;
 
 use App\Models\BlogPost;
 use App\Models\Project;
-use App\Models\Tag;
 use App\Models\Tool;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
-use Livewire\Attributes\Url;
 use Livewire\Component;
 
 #[Layout('components.layouts.main')]
 #[Title('Developer & Writer')]
 class Home extends Component
 {
-    /**
-     * Redesign direction to preview (temporary, used to compare design directions).
-     */
-    #[Url]
-    public string $design = '';
-
-    public function render()
+    public function render(): View
     {
         $featuredProjects = Project::featured()->with('uploadedImage')->take(3)->get();
-        $completedProjects = Project::completed()->with('uploadedImage')->take(6)->get();
-        $inProgressProjects = Project::inProgress()->take(3)->get();
-        $topTags = Tag::topByUsage(10);
-        $tools = Tool::ordered()->with('uploadedImage')->take(3)->get();
+        $tools = Tool::ordered()->take(3)->get(['id', 'title', 'url']);
 
         $blogPostQuery = BlogPost::featured()->with('image');
 
@@ -39,18 +29,9 @@ class Home extends Component
 
         $recentBlogPosts = $blogPostQuery->take(3)->get();
 
-        $view = match ($this->design) {
-            'nordic' => 'livewire.home.nordic',
-            'aurora' => 'livewire.home.aurora',
-            default => 'livewire.home',
-        };
-
-        return view($view, [
+        return view('livewire.home', [
             'featuredProjects' => $featuredProjects,
             'recentBlogPosts' => $recentBlogPosts,
-            'completedProjects' => $completedProjects,
-            'inProgressProjects' => $inProgressProjects,
-            'topTags' => $topTags,
             'tools' => $tools,
             'capabilities' => $this->capabilities(),
             'aiPipeline' => $this->aiPipeline(),

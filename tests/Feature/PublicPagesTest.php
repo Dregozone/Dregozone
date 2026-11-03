@@ -218,34 +218,63 @@ test('home page displays tools section', function () {
         ->assertSee('My Handy Tool');
 });
 
-test('home page renders the nordic design direction', function () {
-    Project::factory()->create(['title' => 'Fjord Project', 'featured' => true, 'status' => 'completed']);
-
-    $this->get('/?design=nordic')
-        ->assertSuccessful()
-        ->assertSee('design-nordic', false)
-        ->assertSee('images/home/hero-fjord.webp', false)
-        ->assertSee('A local AI studio')
-        ->assertSee('Life OS')
-        ->assertSee('Fjord Project');
-});
-
-test('home page renders the aurora design direction', function () {
+test('home page renders the aurora hero, ai lab and featured work', function () {
     Project::factory()->create(['title' => 'Aurora Project', 'featured' => true, 'status' => 'completed']);
 
-    $this->get('/?design=aurora')
+    $this->get('/')
         ->assertSuccessful()
-        ->assertSee('design-aurora', false)
         ->assertSee('images/home/hero-aurora.webp', false)
         ->assertSee('data-aurora', false)
         ->assertSee('A local AI lab')
+        ->assertSee('Life OS')
         ->assertSee('Aurora Project');
 });
 
-test('home page falls back to the current design for unknown directions', function () {
-    Livewire::withQueryParams(['design' => 'unknown'])
-        ->test(Home::class)
-        ->assertSee("Things I've built", false)
-        ->assertDontSee('design-nordic', false)
-        ->assertDontSee('design-aurora', false);
+test('public pages share the aurora layout and live page header', function (string $uri, string $activeLabel) {
+    $this->get($uri)
+        ->assertSuccessful()
+        ->assertSee('theme-aurora', false)
+        ->assertSee('data-site-header', false)
+        ->assertSee('data-aurora', false)
+        ->assertSeeInOrder(['aria-current="page"', $activeLabel], false);
+})->with([
+    'home' => ['/', 'Home'],
+    'now' => ['/now', 'Now'],
+    'blog' => ['/blog', 'Blog'],
+    'projects' => ['/projects', 'Projects'],
+    'tools' => ['/tools', 'Tools'],
+    'pace calculator' => ['/run-tools', 'Tools'],
+    'contact' => ['/contact', 'Contact'],
+]);
+
+test('privacy policy uses the aurora layout', function () {
+    $this->get('/privacy-policy')
+        ->assertSuccessful()
+        ->assertSee('theme-aurora', false)
+        ->assertSee('aurora-prose', false);
 });
+
+test('blog post renders in the aurora reading layout', function () {
+    $post = BlogPost::factory()->published()->create(['title' => 'A Readable Post']);
+
+    $this->get(route('blog.post', $post))
+        ->assertSuccessful()
+        ->assertSee('A Readable Post')
+        ->assertSee('aurora-prose', false)
+        ->assertSee('data-progress', false);
+});
+
+test('blog uses the aurora pagination', function () {
+    BlogPost::factory()->published()->count(10)->create();
+
+    Livewire::test(Blog::class)
+        ->assertSee('next →')
+        ->assertSee('1–9 of 10');
+});
+
+test('auth pages use the aurora theme', function (string $uri) {
+    $this->get($uri)
+        ->assertSuccessful()
+        ->assertSee('theme-aurora', false)
+        ->assertSee('images/home/hero-aurora.webp', false);
+})->with(['/login', '/register', '/forgot-password']);

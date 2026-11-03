@@ -35,103 +35,49 @@ new #[Layout('components.layouts.main')] class extends Component
 ?>
 
 <div>
-    <!-- Hero Section -->
-    <section class="bg-stone-50 border-b border-stone-100">
-        <div class="max-w-6xl mx-auto px-6 py-16 lg:py-20">
-            <div class="text-center">
-                <div class="flex items-center justify-center gap-3 mb-5">
-                    <span class="inline-block w-8 h-0.5 bg-amber-400" aria-hidden="true"></span>
-                    <span class="text-xs font-bold uppercase tracking-widest text-amber-600">Run Tools</span>
-                    <span class="inline-block w-8 h-0.5 bg-amber-400" aria-hidden="true"></span>
-                </div>
-                <h1 class="text-4xl font-black text-stone-900 tracking-tight mb-4">Pace Calculator</h1>
-                <p class="text-lg text-stone-600 max-w-2xl mx-auto">
-                    Enter your target distance and finish time to instantly calculate the running pace you'll need to maintain — in kilometres or miles.
-                </p>
-            </div>
-        </div>
-    </section>
+    <x-aurora.page-header path="~/tools/pace" eyebrow="./pace --calculate"
+        description="Enter your target distance and finish time to instantly calculate the running pace you'll need to maintain — in kilometres or miles.">
+        <x-slot:title>Pace Calculator</x-slot:title>
+    </x-aurora.page-header>
 
-    <!-- Calculator Section -->
-    <section class="bg-white" id="main-content">
-        <div class="max-w-2xl mx-auto px-6 py-16">
-
-            <div class="bg-stone-50 border border-stone-100 rounded-2xl p-8 shadow-sm">
-                <fieldset class="space-y-6">
+    <section class="px-6 py-14 lg:py-20">
+        <div class="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[1.15fr_1fr] lg:items-start">
+            <div class="aurora-glass rounded-2xl p-6 sm:p-8" data-reveal>
+                <fieldset class="space-y-8">
                     <legend class="sr-only">Pace calculator inputs</legend>
 
-                    <!-- Distance -->
                     <div>
-                        <p class="text-sm font-medium text-stone-700 mb-2" id="distance-group-label">Distance</p>
+                        <p class="mb-3 font-mono text-xs text-glow-teal" id="distance-group-label">// distance</p>
                         <div class="grid grid-cols-2 gap-4" role="group" aria-labelledby="distance-group-label">
                             <flux:field>
                                 <flux:label for="distanceKm">Kilometres</flux:label>
-                                <flux:input
-                                    id="distanceKm"
-                                    wire:model="distanceKm"
-                                    wire:change="valueChanged"
-                                    type="number"
-                                    min="0"
-                                    placeholder="0"
-                                />
+                                <flux:input id="distanceKm" wire:model="distanceKm" wire:change="valueChanged" type="number" min="0" placeholder="0" />
                             </flux:field>
                             <flux:field>
                                 <flux:label for="distanceM">Metres</flux:label>
-                                <flux:input
-                                    id="distanceM"
-                                    wire:model="distanceM"
-                                    wire:change="valueChanged"
-                                    type="number"
-                                    min="0"
-                                    max="999"
-                                    placeholder="0"
-                                />
+                                <flux:input id="distanceM" wire:model="distanceM" wire:change="valueChanged" type="number" min="0" max="999" placeholder="0" />
                             </flux:field>
                         </div>
-                        <p class="mt-1.5 text-xs text-stone-400">e.g. 2 km + 400 m = 2.4 km &nbsp;|&nbsp; half marathon = 21 km + 97 m</p>
+                        <p class="mt-2 font-mono text-[11px] text-dim">e.g. 2 km + 400 m = 2.4 km &nbsp;|&nbsp; half marathon = 21 km + 97 m</p>
                     </div>
 
-                    <!-- Time -->
                     <div>
-                        <p class="text-sm font-medium text-stone-700 mb-2" id="time-group-label">Time</p>
+                        <p class="mb-3 font-mono text-xs text-glow-teal" id="time-group-label">// time</p>
                         <div class="grid grid-cols-3 gap-4" role="group" aria-labelledby="time-group-label">
                             <flux:field>
                                 <flux:label for="timeHours">Hours</flux:label>
-                                <flux:input
-                                    id="timeHours"
-                                    wire:model="timeHours"
-                                    wire:change="valueChanged"
-                                    type="number"
-                                    min="0"
-                                    placeholder="0"
-                                />
+                                <flux:input id="timeHours" wire:model="timeHours" wire:change="valueChanged" type="number" min="0" placeholder="0" />
                             </flux:field>
                             <flux:field>
                                 <flux:label for="timeMinutes">Minutes</flux:label>
-                                <flux:input
-                                    id="timeMinutes"
-                                    wire:model="timeMinutes"
-                                    wire:change="valueChanged"
-                                    type="number"
-                                    min="0"
-                                    max="59"
-                                    placeholder="0"
-                                />
+                                <flux:input id="timeMinutes" wire:model="timeMinutes" wire:change="valueChanged" type="number" min="0" max="59" placeholder="0" />
                             </flux:field>
                             <flux:field>
                                 <flux:label for="timeSecs">Seconds</flux:label>
-                                <flux:input
-                                    id="timeSecs"
-                                    wire:model="timeSecs"
-                                    wire:change="valueChanged"
-                                    type="number"
-                                    min="0"
-                                    max="59"
-                                    placeholder="0"
-                                />
+                                <flux:input id="timeSecs" wire:model="timeSecs" wire:change="valueChanged" type="number" min="0" max="59" placeholder="0" />
                             </flux:field>
                         </div>
-                        <p class="mt-1.5 text-xs text-stone-400">e.g. 1 hr + 35 min + 30 sec</p>
+                        <p class="mt-2 font-mono text-[11px] text-dim">e.g. 1 hr + 35 min + 30 sec</p>
                     </div>
 
                     <flux:field>
@@ -142,23 +88,30 @@ new #[Layout('components.layouts.main')] class extends Component
                         </flux:select>
                     </flux:field>
 
-                    <flux:button wire:click="calculate()" variant="primary" icon="bolt" class="w-full">
-                        Calculate My Pace
-                    </flux:button>
+                    <button type="button" wire:click="calculate()" class="aurora-button w-full">
+                        <span wire:loading.remove wire:target="calculate">Calculate My Pace</span>
+                        <span wire:loading wire:target="calculate">Calculating…</span>
+                    </button>
                 </fieldset>
             </div>
 
-            <!-- Result -->
-            <div aria-live="polite" aria-atomic="true" class="mt-8">
-                @if ($requiredPace != '')
-                    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-8 text-center">
-                        <p class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-3">Your Required Pace</p>
-                        <p class="text-5xl sm:text-6xl font-black text-stone-900 tracking-tight">{{ $requiredPace }}</p>
-                        <p class="mt-3 text-sm text-stone-500">Maintain this pace consistently to hit your target time.</p>
-                    </div>
-                @endif
+            {{-- The result is the point of the page, so it gets the most light. --}}
+            <div aria-live="polite" aria-atomic="true" class="lg:sticky lg:top-24" data-reveal style="--i: 1">
+                <div @class([
+                    'relative overflow-hidden rounded-2xl border p-8 text-center transition-colors duration-700',
+                    'border-glow-teal/30 bg-glow-teal/5 shadow-[0_30px_80px_-40px_rgb(63_230_192/0.6)]' => $requiredPace != '',
+                    'border-edge bg-panel' => $requiredPace == '',
+                ])>
+                    <p class="font-mono text-xs text-mute">{{ $requiredPace != '' ? '// your required pace' : '// awaiting input' }}</p>
+                    @if ($requiredPace != '')
+                        <p class="aurora-gradient-text mt-5 text-5xl font-medium tracking-[-0.04em] sm:text-6xl">{{ $requiredPace }}</p>
+                        <p class="mt-4 text-sm text-mute">Maintain this pace consistently to hit your target time.</p>
+                    @else
+                        <p class="mt-5 font-mono text-5xl text-dim/60 sm:text-6xl">--:--</p>
+                        <p class="mt-4 text-sm text-dim">Your pace appears here once you calculate.</p>
+                    @endif
+                </div>
             </div>
-
         </div>
     </section>
 </div>

@@ -3,18 +3,18 @@
     <!-- Header -->
     <div class="flex flex-col gap-1 animate-auth-enter auth-stagger-1">
         <!-- Icon -->
-        <div class="w-12 h-12 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center mb-2">
-            <svg class="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <div class="w-12 h-12 rounded-xl bg-glow-teal/10 border border-glow-teal/20 flex items-center justify-center mb-2">
+            <svg class="w-6 h-6 text-glow-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
             </svg>
         </div>
-        <h1 class="text-2xl font-black tracking-tight text-stone-900">Confirm password</h1>
-        <p class="text-sm text-stone-500">This is a secure area. Please confirm your password to continue.</p>
+        <h1 class="text-2xl font-medium tracking-[-0.03em] text-ink">Confirm password</h1>
+        <p class="text-sm text-mute">This is a secure area. Please confirm your password to continue.</p>
     </div>
 
     <!-- Session Status -->
     @if (session('status'))
-        <div class="animate-auth-enter auth-stagger-2 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm font-medium text-green-700">
+        <div class="animate-auth-enter auth-stagger-2 rounded-lg bg-glow-teal/5 border border-glow-teal/30 px-4 py-3 text-sm font-medium text-glow-teal">
             {{ session('status') }}
         </div>
     @endif
@@ -23,7 +23,7 @@
 
         <!-- Password -->
         <div class="flex flex-col gap-1.5">
-            <label for="password" class="text-sm font-semibold text-stone-700">Password</label>
+            <label for="password" class="text-sm font-semibold text-ink">Password</label>
             <div x-data="{ show: false }" class="relative">
                 <input
                     wire:model="password"
@@ -32,11 +32,11 @@
                     required
                     autocomplete="current-password"
                     placeholder="••••••••"
-                    class="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-stone-200 bg-white text-stone-900 placeholder-stone-400 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500 transition-all duration-150"
+                    class="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-edge-strong bg-void/60 text-ink placeholder-dim text-sm shadow-none focus:outline-none focus:ring-2 focus:ring-glow-teal/30 focus:border-glow-teal/60 transition-all duration-150"
                     autofocus
                 />
                 <button type="button" @click="show = !show"
-                    class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-stone-400 hover:text-stone-600 transition-colors"
+                    class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-dim hover:text-ink transition-colors"
                     :aria-label="show ? 'Hide password' : 'Show password'">
                     <svg x-show="!show" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
@@ -48,13 +48,13 @@
                 </button>
             </div>
             @error('password')
-                <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                <p class="text-xs text-rose-300 font-medium">{{ $message }}</p>
             @enderror
         </div>
 
         <!-- Submit -->
         <button type="submit"
-            class="w-full flex items-center justify-center gap-2 bg-stone-900 hover:bg-stone-700 text-white font-semibold text-sm px-5 py-3 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-stone-900 focus:ring-offset-2 active:scale-[0.98]"
+            class="w-full flex items-center justify-center gap-2 bg-ink hover:bg-white text-void font-semibold text-sm px-5 py-3 rounded-xl shadow-none hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-glow-teal/50 focus:ring-offset-2 focus:ring-offset-void active:scale-[0.98]"
             wire:loading.attr="disabled" wire:loading.class="opacity-75 cursor-not-allowed">
             <span wire:loading.remove>Confirm &amp; continue</span>
             <span wire:loading class="inline-flex items-center gap-2">
