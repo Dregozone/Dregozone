@@ -4,12 +4,25 @@
         /* Pipeline circuit: scroll drives a packet through each stage; stages report back as they pass. */
         .aurora-wire { transform: scaleX(var(--p, 1)); transform-origin: left; }
         .aurora-packet { left: calc(var(--p, 1) * 100%); }
+        .aurora-wire-v { transform: scaleY(var(--p, 1)); transform-origin: top; }
+        .aurora-packet-v { top: calc(var(--p, 1) * 100%); }
+        .aurora-node { transition: border-color .5s var(--ease-aurora), background-color .5s var(--ease-aurora), box-shadow .5s var(--ease-aurora); }
         .aurora-stage { transition: border-color .6s var(--ease-aurora), box-shadow .6s var(--ease-aurora); }
-        .aurora-stage .aurora-status-done { display: none; }
-        @for ($stage = 1; $stage <= 4; $stage++)
-            [data-stage="{{ $stage }}"] .aurora-stage:nth-child(-n+{{ $stage }}) { border-color: rgb(63 230 192 / .35); box-shadow: 0 0 0 1px rgb(63 230 192 / .08), 0 20px 60px -30px rgb(63 230 192 / .5); }
-            [data-stage="{{ $stage }}"] .aurora-stage:nth-child(-n+{{ $stage }}) .aurora-status-done { display: inline; }
-            [data-stage="{{ $stage }}"] .aurora-stage:nth-child(-n+{{ $stage }}) .aurora-status-wait { display: none; }
+        .aurora-stage :is(.aurora-status-done, .aurora-status-run) { display: none; }
+        {{-- Stage n is under the packet ("running"); stages before it have "passed". --}}
+        @for ($stage = 1; $stage <= 5; $stage++)
+            @if ($stage > 1)
+                [data-stage="{{ $stage }}"] .aurora-stage:nth-child(-n+{{ $stage - 1 }}) { border-color: rgb(63 230 192 / .35); box-shadow: 0 0 0 1px rgb(63 230 192 / .08), 0 20px 60px -30px rgb(63 230 192 / .5); }
+                [data-stage="{{ $stage }}"] .aurora-stage:nth-child(-n+{{ $stage - 1 }}) .aurora-status-done { display: inline; }
+                [data-stage="{{ $stage }}"] .aurora-stage:nth-child(-n+{{ $stage - 1 }}) :is(.aurora-status-wait, .aurora-status-run) { display: none; }
+                [data-stage="{{ $stage }}"] .aurora-stage:nth-child(-n+{{ $stage - 1 }}) .aurora-node { border-color: var(--color-glow-teal); background: var(--color-glow-teal); box-shadow: 0 0 12px 2px rgb(63 230 192 / .6); }
+            @endif
+            @if ($stage <= 4)
+                [data-stage="{{ $stage }}"] .aurora-stage:nth-child({{ $stage }}) { border-color: rgb(92 211 255 / .4); box-shadow: 0 0 0 1px rgb(92 211 255 / .1), 0 20px 60px -30px rgb(92 211 255 / .6); }
+                [data-stage="{{ $stage }}"] .aurora-stage:nth-child({{ $stage }}) .aurora-status-run { display: inline; }
+                [data-stage="{{ $stage }}"] .aurora-stage:nth-child({{ $stage }}) .aurora-status-wait { display: none; }
+                [data-stage="{{ $stage }}"] .aurora-stage:nth-child({{ $stage }}) .aurora-node { border-color: var(--color-glow-cyan); background: var(--color-void); box-shadow: 0 0 12px 3px rgb(92 211 255 / .7); }
+            @endif
         @endfor
 
         /* Terminal replays a real agent session line by line. */
@@ -119,18 +132,26 @@
             </div>
 
             {{-- Pipeline circuit --}}
-            <div class="relative mt-20" data-progress data-stages="4">
+            <div class="relative mt-20" data-progress data-stages="4" data-progress-line-mobile="0.6">
+                {{-- Desktop: the packet travels along the row. --}}
                 <div class="absolute left-0 right-0 top-[2.15rem] hidden h-px bg-edge lg:block" aria-hidden="true">
                     <div class="aurora-wire absolute inset-0 aurora-gradient"></div>
                     <div class="aurora-packet absolute top-1/2 h-1.5 w-10 -translate-x-full -translate-y-1/2 rounded-full bg-gradient-to-r from-transparent to-white shadow-[0_0_18px_4px_rgb(92_211_255/0.6)]"></div>
                 </div>
-                <ol class="relative grid gap-4 lg:grid-cols-4">
+                {{-- Mobile: the packet runs down a rail, pinned to the reader's eye line. --}}
+                <div class="absolute bottom-0 left-[1.3rem] top-0 w-px bg-edge lg:hidden" aria-hidden="true">
+                    <div class="aurora-wire-v absolute inset-0 bg-gradient-to-b from-glow-teal via-glow-cyan to-glow-violet"></div>
+                    <div class="aurora-packet-v absolute left-1/2 h-10 w-1.5 -translate-x-1/2 -translate-y-full rounded-full bg-gradient-to-b from-transparent to-white shadow-[0_0_18px_4px_rgb(92_211_255/0.6)]"></div>
+                </div>
+                <ol class="relative grid gap-4 pl-12 lg:grid-cols-4 lg:pl-0">
                     @foreach ($aiPipeline as $stage)
                         <li class="aurora-stage aurora-glass rounded-2xl p-6">
+                            <span class="aurora-node absolute -left-[1.98rem] top-7 h-2.5 w-2.5 rounded-full border border-edge-strong bg-void lg:hidden" aria-hidden="true"></span>
                             <div class="font-mono flex items-center justify-between text-[11px]">
                                 <span class="rounded-md border border-edge-strong bg-night px-2 py-1 text-ink">{{ $stage['key'] }}</span>
                                 <span class="text-dim">
                                     <span class="aurora-status-wait">○ queued</span>
+                                    <span class="aurora-status-run text-glow-cyan">◐ running</span>
                                     <span class="aurora-status-done text-glow-teal">● passed</span>
                                 </span>
                             </div>

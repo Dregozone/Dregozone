@@ -189,19 +189,29 @@ function updateScrollEffects() {
 
         if (reduceMotion) {
             element.style.setProperty('--p', '1');
-            element.dataset.stage = String(stages);
+            element.dataset.stage = String(stages + 1);
 
             return;
         }
 
         const rect = element.getBoundingClientRect();
-        // 0 when the element's top reaches 85% of the viewport, 1 when its bottom passes 75%.
-        const start = viewport * 0.85;
-        const end = viewport * 0.75 - rect.height;
-        const progress = clamp((start - rect.top) / (start - end));
+        const readingLine = window.innerWidth < 1024 ? Number(element.dataset.progressLineMobile) : NaN;
+        let progress;
+
+        if (readingLine > 0) {
+            // Line mode: progress is how far a fixed reading line has travelled through the element,
+            // so anything placed at --p stays pinned to that line while the content scrolls past.
+            progress = clamp((viewport * readingLine - rect.top) / rect.height);
+        } else {
+            // 0 when the element's top reaches 85% of the viewport, 1 when its bottom passes 75%.
+            const start = viewport * 0.85;
+            const end = viewport * 0.75 - rect.height;
+            progress = clamp((start - rect.top) / (start - end));
+        }
+
         element.style.setProperty('--p', progress.toFixed(4));
-        // Stage n lights once the progress line reaches the nth column.
-        element.dataset.stage = Math.ceil(progress * stages - 0.0001).toString();
+        // Stage n is "current" once the packet reaches it; stages + 1 means the job has passed every stage.
+        element.dataset.stage = progress >= 1 ? String(stages + 1) : Math.ceil(progress * stages - 0.0001).toString();
     });
 
     if (!reduceMotion && scrollY < viewport * 1.2) {

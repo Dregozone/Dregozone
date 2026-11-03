@@ -32,12 +32,52 @@
     initial-value: 0deg;
 }
 
-/* Flux components follow the aurora accent on public pages only. */
+/* Flux components follow the aurora accent wherever the Aurora theme is active. */
 html.theme-aurora {
     --color-accent: var(--color-glow-teal);
     --color-accent-content: var(--color-glow-teal);
     --color-accent-foreground: var(--color-void);
     color-scheme: dark;
+
+    /*
+     * Console palette. The admin screens and Flux components are written with Tailwind's
+     * gray/zinc/blue scales and dark: variants. Inside the Aurora theme those scales resolve
+     * to the night palette, so every console screen themes from this one place.
+     */
+    --color-gray-50: #e7edf6;
+    --color-gray-100: #d6dde8;
+    --color-gray-200: #b6c0d0;
+    --color-gray-300: #9aa6b8;
+    --color-gray-400: #8b98ac;
+    --color-gray-500: #6b788c;
+    --color-gray-600: #2a3550;
+    --color-gray-700: #121a2c;
+    --color-gray-800: #0d1322;
+    --color-gray-900: #070b15;
+    --color-gray-950: #04060c;
+
+    --color-zinc-50: #e7edf6;
+    --color-zinc-100: #d6dde8;
+    --color-zinc-200: #b6c0d0;
+    --color-zinc-300: #9aa6b8;
+    --color-zinc-400: #8b98ac;
+    --color-zinc-500: #6b788c;
+    --color-zinc-600: #2a3550;
+    --color-zinc-700: #1c2540;
+    --color-zinc-800: #111829;
+    --color-zinc-900: #070b15;
+    --color-zinc-950: #04060c;
+
+    --color-blue-50: rgb(63 230 192 / 0.08);
+    --color-blue-100: rgb(63 230 192 / 0.14);
+    --color-blue-200: #8ff2da;
+    --color-blue-300: #5cd3ff;
+    --color-blue-400: #5cd3ff;
+    --color-blue-500: #3fe6c0;
+    --color-blue-600: #0f7f86;
+    --color-blue-700: #0b6a70;
+    --color-blue-800: #5cd3ff;
+    --color-blue-900: #0b3b40;
 }
 
 @layer components {

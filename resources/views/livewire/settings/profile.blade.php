@@ -1,4 +1,4 @@
-<section class="w-full md:max-w-3xl mx-auto pb-10">
+<section class="pb-24">
     @include('partials.settings-heading')
 
     <x-settings.layout :heading="__('Profile')" :subheading="__('Update your name and email address')">
