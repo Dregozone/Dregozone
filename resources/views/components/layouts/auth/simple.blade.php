@@ -41,7 +41,7 @@
                         Building things <span class="aurora-gradient-text">for the web.</span>
                     </h2>
                     <p class="aurora-rise mt-5 max-w-sm leading-relaxed text-mute" style="--delay: .5s">
-                        Developer, writer, explorer. Create a free account to get more from the site.
+                        Developer, tinkerer, explorer. Create a free account to get more from the site.
                     </p>
 
                     <ul class="aurora-rise mt-8 flex flex-wrap gap-2" style="--delay: .65s">

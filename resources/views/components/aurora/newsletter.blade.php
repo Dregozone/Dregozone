@@ -1,7 +1,7 @@
 @props([
     'eyebrow' => '// subscribe',
     'heading' => 'Release notes from the lab.',
-    'description' => "New writing, projects and experiments, only when they're worth opening.",
+    'description' => "New experiments, projects and field notes, only when they're worth opening.",
 ])
 
 <section {{ $attributes->merge(['class' => 'relative overflow-hidden border-t border-edge px-6 py-24 lg:py-28']) }}>

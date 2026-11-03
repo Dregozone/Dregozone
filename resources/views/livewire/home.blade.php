@@ -310,7 +310,7 @@
             <div class="aurora-glass rounded-2xl p-7" data-reveal style="--i: 1">
                 <p class="font-mono mb-2 text-xs text-glow-teal">// subscribe</p>
                 <p class="text-lg font-medium">Release notes from the lab.</p>
-                <p class="mb-6 mt-1 text-sm text-mute">New writing, projects and experiments, only when they're worth opening.</p>
+                <p class="mb-6 mt-1 text-sm text-mute">New experiments, projects and field notes, only when they're worth opening.</p>
                 @livewire('newsletter-signup')
             </div>
         </div>

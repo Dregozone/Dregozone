@@ -62,6 +62,19 @@ class BlogPost extends Model
         return $this->belongsTo(UploadedImage::class, 'image_id');
     }
 
+    /**
+     * The link preview image for this post: its header image cropped to 1200×630, or null
+     * when the post has no image suitable for a card and the site default should be used.
+     */
+    public function socialCardUrl(): ?string
+    {
+        if (! $this->image?->isSuitableForSocialCard()) {
+            return null;
+        }
+
+        return route('blog.post.card', ['post' => $this, 'v' => $this->image->updated_at?->timestamp]);
+    }
+
     public function viewRecords(): HasMany
     {
         return $this->hasMany(UserBlogView::class);

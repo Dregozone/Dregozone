@@ -5,6 +5,8 @@ namespace App\Livewire;
 use App\Models\BlogPost as BlogPostModel;
 use App\Models\UserBlogRead;
 use App\Models\UserBlogView;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -71,7 +73,7 @@ class BlogPost extends Component
         $this->readAt = null;
     }
 
-    public function render()
+    public function render(): View
     {
         $relatedPosts = BlogPostModel::published()
             ->where('id', '!=', $this->post->id)
@@ -95,8 +97,16 @@ class BlogPost extends Component
             $relatedPosts = $relatedPosts->merge($additionalPosts);
         }
 
+        $socialCardUrl = $this->post->socialCardUrl();
+
         return view('livewire.blog-post', [
             'relatedPosts' => $relatedPosts,
+        ])->title($this->post->title)->layoutData([
+            'description' => $this->post->excerpt ?: Str::limit(strip_tags((string) $this->post->content), 180),
+            'socialType' => 'article',
+            'socialImage' => $socialCardUrl,
+            'socialImageAlt' => $socialCardUrl ? $this->post->title : null,
+            'publishedAt' => $this->post->published_at?->toIso8601String(),
         ]);
     }
 }

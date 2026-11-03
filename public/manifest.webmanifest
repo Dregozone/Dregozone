@@ -1,7 +1,7 @@
 {
     "name": "Anders Learmonth",
     "short_name": "Dregozone",
-    "description": "Developer portfolio, projects, and technical writing.",
+    "description": "Developer portfolio: projects, tools and experiments with local AI.",
     "start_url": "/",
     "scope": "/",
     "display": "standalone",

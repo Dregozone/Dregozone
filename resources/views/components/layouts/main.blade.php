@@ -1,4 +1,11 @@
-@props(['title' => 'Developer & Writer'])
+@props([
+    'title' => 'Developer & AI Tinkerer',
+    'description' => 'Anders Learmonth — senior full-stack engineer building Laravel products, local AI tooling and interfaces that feel effortless.',
+    'socialImage' => null,
+    'socialImageAlt' => null,
+    'socialType' => 'website',
+    'publishedAt' => null,
+])
 
 @php
     $navigation = [
@@ -18,10 +25,36 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="Anders Learmonth — senior full-stack engineer building Laravel products, local AI tooling and interfaces that feel effortless.">
+    <meta name="description" content="{{ $description }}">
     <meta name="color-scheme" content="dark">
     <meta name="theme-color" content="#04060c">
     <title>Anders Learmonth — {{ $title }}</title>
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- Link previews: a post's own header image when it has a suitable one, otherwise the site card. --}}
+    @php
+        $socialTitle = $socialType === 'article' ? $title : "Anders Learmonth — {$title}";
+        $socialImageUrl = $socialImage ?? asset('images/social/card.jpg');
+        $socialImageAlt ??= 'Anders Learmonth — Developer & AI Tinkerer, over an aurora above a mountain lake.';
+    @endphp
+    <meta property="og:site_name" content="Anders Learmonth">
+    <meta property="og:type" content="{{ $socialType }}">
+    <meta property="og:title" content="{{ $socialTitle }}">
+    <meta property="og:description" content="{{ $description }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ $socialImageUrl }}">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="{{ $socialImageAlt }}">
+    @if ($publishedAt)
+        <meta property="article:published_time" content="{{ $publishedAt }}">
+    @endif
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $socialTitle }}">
+    <meta name="twitter:description" content="{{ $description }}">
+    <meta name="twitter:image" content="{{ $socialImageUrl }}">
+    <meta name="twitter:image:alt" content="{{ $socialImageAlt }}">
     <link rel="manifest" href="/manifest.webmanifest">
     <script>document.documentElement.classList.add('js-motion')</script>
 
@@ -148,7 +181,7 @@
                         <span class="aurora-gradient-text">Anders</span>Learmonth
                     </a>
                     <p class="mt-3 max-w-xs text-sm leading-relaxed text-mute">
-                        Building things for the web, writing about what I learn, and running a small AI lab on one desk.
+                        Building for the web, taking new AI tools apart to see what they can really do, and running a small lab on one desk.
                     </p>
                     <x-aurora.social-links class="mt-6" />
                 </div>
