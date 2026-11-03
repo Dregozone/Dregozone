@@ -25,10 +25,6 @@
             @endif
         @endfor
 
-        /* Terminal replays a real agent session line by line. */
-        html.js-motion .aurora-terminal .aurora-term-line { opacity: 0; translate: -6px 0; transition: opacity .35s ease, translate .35s ease; transition-delay: calc(var(--i) * 260ms + 200ms); }
-        html.js-motion .aurora-terminal.is-in .aurora-term-line { opacity: 1; translate: 0 0; }
-
     </style>
 
     {{-- =====================================================================
@@ -41,6 +37,10 @@
                     srcset="{{ asset('images/home/hero-aurora-960.webp') }} 960w, {{ asset('images/home/hero-aurora.webp') }} 1536w"
                     sizes="100vw" width="1536" height="864" alt="" fetchpriority="high" decoding="async" data-plate
                     class="aurora-plate h-full w-full object-cover">
+                {{-- Generated with Wan 2.2 from the same plate; an enhancement only (see motion.js bindHeroVideo). --}}
+                <video wire:ignore data-hero-video muted loop playsinline preload="none" aria-hidden="true"
+                    data-src-webm="{{ asset('images/home/hero-aurora-loop.webm') }}" data-src-mp4="{{ asset('images/home/hero-aurora-loop.mp4') }}"
+                    class="aurora-hero-video absolute inset-0 h-full w-full object-cover"></video>
                 <canvas wire:ignore class="aurora-canvas absolute inset-0" data-aurora data-horizon="0.725" data-fps="#aurora-fps" aria-hidden="true"></canvas>
             </div>
         </div>
@@ -78,10 +78,10 @@
                 <span>render.log</span>
                 <span class="flex items-center gap-1.5 text-glow-teal"><span class="h-1.5 w-1.5 animate-pulse rounded-full bg-glow-teal"></span>live</span>
             </span>
-            <span class="flex justify-between"><span class="text-dim">plate</span><span>SDXL Turbo · local</span></span>
+            <span class="flex justify-between"><span class="text-dim">plate</span><span>SDXL Turbo + Wan 2.2</span></span>
             <span class="flex justify-between"><span class="text-dim">gpu</span><span>RTX 2060 Super · 8 GB</span></span>
             <span class="flex justify-between"><span class="text-dim">sky</span><span>&lt;canvas&gt; · <span id="aurora-fps">60</span> fps</span></span>
-            <span class="flex justify-between"><span class="text-dim">weight</span><span>105 KB · vanilla JS</span></span>
+            <span class="flex justify-between"><span class="text-dim">weight</span><span>105 KB still · 470 KB loop</span></span>
         </a>
     </section>
 
@@ -183,41 +183,7 @@
                     </dl>
                 </div>
 
-                <div class="aurora-terminal aurora-glass overflow-hidden rounded-2xl" data-reveal>
-                    <div class="flex items-center justify-between border-b border-edge px-4 py-3">
-                        <div class="flex gap-1.5" aria-hidden="true">
-                            <span class="h-2.5 w-2.5 rounded-full bg-[#ff5f57]/70"></span><span class="h-2.5 w-2.5 rounded-full bg-[#febc2e]/70"></span><span class="h-2.5 w-2.5 rounded-full bg-[#28c840]/70"></span>
-                        </div>
-                        <p class="font-mono text-[11px] text-dim">pod 1 · desk 1 · ~/Herd/orbit</p>
-                        <p class="font-mono text-[11px] text-glow-cyan">running</p>
-                    </div>
-                    @php
-                        $sessionLines = [
-                            ['prompt', '> add a "share list" button to the grocery list'],
-                            ['say', "I'll start by reading how the pages are laid out."],
-                            ['tool', 'Read(routes/web.php)', 'Read 64 lines'],
-                            ['tool', 'Edit(app/Livewire/Page.php)', 'Updated with 18 additions'],
-                            ['tool', 'Write(tests/Feature/PageTest.php)', 'Wrote 42 lines'],
-                            ['tool', 'Bash(php artisan test)', 'Tests: 61 passed (184 assertions)'],
-                            ['say', 'Done. The change is in, with a test, and the whole suite passes.'],
-                        ];
-                    @endphp
-                    <div class="font-mono space-y-1.5 p-5 text-[12.5px] leading-6" role="img" aria-label="A replay of a Claude Code agent session adding a feature with a passing test suite.">
-                        @foreach ($sessionLines as $line)
-                            <div class="aurora-term-line" style="--i: {{ $loop->index }}">
-                                @if ($line[0] === 'prompt')
-                                    <p class="text-ink">{{ $line[1] }}</p>
-                                @elseif ($line[0] === 'say')
-                                    <p class="text-mute"><span class="text-glow-ember">●</span> {{ $line[1] }}</p>
-                                @else
-                                    <p class="text-ink"><span class="text-glow-ember">●</span> {{ $line[1] }}</p>
-                                    <p class="pl-4 {{ str_starts_with($line[2], 'Tests') ? 'text-glow-teal' : 'text-dim' }}">└ {{ $line[2] }}</p>
-                                @endif
-                            </div>
-                        @endforeach
-                        <p class="aurora-term-line text-dim" style="--i: {{ count($sessionLines) }}">&gt; <span class="aurora-caret" aria-hidden="true"></span></p>
-                    </div>
-                </div>
+                <x-aurora.agent-replay :sessions="$agentSessions" data-reveal />
             </div>
 
             <div class="mt-16" data-progress>
@@ -239,7 +205,7 @@
                             <p class="font-mono mb-4 text-xs text-glow-cyan">// hero.plate</p>
                             <h3 class="text-[clamp(1.6rem,2.8vw,2.4rem)] font-medium leading-[1.05] tracking-[-0.03em]">The sky at the top of this page was never photographed.</h3>
                             <p class="mt-5 leading-relaxed text-mute">
-                                The plate was generated locally in ComfyUI in about forty seconds of GPU time. The aurora moving across it is drawn live in the browser, then mirrored into the lake.
+                                The plate was generated locally in ComfyUI in about forty seconds of GPU time, then animated with Wan 2.2 on the same GPU into an eight-second loop. The aurora moving across it is drawn live in the browser and mirrored into the lake.
                             </p>
                         </div>
                         <div class="font-mono flex flex-col gap-3 text-[11px] sm:flex-row sm:flex-wrap sm:items-center">

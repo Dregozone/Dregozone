@@ -1,0 +1,167 @@
+{
+    "title": "Local hero images with ComfyUI",
+    "project": "~/Herd/dregozone",
+    "date": "2026-11-02",
+    "duration_seconds": 479.039,
+    "shipped": "the hero on this page",
+    "prompt": "> i have comfyui installed, you could try to make a landing hero image with that if it helps?",
+    "events": [
+        {
+            "type": "tool",
+            "call": "Bash · Start ComfyUI server headless in background",
+            "result": "started in background",
+            "status": "info",
+            "delay": 450
+        },
+        {
+            "type": "diff",
+            "call": "Write(~/scratch/comfy_gen.py)",
+            "result": "Created",
+            "status": "info",
+            "lines": [
+                [
+                    "+",
+                    "\"\"\"Queue SDXL Turbo hires-fix generations on a local ComfyUI and download the results."
+                ],
+                [
+                    "+",
+                    "Usage: python comfy_gen.py <name> <out_dir> <seed,seed,...> \"<prompt>\""
+                ],
+                [
+                    "+",
+                    "\"\"\""
+                ],
+                [
+                    "+",
+                    "import json"
+                ],
+                [
+                    "+",
+                    "import sys"
+                ]
+            ],
+            "delay": 1796
+        },
+        {
+            "type": "tool",
+            "call": "Bash · Read ComfyUI startup failure log",
+            "result": "The system cannot find the path specified: 'D:\\\\Comfy-Desktop\\\\ComfyUI-Shared\\\\custom_node...",
+            "status": "error",
+            "delay": 1076
+        },
+        {
+            "type": "say",
+            "text": "It expects custom_nodes under the base directory.",
+            "delay": 1128
+        },
+        {
+            "type": "tool",
+            "call": "Bash · Write ComfyUI extra model paths config",
+            "result": "3 lines of output",
+            "status": "info",
+            "delay": 980
+        },
+        {
+            "type": "tool",
+            "call": "Bash · Start ComfyUI headless with shared model paths",
+            "result": "started in background",
+            "status": "info",
+            "delay": 1238
+        },
+        {
+            "type": "tool",
+            "call": "Bash · Read second ComfyUI startup failure",
+            "result": "ModuleNotFoundError: No module named 'torch'",
+            "status": "error",
+            "delay": 1203
+        },
+        {
+            "type": "tool",
+            "call": "Bash · Search deeper for torch and the desktop marker",
+            "result": "41 lines of output",
+            "status": "info",
+            "delay": 1085
+        },
+        {
+            "type": "say",
+            "text": "The project's .venv has torch, so I'm starting ComfyUI with that environment.",
+            "delay": 1030
+        },
+        {
+            "type": "tool",
+            "call": "Bash · Start ComfyUI headless using its venv",
+            "result": "started in background",
+            "status": "info",
+            "delay": 953
+        },
+        {
+            "type": "tool",
+            "call": "Bash · Wait until ComfyUI responds",
+            "result": "TIMEOUT",
+            "status": "error",
+            "delay": 769
+        },
+        {
+            "type": "tool",
+            "call": "Bash · Read third ComfyUI startup failure",
+            "result": "OPENSSL_Uplink(00007FFC51159C60,08): no OPENSSL_Applink",
+            "status": "error",
+            "delay": 2200
+        },
+        {
+            "type": "say",
+            "text": "PyTorch loads fine, but it crashes on an OpenSSL applink error.",
+            "delay": 1091
+        },
+        {
+            "type": "tool",
+            "call": "PowerShell · Launch ComfyUI via PowerShell and wait for ready",
+            "result": "still waiting, moved to background",
+            "status": "info",
+            "delay": 1212
+        },
+        {
+            "type": "tool",
+            "call": "Bash · Check ComfyUI status and logs",
+            "result": "OPENSSL_Uplink(00007FFC7E509C60,08): no OPENSSL_Applink",
+            "status": "error",
+            "delay": 2200
+        },
+        {
+            "type": "tool",
+            "call": "PowerShell · Relaunch ComfyUI with a clean PATH and SSL env",
+            "result": "SSLKEYLOGFILE = \\.\\aswMonFltProxy\\…  (set by Avast)",
+            "status": "info",
+            "delay": 1426
+        },
+        {
+            "type": "say",
+            "text": "Found it: Avast sets SSLKEYLOGFILE to a named pipe, and Python's OpenSSL crashes when it tries to write a key log there.",
+            "delay": 1157
+        },
+        {
+            "type": "tool",
+            "call": "PowerShell · Restart ComfyUI without SSLKEYLOGFILE and wait",
+            "result": "blocked by the permission policy",
+            "status": "error",
+            "delay": 1252
+        },
+        {
+            "type": "say",
+            "text": "Killing python processes was blocked, which is reasonable.",
+            "delay": 1389
+        },
+        {
+            "type": "tool",
+            "call": "PowerShell · Launch ComfyUI without Avast SSLKEYLOGFILE",
+            "result": "READY",
+            "status": "ok",
+            "delay": 1365
+        },
+        {
+            "type": "say",
+            "text": "ComfyUI is up. Generating fjord and aurora candidates with SDXL Turbo and a hires pass, about 40 seconds each.",
+            "delay": 600
+        }
+    ]
+}

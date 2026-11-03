@@ -278,3 +278,15 @@ test('auth pages use the aurora theme', function (string $uri) {
         ->assertSee('theme-aurora', false)
         ->assertSee('images/home/hero-aurora.webp', false);
 })->with(['/login', '/register', '/forgot-password']);
+
+test('home page replays the curated agent sessions and offers the hero video', function () {
+    $this->get('/')
+        ->assertSuccessful()
+        ->assertSee('data-agent-replay', false)
+        ->assertSee('data-replay-sessions', false)
+        ->assertSee('Local hero images with ComfyUI')
+        ->assertSee('Stale admin blog list')
+        ->assertSee('real transcript, lightly trimmed')
+        ->assertSee('data-hero-video', false)
+        ->assertSee('images/home/hero-aurora-loop.webm', false);
+});

@@ -6,6 +6,7 @@ use App\Models\BlogPost;
 use App\Models\Project;
 use App\Models\Tool;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\File;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -33,12 +34,28 @@ class Home extends Component
             'featuredProjects' => $featuredProjects,
             'recentBlogPosts' => $recentBlogPosts,
             'tools' => $tools,
+            'agentSessions' => $this->agentSessions(),
             'capabilities' => $this->capabilities(),
             'aiPipeline' => $this->aiPipeline(),
             'heroRecipe' => $this->heroRecipe(),
             'lifeOsStats' => $this->lifeOsStats(),
             'lifeOsImages' => $this->lifeOsImages(),
         ]);
+    }
+
+    /**
+     * Curated Claude Code sessions for the replay terminal, imported with `agent-session:import`.
+     *
+     * @return list<array{title: string, project: string, date: string, duration_seconds: int|float, shipped: ?string, prompt: string, events: list<array<string, mixed>>}>
+     */
+    protected function agentSessions(): array
+    {
+        return collect(File::glob(resource_path('data/agent-sessions/*.json')))
+            ->sort()
+            ->map(fn (string $path): ?array => json_decode(File::get($path), true))
+            ->filter(fn (?array $session): bool => is_array($session) && ! empty($session['events']))
+            ->values()
+            ->all();
     }
 
     /**
@@ -124,6 +141,7 @@ class Home extends Component
             ['node' => 'Latent upscale', 'detail' => '1536×864 · bislerp'],
             ['node' => 'KSampler', 'detail' => '5 steps · denoise 0.45'],
             ['node' => 'VAE decode', 'detail' => 'tiled · fits in 8 GB'],
+            ['node' => 'Wan 2.2 TI2V', 'detail' => 'image → 4 s video · ping-pong loop'],
         ];
     }
 

@@ -382,6 +382,209 @@ function bindAurora() {
     });
 }
 
+/**
+ * Hero video: an enhancement over the still plate, never a replacement. It loads only once the
+ * page is idle, plays only while visible, and is skipped for reduced motion and data-saver visitors.
+ */
+function bindHeroVideo() {
+    const saveData = navigator.connection?.saveData === true;
+
+    unbound('video[data-hero-video]', 'Video').forEach((video) => {
+        if (reduceMotion || saveData) {
+            return;
+        }
+
+        const start = () => {
+            [['webm', 'video/webm'], ['mp4', 'video/mp4']].forEach(([key, type]) => {
+                const src = video.dataset[`src${key[0].toUpperCase()}${key.slice(1)}`];
+
+                if (src) {
+                    const source = document.createElement('source');
+                    source.src = src;
+                    source.type = type;
+                    video.appendChild(source);
+                }
+            });
+
+            video.addEventListener('playing', () => addEngineClass(video, 'is-playing'), { once: true });
+            video.load();
+
+            new IntersectionObserver(([entry]) => {
+                entry.isIntersecting ? video.play().catch(() => {}) : video.pause();
+            }).observe(video);
+        };
+
+        (window.requestIdleCallback ?? ((callback) => setTimeout(callback, 1200)))(start);
+    });
+}
+
+/**
+ * Agent session replay: real, curated Claude Code sessions played back with compressed real timing.
+ */
+function bindAgentReplay() {
+    unbound('[data-agent-replay]', 'Replay').forEach((root) => {
+        if (reduceMotion) {
+            return;
+        }
+
+        const sessions = JSON.parse(root.querySelector('[data-replay-sessions]')?.textContent ?? '[]');
+        const log = root.querySelector('[data-replay-log]');
+        const viewport = root.querySelector('[data-replay-viewport]');
+        const clock = root.querySelector('[data-replay-clock]');
+        const state = root.querySelector('[data-replay-state]');
+        const tabs = [...root.querySelectorAll('[data-replay-tab]')];
+        const field = (name) => root.querySelector(`[data-replay-${name}]`);
+
+        if (!sessions.length || !log) {
+            return;
+        }
+
+        let token = 0;
+        let visible = false;
+        let wake = null;
+        const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+        const whenVisible = () => (visible ? Promise.resolve() : new Promise((resolve) => { wake = resolve; }));
+        const formatDuration = (seconds) => (seconds >= 60 ? `${Math.floor(seconds / 60)}m ${Math.round(seconds % 60)}s` : `${Math.round(seconds)}s`);
+        const statusClass = (status) => ({ ok: 'text-glow-teal', error: 'text-rose-300' })[status] ?? 'text-dim';
+
+        new IntersectionObserver(([entry]) => {
+            visible = entry.isIntersecting;
+
+            if (visible && wake) {
+                wake();
+                wake = null;
+            }
+        }, { threshold: 0.35 }).observe(root);
+
+        const setState = (running) => {
+            state.className = `flex items-center gap-1.5 ${running ? 'text-glow-cyan' : 'text-glow-teal'}`;
+            state.innerHTML = `<span class="h-1.5 w-1.5 rounded-full ${running ? 'animate-pulse bg-glow-cyan' : 'bg-glow-teal'}"></span>${running ? 'running' : 'done'}`;
+        };
+
+        const append = (element) => {
+            element.classList.add('aurora-replay-line');
+            log.appendChild(element);
+            requestAnimationFrame(() => requestAnimationFrame(() => element.classList.add('is-on')));
+            viewport.scrollTo({ top: viewport.scrollHeight, behavior: 'smooth' });
+
+            return element;
+        };
+
+        const paragraph = (className, ...parts) => {
+            const p = document.createElement('p');
+            p.className = className;
+            parts.forEach((part) => p.append(part));
+
+            return p;
+        };
+
+        const bullet = () => Object.assign(document.createElement('span'), { className: 'text-glow-ember', textContent: '● ' });
+
+        const type = async (node, text, my) => {
+            for (let i = 0; i <= text.length; i += 2) {
+                if (my !== token) {
+                    return;
+                }
+
+                node.textContent = text.slice(0, i);
+                await sleep(16);
+            }
+
+            node.textContent = text;
+        };
+
+        const play = async (index) => {
+            const my = ++token;
+            const session = sessions[index];
+
+            tabs.forEach((tab, i) => tab.setAttribute('aria-selected', String(i === index)));
+            field('project').textContent = session.project;
+            field('date').textContent = new Date(session.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+            field('shipped').textContent = session.shipped ? `→ shipped ${session.shipped}` : '';
+            log.replaceChildren();
+            viewport.scrollTop = 0;
+            setState(true);
+
+            const started = performance.now();
+            const tick = setInterval(() => {
+                clock.textContent = `00:${String(Math.floor((performance.now() - started) / 1000)).padStart(2, '0')}`;
+            }, 250);
+
+            const prompt = append(paragraph('text-ink', ''));
+            await type(prompt, session.prompt, my);
+
+            for (const event of session.events) {
+                if (my !== token) {
+                    clearInterval(tick);
+
+                    return;
+                }
+
+                await whenVisible();
+
+                if (event.type === 'say') {
+                    const text = document.createElement('span');
+                    append(paragraph('text-mute', bullet(), text));
+                    await type(text, event.text, my);
+                    await sleep(Math.min(event.delay, 900));
+                    continue;
+                }
+
+                const block = append(document.createElement('div'));
+                block.append(paragraph('text-ink', bullet(), event.call));
+
+                if (event.type === 'diff' && event.lines?.length) {
+                    const box = Object.assign(document.createElement('div'), { className: 'my-1 ml-4 overflow-hidden rounded-lg border border-edge bg-night' });
+                    block.append(box);
+
+                    for (const [sign, code] of event.lines) {
+                        const row = paragraph(`truncate px-3 ${sign === '+' ? 'bg-glow-teal/5 text-glow-teal' : 'text-rose-300'}`, `${sign} ${code}`);
+                        row.classList.add('aurora-replay-line');
+                        box.append(row);
+                        requestAnimationFrame(() => requestAnimationFrame(() => row.classList.add('is-on')));
+                        viewport.scrollTo({ top: viewport.scrollHeight, behavior: 'smooth' });
+                        await sleep(140);
+                    }
+
+                    await sleep(350);
+                    continue;
+                }
+
+                const result = paragraph('truncate pl-4 text-dim', Object.assign(document.createElement('span'), { className: 'aurora-spinner' }), ' running…');
+                block.append(result);
+                viewport.scrollTo({ top: viewport.scrollHeight, behavior: 'smooth' });
+                await sleep(event.delay);
+
+                if (my !== token) {
+                    clearInterval(tick);
+
+                    return;
+                }
+
+                result.className = `truncate pl-4 ${statusClass(event.status)}`;
+                result.textContent = `└ ${event.result ?? 'done'}`;
+                await sleep(260);
+            }
+
+            clearInterval(tick);
+            setState(false);
+            // Be honest about the compression: show how long the session really took.
+            clock.textContent = `${formatDuration(session.duration_seconds)} real time`;
+
+            await sleep(6000);
+
+            if (my === token && sessions.length > 1) {
+                await whenVisible();
+                play((index + 1) % sessions.length);
+            }
+        };
+
+        tabs.forEach((tab, index) => tab.addEventListener('click', () => play(index)));
+
+        whenVisible().then(() => play(0));
+    });
+}
+
 function boot() {
     document.documentElement.classList.add('js-motion');
     bindPlateFrames();
@@ -391,6 +594,8 @@ function boot() {
     bindSpotlight();
     bindScrollEffects();
     bindAurora();
+    bindHeroVideo();
+    bindAgentReplay();
 }
 
 if (document.readyState === 'loading') {
