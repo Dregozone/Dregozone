@@ -1,430 +1,318 @@
 <div>
-    {{-- =====================================================================
-         HERO
-    ====================================================================== --}}
-    <section class="bg-stone-50 border-b border-stone-100 overflow-hidden">
-        <div class="max-w-6xl mx-auto px-6 py-20 lg:py-28">
-            <div class="grid lg:grid-cols-[1fr_400px] gap-14 items-center">
 
-                {{-- Left: intro text --}}
-                <div>
-                    <div class="flex items-center gap-3 mb-7">
-                        <span class="inline-block w-8 h-0.5 bg-amber-400"></span>
-                        <span class="text-xs font-bold uppercase tracking-widest text-amber-600">Welcome to my corner of the web</span>
-                    </div>
-
-                    <h1 class="text-[clamp(2.75rem,7vw,5rem)] font-black text-stone-900 leading-[0.9] tracking-tight mb-7">
-                        Hey, I'm<br>
-                        <span class="text-amber-500">Anders</span><br>
-                        Learmonth.
-                    </h1>
-
-                    <p class="text-lg text-stone-600 leading-relaxed mb-8 max-w-lg">
-                        I build things for the web, write honestly about what I'm learning, and find real joy in exploring languages — both human and programming.
-                    </p>
-
-                    <div class="flex flex-wrap gap-2 mb-10">
-                        @foreach(['Laravel', 'Livewire', 'PHP', 'Language Learning', 'Open Source', 'Side Projects'] as $interest)
-                            <span class="inline-flex items-center px-3 py-1.5 bg-white border border-stone-200 text-stone-600 text-xs font-semibold rounded-full">
-                                {{ $interest }}
-                            </span>
-                        @endforeach
-                    </div>
-
-                    <div class="flex flex-wrap gap-3">
-                        <a href="{{ route('blog') }}"
-                            class="inline-flex items-center gap-2 bg-stone-900 text-white px-6 py-3.5 rounded-full text-sm font-bold hover:bg-stone-700 transition-colors">
-                            Read the blog
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                        </a>
-                        <a href="{{ route('contact') }}"
-                            class="inline-flex items-center gap-2 bg-white border border-stone-300 text-stone-700 px-6 py-3.5 rounded-full text-sm font-bold hover:border-stone-500 hover:text-stone-900 transition-colors">
-                            Say hello
-                        </a>
-                    </div>
-                </div>
-
-                {{-- Right: activity peek cards --}}
-                <div class="hidden lg:flex flex-col gap-4">
-                    {{-- Latest post card --}}
-                    @if($recentBlogPosts->isNotEmpty())
-                        @php $latestPost = $recentBlogPosts->first(); @endphp
-                        <a href="{{ route('blog.post', $latestPost) }}"
-                            class="group block bg-white rounded-2xl p-6 border border-stone-200 hover:border-amber-300 hover:shadow-md transition-all">
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="text-xs font-bold uppercase tracking-widest text-amber-600">Latest post</span>
-                                <span class="text-xs text-stone-400">{{ $latestPost->published_at->diffForHumans() }}</span>
-                            </div>
-                            <h3 class="font-bold text-stone-900 leading-snug group-hover:text-amber-700 transition-colors">
-                                {{ $latestPost->title }}
-                            </h3>
-                            @if($latestPost->excerpt)
-                                <p class="mt-2 text-sm text-stone-500 line-clamp-2">{{ $latestPost->excerpt }}</p>
-                            @endif
-                            <span class="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-stone-500 group-hover:text-stone-700 transition-colors">
-                                Read it
-                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                            </span>
-                        </a>
-                    @endif
-
-                    {{-- Currently building card --}}
-                    @if($inProgressProjects->isNotEmpty())
-                        <div class="bg-amber-400 rounded-2xl p-6">
-                            <span class="text-xs font-bold uppercase tracking-widest text-amber-900">Currently building</span>
-                            <div class="mt-3 space-y-2">
-                                @foreach($inProgressProjects->take(2) as $project)
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-700 shrink-0"></span>
-                                        <span class="text-sm font-semibold text-amber-900">{{ $project->title }}</span>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <div class="bg-stone-900 rounded-2xl p-6">
-                            <span class="text-xs font-bold uppercase tracking-widest text-stone-400">What I enjoy</span>
-                            <p class="mt-3 text-stone-300 text-sm leading-relaxed">Crafting clean code, writing about it, and picking up new languages along the way.</p>
-                        </div>
-                    @endif
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    {{-- =====================================================================
-         BUILDING NOW STRIP (mobile / overflow fallback when no right column)
-    ====================================================================== --}}
-    @if($inProgressProjects->isNotEmpty())
-        <div class="bg-amber-400 border-b border-amber-300">
-            <div class="max-w-6xl mx-auto px-6 py-3 flex items-center gap-5 overflow-x-auto scrollbar-none">
-                <span class="text-amber-900 text-xs font-black uppercase tracking-widest whitespace-nowrap">Building now ↗</span>
-                <div class="flex items-center gap-5 shrink-0">
-                    @foreach($inProgressProjects as $project)
-                        <span class="text-amber-900 text-sm font-semibold whitespace-nowrap">{{ $project->title }}</span>
-                        @unless($loop->last)
-                            <span class="text-amber-600 font-light">·</span>
-                        @endunless
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    @endif
-
-    {{-- =====================================================================
-         WORK / PROJECTS
-    ====================================================================== --}}
-    <section class="bg-white py-20 lg:py-24">
-        <div class="max-w-6xl mx-auto px-6">
-
-            <div class="flex items-end justify-between mb-12">
-                <div>
-                    <p class="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">Portfolio</p>
-                    <h2 class="text-3xl font-black text-stone-900 tracking-tight">Things I've built</h2>
-                </div>
-            </div>
-
-            @if($featuredProjects->isNotEmpty() /*|| $completedProjects->isNotEmpty()*/)
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach($featuredProjects/*->merge($completedProjects)*/->unique('id')->take(6) as $project)
-                        <div class="group bg-stone-50 rounded-2xl p-6 border border-stone-100 hover:border-stone-300 hover:shadow-sm transition-all">
-                            @if($project->uploadedImage)
-                                <div class="mb-5 rounded-xl overflow-hidden bg-stone-200 aspect-video shadow-md">
-                                    <img src="{{ $project->uploadedImage->base64_data }}" alt="{{ $project->title }}" loading="lazy" decoding="async" class="w-full h-full object-cover">
-                                </div>
-                            @elseif($project->image)
-                                <div class="mb-5 rounded-xl overflow-hidden bg-stone-200 aspect-video shadow-md">
-                                    <img src="{{ $project->image }}" alt="{{ $project->title }}" loading="lazy" decoding="async" class="w-full h-full object-cover">
-                                </div>
-                            @endif
-
-                            <div class="flex items-start justify-between gap-3 mb-3">
-                                <h3 class="font-bold text-stone-900 leading-snug">{{ $project->title }}</h3>
-                                <span class="shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full
-                                    @if($project->status === 'completed') bg-emerald-100 text-emerald-700
-                                    @elseif($project->status === 'in_progress') bg-amber-100 text-amber-700
-                                    @else bg-stone-200 text-stone-600 @endif">
-                                    <span class="w-1.5 h-1.5 rounded-full
-                                        @if($project->status === 'completed') bg-emerald-500
-                                        @elseif($project->status === 'in_progress') bg-amber-500
-                                        @else bg-stone-400 @endif"></span>
-                                    {{ ucfirst(str_replace('_', ' ', $project->status)) }}
-                                </span>
-                            </div>
-
-                            <p class="text-stone-500 text-sm leading-relaxed mb-4">{{ $project->description }}</p>
-
-                            @if($project->technologies)
-                                <div class="flex flex-wrap gap-1.5 mb-5">
-                                    @foreach(array_slice($project->technologies, 0, 4) as $tech)
-                                        <span class="px-2 py-0.5 bg-white border border-stone-200 text-stone-500 text-xs font-medium rounded-md">{{ $tech }}</span>
-                                    @endforeach
-                                </div>
-                            @endif
-
-                            <div class="flex items-center gap-4">
-                                @if($project->url)
-                                    <a href="{{ $project->url }}" target="_blank" rel="noopener"
-                                        class="inline-flex items-center gap-1 text-xs font-bold text-stone-700 hover:text-amber-600 transition-colors">
-                                        Live site
-                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                                    </a>
-                                @endif
-                                @if($project->github_url)
-                                    <a href="{{ $project->github_url }}" target="_blank" rel="noopener"
-                                        class="inline-flex items-center gap-1 text-xs font-bold text-stone-700 hover:text-amber-600 transition-colors">
-                                        Source
-                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <div class="text-center py-16 text-stone-400">
-                    <p class="text-lg">Projects coming soon — check back!</p>
-                </div>
+    <style>
+        /* Pipeline circuit: scroll drives a packet through each stage; stages report back as they pass. */
+        .aurora-wire { transform: scaleX(var(--p, 1)); transform-origin: left; }
+        .aurora-packet { left: calc(var(--p, 1) * 100%); }
+        .aurora-wire-v { transform: scaleY(var(--p, 1)); transform-origin: top; }
+        .aurora-packet-v { top: calc(var(--p, 1) * 100%); }
+        .aurora-node { transition: border-color .5s var(--ease-aurora), background-color .5s var(--ease-aurora), box-shadow .5s var(--ease-aurora); }
+        .aurora-stage { transition: border-color .6s var(--ease-aurora), box-shadow .6s var(--ease-aurora); }
+        .aurora-stage :is(.aurora-status-done, .aurora-status-run) { display: none; }
+        {{-- Stage n is under the packet ("running"); stages before it have "passed". --}}
+        @for ($stage = 1; $stage <= 5; $stage++)
+            @if ($stage > 1)
+                [data-stage="{{ $stage }}"] .aurora-stage:nth-child(-n+{{ $stage - 1 }}) { border-color: rgb(63 230 192 / .35); box-shadow: 0 0 0 1px rgb(63 230 192 / .08), 0 20px 60px -30px rgb(63 230 192 / .5); }
+                [data-stage="{{ $stage }}"] .aurora-stage:nth-child(-n+{{ $stage - 1 }}) .aurora-status-done { display: inline; }
+                [data-stage="{{ $stage }}"] .aurora-stage:nth-child(-n+{{ $stage - 1 }}) :is(.aurora-status-wait, .aurora-status-run) { display: none; }
+                [data-stage="{{ $stage }}"] .aurora-stage:nth-child(-n+{{ $stage - 1 }}) .aurora-node { border-color: var(--color-glow-teal); background: var(--color-glow-teal); box-shadow: 0 0 12px 2px rgb(63 230 192 / .6); }
             @endif
+            @if ($stage <= 4)
+                [data-stage="{{ $stage }}"] .aurora-stage:nth-child({{ $stage }}) { border-color: rgb(92 211 255 / .4); box-shadow: 0 0 0 1px rgb(92 211 255 / .1), 0 20px 60px -30px rgb(92 211 255 / .6); }
+                [data-stage="{{ $stage }}"] .aurora-stage:nth-child({{ $stage }}) .aurora-status-run { display: inline; }
+                [data-stage="{{ $stage }}"] .aurora-stage:nth-child({{ $stage }}) .aurora-status-wait { display: none; }
+                [data-stage="{{ $stage }}"] .aurora-stage:nth-child({{ $stage }}) .aurora-node { border-color: var(--color-glow-cyan); background: var(--color-void); box-shadow: 0 0 12px 3px rgb(92 211 255 / .7); }
+            @endif
+        @endfor
 
-        </div>
-    </section>
+    </style>
 
     {{-- =====================================================================
-         WRITING / BLOG
+         HERO — generated plate, live aurora
     ====================================================================== --}}
-    <section class="bg-stone-50 py-20 lg:py-24 border-t border-stone-100">
-        <div class="max-w-6xl mx-auto px-6">
+    <section class="relative -mt-16 h-[100svh] min-h-[680px] max-h-[1000px] overflow-hidden bg-void" data-plate-frame aria-labelledby="aurora-title">
+        <div class="absolute inset-0" data-parallax="0.3">
+            <div class="absolute -inset-6" data-tilt="16">
+                <img src="{{ asset('images/home/hero-aurora.webp') }}"
+                    srcset="{{ asset('images/home/hero-aurora-960.webp') }} 960w, {{ asset('images/home/hero-aurora.webp') }} 1536w"
+                    sizes="100vw" width="1536" height="864" alt="" fetchpriority="high" decoding="async" data-plate
+                    class="aurora-plate h-full w-full object-cover">
+                {{-- Generated with Wan 2.2 from the same plate; an enhancement only (see motion.js bindHeroVideo). --}}
+                <video wire:ignore data-hero-video muted loop playsinline preload="none" aria-hidden="true"
+                    data-src-webm="{{ asset('images/home/hero-aurora-loop.webm') }}" data-src-mp4="{{ asset('images/home/hero-aurora-loop.mp4') }}"
+                    class="aurora-hero-video absolute inset-0 h-full w-full object-cover"></video>
+                <canvas wire:ignore class="aurora-canvas absolute inset-0" data-aurora data-horizon="0.725" data-fps="#aurora-fps" aria-hidden="true"></canvas>
+            </div>
+        </div>
+        <div class="aurora-grain pointer-events-none absolute inset-0"></div>
+        <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_60%_at_15%_45%,rgb(4_6_12/0.7),transparent_70%)]"></div>
+        <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-void to-transparent"></div>
 
-            <div class="flex items-end justify-between mb-12">
-                <div>
-                    <p class="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">From the blog</p>
-                    <h2 class="text-3xl font-black text-stone-900 tracking-tight">Writing</h2>
-                </div>
-                <a href="{{ route('blog') }}"
-                    class="hidden sm:inline-flex items-center gap-1.5 text-sm font-bold text-stone-600 hover:text-stone-900 transition-colors">
-                    All posts
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+        <div class="relative mx-auto flex h-full max-w-6xl flex-col justify-center px-6 pb-40 pt-16">
+            <p class="font-mono aurora-rise mb-8 text-sm text-mute" style="--delay: .3s">
+                <span class="text-glow-teal">anders@lab</span><span class="text-dim">:</span><span class="text-glow-cyan">~</span><span class="text-dim">$</span>
+                <span data-typed="whoami" data-typed-delay="1100">whoami</span><span class="aurora-caret ml-1" aria-hidden="true"></span>
+            </p>
+            <h1 id="aurora-title" class="max-w-5xl text-[clamp(2.6rem,6.6vw,5.6rem)] font-medium leading-[0.95] tracking-[-0.045em]">
+                <span class="aurora-rise block" style="--delay: 1.5s">Full-stack engineer.</span>
+                <span class="aurora-rise block text-mute" style="--delay: 1.65s">Local-AI tinkerer.</span>
+                <span class="aurora-rise aurora-gradient-text block pb-2" style="--delay: 1.8s">Interface obsessive.</span>
+            </h1>
+            <p class="aurora-rise mt-8 max-w-xl text-lg leading-relaxed text-mute" style="--delay: 2.1s">
+                I'm Anders Learmonth. I build Laravel products end to end, run my own AI stack on a single GPU, and sweat the last five percent of an interface that nobody notices but everyone feels.
+            </p>
+            <div class="aurora-rise mt-10 flex flex-wrap items-center gap-6" style="--delay: 2.3s">
+                <a href="#work" class="aurora-cta inline-flex items-center gap-3 rounded-full px-6 py-3.5 text-sm font-medium text-ink">
+                    Explore the work
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m0 0l-6-6m6 6l6-6" /></svg>
+                </a>
+                <a href="#lab" class="group inline-flex items-center gap-2 text-sm font-medium text-mute transition-colors hover:text-ink">
+                    Tour the AI lab <span class="transition-transform duration-500 group-hover:translate-x-1" aria-hidden="true">→</span>
                 </a>
             </div>
+        </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @forelse($recentBlogPosts as $post)
-                    @php $isRead = auth()->check() && $post->reads->isNotEmpty(); @endphp
-                    <article class="group bg-white rounded-2xl overflow-hidden border border-stone-100 hover:border-stone-300 hover:shadow-sm transition-all flex flex-col {{ $isRead ? 'opacity-75' : '' }}">
-                        @if($post->image)
-                            <div class="aspect-video overflow-hidden bg-stone-100">
-                                <img src="{{ $post->image->base64_data }}" alt="{{ $post->title }}"
-                                    loading="lazy"
-                                    decoding="async"
-                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                            </div>
-                        @else
-                            <div class="aspect-video bg-gradient-to-br from-stone-100 to-stone-200 flex items-center justify-center">
-                                <span class="text-4xl text-stone-300 font-black">{{ mb_substr($post->title, 0, 1) }}</span>
-                            </div>
-                        @endif
+        {{-- Render HUD: what the visitor is looking at, honestly. --}}
+        <a href="#plate" class="aurora-rise aurora-glass font-mono absolute bottom-8 right-6 hidden w-72 rounded-xl p-4 text-[11px] leading-6 text-mute transition-colors hover:border-edge-strong lg:block xl:right-[max(1.5rem,calc((100vw-72rem)/2))]" style="--delay: 2.6s">
+            <span class="mb-2 flex items-center justify-between text-ink">
+                <span>render.log</span>
+                <span class="flex items-center gap-1.5 text-glow-teal"><span class="h-1.5 w-1.5 animate-pulse rounded-full bg-glow-teal"></span>live</span>
+            </span>
+            <span class="flex justify-between"><span class="text-dim">plate</span><span>SDXL Turbo + Wan 2.2</span></span>
+            <span class="flex justify-between"><span class="text-dim">gpu</span><span>RTX 2060 Super · 8 GB</span></span>
+            <span class="flex justify-between"><span class="text-dim">sky</span><span>&lt;canvas&gt; · <span id="aurora-fps">60</span> fps</span></span>
+            <span class="flex justify-between"><span class="text-dim">weight</span><span>105 KB still · 470 KB loop</span></span>
+        </a>
+    </section>
 
-                        <div class="p-6 flex flex-col flex-1">
-                            <div class="flex items-center gap-2.5 mb-3">
-                                @if($post->tags && count($post->tags) > 0)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-700">
-                                        {{ $post->tags[0] }}
-                                    </span>
-                                @endif
-                                @if($isRead)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-200">
-                                        ✓ Read
-                                    </span>
-                                @endif
-                                <span class="text-xs text-stone-400">{{ $post->published_at->format('M j, Y') }}</span>
-                            </div>
+    {{-- =====================================================================
+         CAPABILITIES
+    ====================================================================== --}}
+    <section class="relative px-6 py-28 lg:py-36" aria-labelledby="aurora-capabilities-title">
+        <div class="mx-auto max-w-6xl">
+            <div class="mb-16 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                <div data-reveal>
+                    <p class="font-mono mb-4 text-xs text-glow-teal">// what I bring</p>
+                    <h2 id="aurora-capabilities-title" class="max-w-2xl text-[clamp(2rem,4.4vw,3.6rem)] font-medium leading-[1.02] tracking-[-0.035em]">Owning problems end to end, from the schema to the last pixel.</h2>
+                </div>
+                <p class="max-w-sm text-mute" data-reveal style="--i: 1">Readable code, calm collaboration and clear written thinking, applied wherever the work needs it.</p>
+            </div>
 
-                            <h3 class="font-bold leading-snug mb-2 group-hover:text-amber-700 transition-colors {{ $isRead ? 'text-stone-500' : 'text-stone-900' }}">
-                                <a href="{{ route('blog.post', $post) }}">{{ $post->title }}</a>
-                            </h3>
-
-                            @if($post->excerpt)
-                                <p class="text-sm leading-relaxed mb-4 flex-1 {{ $isRead ? 'text-stone-400' : 'text-stone-500' }}">
-                                    {{ Str::limit($post->excerpt, 100) }}
-                                </p>
-                            @endif
-
-                            <a href="{{ route('blog.post', $post) }}"
-                                class="mt-auto inline-flex items-center gap-1.5 text-xs font-bold text-stone-600 hover:text-amber-600 transition-colors">
-                                Read more
-                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                            </a>
-                        </div>
+            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                @foreach ($capabilities as $capability)
+                    <article class="aurora-glass flex flex-col rounded-2xl p-6" data-spotlight data-reveal style="--i: {{ $loop->index }}">
+                        <p class="font-mono text-xs text-dim">0x0{{ $loop->iteration }}</p>
+                        <h3 class="mt-10 text-xl font-medium tracking-[-0.02em]">{{ $capability['title'] }}</h3>
+                        <p class="mt-3 flex-1 text-sm leading-relaxed text-mute">{{ $capability['description'] }}</p>
+                        <ul class="font-mono mt-6 flex flex-wrap gap-1.5 text-[10px] text-mute">
+                            @foreach ($capability['stack'] as $item)
+                                <li class="rounded-md border border-edge px-2 py-1">{{ $item }}</li>
+                            @endforeach
+                        </ul>
                     </article>
-                @empty
-                    <div class="col-span-full text-center py-16">
-                        <p class="text-stone-400 text-lg">No posts yet — coming soon!</p>
-                    </div>
-                @endforelse
-            </div>
-
-            <div class="mt-10 sm:hidden text-center">
-                <a href="{{ route('blog') }}"
-                    class="inline-flex items-center gap-2 bg-stone-900 text-white px-6 py-3 rounded-full text-sm font-bold hover:bg-stone-700 transition-colors">
-                    All posts
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                </a>
-            </div>
-
-        </div>
-    </section>
-
-    {{-- =====================================================================
-         TOOLS
-    ====================================================================== --}}
-    <section class="bg-white py-20 lg:py-24 border-t border-stone-100">
-        <div class="max-w-6xl mx-auto px-6">
-
-            <div class="flex items-end justify-between mb-12">
-                <div>
-                    <p class="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">Utilities</p>
-                    <h2 class="text-3xl font-black text-stone-900 tracking-tight">Tools</h2>
-                </div>
-                <a href="{{ route('tools') }}"
-                    class="hidden sm:inline-flex items-center gap-1.5 text-sm font-bold text-stone-600 hover:text-stone-900 transition-colors">
-                    All tools
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                </a>
-            </div>
-
-            @if($tools->isNotEmpty())
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach($tools as $tool)
-                        <a href="{{ $tool->url }}"
-                            class="group bg-stone-50 rounded-2xl border border-stone-100 hover:border-stone-300 hover:shadow-sm transition-all overflow-hidden flex flex-col">
-                            @if($tool->uploadedImage)
-                                <div class="aspect-video overflow-hidden bg-stone-100">
-                                    <img src="{{ $tool->uploadedImage->base64_data }}"
-                                        alt="{{ $tool->title }}"
-                                        loading="lazy"
-                                        decoding="async"
-                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                </div>
-                            @else
-                                <div class="aspect-video bg-gradient-to-br from-amber-50 to-amber-100 flex items-center justify-center">
-                                    <svg class="w-12 h-12 text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l5.654-4.654m5.965-3.964.337-.338a12.634 12.634 0 0 0 0-17.869 12.634 12.634 0 0 0-17.869 0 .75.75 0 0 0 0 1.061l.688.688" />
-                                    </svg>
-                                </div>
-                            @endif
-
-                            <div class="p-6 flex flex-col flex-1">
-                                <h3 class="font-bold text-stone-900 leading-snug mb-2 group-hover:text-amber-700 transition-colors">
-                                    {{ $tool->title }}
-                                </h3>
-                                <p class="text-stone-500 text-sm leading-relaxed flex-1">{{ $tool->description }}</p>
-                                <span class="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-stone-600 group-hover:text-amber-600 transition-colors">
-                                    Open tool
-                                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                                </span>
-                            </div>
-                        </a>
-                    @endforeach
-                </div>
-            @else
-                <div class="text-center py-16 text-stone-400">
-                    <p class="text-lg">Tools coming soon — check back!</p>
-                </div>
-            @endif
-
-            <div class="mt-10 sm:hidden text-center">
-                <a href="{{ route('tools') }}"
-                    class="inline-flex items-center gap-2 bg-stone-900 text-white px-6 py-3 rounded-full text-sm font-bold hover:bg-stone-700 transition-colors">
-                    All tools
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                </a>
-            </div>
-
-        </div>
-    </section>
-
-    {{-- =====================================================================
-         TOPICS / INTERESTS CLOUD
-    ====================================================================== --}}
-    <section class="bg-white py-20 lg:py-24 border-t border-stone-100">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="max-w-2xl">
-                <p class="text-xs font-bold uppercase tracking-widest text-stone-400 mb-3">What I write about</p>
-                <h2 class="text-3xl font-black text-stone-900 tracking-tight mb-4">Topics & interests</h2>
-                <p class="text-stone-500 text-base leading-relaxed mb-10">
-                    Not just code. I write about learning itself — picking up languages, building habits, exploring ideas, and the occasional deep-dive into something technical.
-                </p>
-            </div>
-
-            <div class="flex flex-wrap gap-3">
-                @php
-                    $tagColours = [
-                        'bg-red-50 text-red-700 border-red-200',
-                        'bg-pink-50 text-pink-700 border-pink-200',
-                        'bg-violet-50 text-violet-700 border-violet-200',
-                        'bg-emerald-50 text-emerald-700 border-emerald-200',
-                        'bg-amber-50 text-amber-700 border-amber-200',
-                        'bg-yellow-50 text-yellow-700 border-yellow-200',
-                        'bg-sky-50 text-sky-700 border-sky-200',
-                        'bg-teal-50 text-teal-700 border-teal-200',
-                        'bg-orange-50 text-orange-700 border-orange-200',
-                        'bg-rose-50 text-rose-700 border-rose-200',
-                    ];
-                @endphp
-                @foreach($topTags as $index => $topic)
-                    @php $colour = $tagColours[$index % count($tagColours)]; @endphp
-                    @if($topic->count > 0)
-                        <a href="{{ route('blog', ['tag' => $topic->name]) }}"
-                            class="inline-flex items-center px-4 py-2 rounded-full border text-sm font-semibold transition-all hover:scale-105 hover:shadow-sm {{ $colour }}">
-                            {{ $topic->name }}
-                        </a>
-                    @else
-                        <span class="inline-flex items-center px-4 py-2 rounded-full border text-sm font-semibold {{ $colour }} opacity-60 cursor-default">
-                            {{ $topic->name }}
-                        </span>
-                    @endif
                 @endforeach
             </div>
         </div>
     </section>
 
     {{-- =====================================================================
-         NEWSLETTER
+         THE LAB
     ====================================================================== --}}
-    <section class="bg-stone-900 py-20 lg:py-24">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div>
-                    <p class="text-xs font-bold uppercase tracking-widest text-amber-400 mb-3">Stay in the loop</p>
-                    <h2 class="text-3xl font-black text-white tracking-tight mb-4">
-                        Get new posts<br>in your inbox
-                    </h2>
-                    <p class="text-stone-400 leading-relaxed">
-                        No spam, ever. Just occasional updates when I publish something worth reading — a new project, a lesson learned, or a topic I can't stop thinking about.
-                    </p>
+    <section id="lab" class="relative overflow-hidden px-6 pb-12 pt-28 lg:pb-16 lg:pt-36" aria-labelledby="aurora-lab-title">
+        <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_40%_at_70%_0%,rgb(160_141_255/0.12),transparent_70%),radial-gradient(50%_40%_at_10%_30%,rgb(63_230_192/0.08),transparent_70%)]"></div>
+        <div class="pointer-events-none absolute inset-0 opacity-40 aurora-grid [mask-image:radial-gradient(70%_60%_at_50%_30%,#000,transparent)]"></div>
+
+        <div class="relative mx-auto max-w-6xl">
+            <div class="max-w-3xl" data-reveal>
+                <p class="font-mono mb-4 text-xs text-glow-teal">// the lab</p>
+                <h2 id="aurora-lab-title" class="text-[clamp(2.25rem,5.4vw,4.75rem)] font-medium leading-[0.98] tracking-[-0.045em]">A local AI lab, <span class="aurora-gradient-text">running on one desk.</span></h2>
+                <p class="mt-8 max-w-2xl text-lg leading-relaxed text-mute">
+                    Models on my own hardware, wired into Laravel apps, checked by other models, and orchestrated as a fleet of coding agents. Scroll to send a job through it.
+                </p>
+            </div>
+
+            {{-- Pipeline circuit --}}
+            <div class="relative mt-20" data-progress data-stages="4" data-progress-line-mobile="0.6">
+                {{-- Desktop: the packet travels along the row. --}}
+                <div class="absolute left-0 right-0 top-[2.15rem] hidden h-px bg-edge lg:block" aria-hidden="true">
+                    <div class="aurora-wire absolute inset-0 aurora-gradient"></div>
+                    <div class="aurora-packet absolute top-1/2 h-1.5 w-10 -translate-x-full -translate-y-1/2 rounded-full bg-gradient-to-r from-transparent to-white shadow-[0_0_18px_4px_rgb(92_211_255/0.6)]"></div>
                 </div>
+                {{-- Mobile: the packet runs down a rail, pinned to the reader's eye line. --}}
+                <div class="absolute bottom-0 left-[1.3rem] top-0 w-px bg-edge lg:hidden" aria-hidden="true">
+                    <div class="aurora-wire-v absolute inset-0 bg-gradient-to-b from-glow-teal via-glow-cyan to-glow-violet"></div>
+                    <div class="aurora-packet-v absolute left-1/2 h-10 w-1.5 -translate-x-1/2 -translate-y-full rounded-full bg-gradient-to-b from-transparent to-white shadow-[0_0_18px_4px_rgb(92_211_255/0.6)]"></div>
+                </div>
+                <ol class="relative grid gap-4 pl-12 lg:grid-cols-4 lg:pl-0">
+                    @foreach ($aiPipeline as $stage)
+                        <li class="aurora-stage aurora-glass rounded-2xl p-6">
+                            <span class="aurora-node absolute -left-[1.98rem] top-7 h-2.5 w-2.5 rounded-full border border-edge-strong bg-void lg:hidden" aria-hidden="true"></span>
+                            <div class="font-mono flex items-center justify-between text-[11px]">
+                                <span class="rounded-md border border-edge-strong bg-night px-2 py-1 text-ink">{{ $stage['key'] }}</span>
+                                <span class="text-dim">
+                                    <span class="aurora-status-wait">○ queued</span>
+                                    <span class="aurora-status-run text-glow-cyan">◐ running</span>
+                                    <span class="aurora-status-done text-glow-teal">● passed</span>
+                                </span>
+                            </div>
+                            <h3 class="mt-8 text-lg font-medium leading-snug tracking-[-0.015em]">{{ $stage['title'] }}</h3>
+                            <p class="mt-3 text-sm leading-relaxed text-mute">{{ $stage['description'] }}</p>
+                            <p class="font-mono mt-6 text-[10px] leading-5 text-dim">{{ implode(' / ', $stage['tools']) }}</p>
+                        </li>
+                    @endforeach
+                </ol>
+            </div>
+
+            {{-- Agent session replay + Life OS --}}
+            <div class="mt-28 grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:items-center">
                 <div>
-                    @livewire('newsletter-signup')
+                    <div data-reveal>
+                        <p class="font-mono mb-4 text-xs text-glow-violet">// life-os</p>
+                        <h3 class="text-[clamp(1.9rem,3.6vw,3rem)] font-medium leading-[1.02] tracking-[-0.035em]">A 3D world for running a team of agents.</h3>
+                        <p class="mt-6 max-w-lg leading-relaxed text-mute">
+                            A first-person office where each pod of desks owns a project. Every desk runs its own agent session in its own git worktree, so agents never trip over each other, and progress lands on live kanban boards inside the world.
+                        </p>
+                    </div>
+                    <dl class="mt-10 grid grid-cols-3 gap-3">
+                        @foreach ($lifeOsStats as $stat)
+                            <div class="aurora-glass rounded-xl p-4" data-reveal style="--i: {{ $loop->index }}">
+                                <dd class="text-4xl font-medium tracking-[-0.04em] text-ink" @if($stat['countable']) data-count="{{ $stat['value'] }}" @endif>{{ $stat['value'] }}</dd>
+                                <dt class="mt-2 text-xs leading-snug text-mute">{{ $stat['label'] }}</dt>
+                            </div>
+                        @endforeach
+                    </dl>
+                </div>
+
+                <x-aurora.agent-replay :sessions="$agentSessions" data-reveal />
+            </div>
+
+            <div class="mt-16" data-progress>
+                <div class="aurora-wall grid gap-3 sm:grid-cols-2">
+                    @foreach ($lifeOsImages as $image)
+                        <figure class="group relative overflow-hidden rounded-xl border border-edge bg-night">
+                            <img src="{{ asset('images/now/'.$image['file']) }}" alt="{{ $image['caption'] }}" width="1600" height="900" loading="lazy" decoding="async" class="aspect-video w-full object-cover opacity-80 transition-opacity duration-700 group-hover:opacity-100">
+                            <figcaption class="font-mono absolute inset-x-0 bottom-0 bg-gradient-to-t from-[rgb(4_6_12/0.9)] to-transparent px-4 pb-3 pt-10 text-[11px] text-mute">{{ $image['caption'] }}</figcaption>
+                        </figure>
+                    @endforeach
+                </div>
+            </div>
+
+            {{-- How the hero plate was made --}}
+            <div id="plate" class="mt-28 scroll-mt-24" data-reveal>
+                <div class="aurora-glass rounded-3xl p-6 sm:p-10">
+                    <div class="grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center">
+                        <div>
+                            <p class="font-mono mb-4 text-xs text-glow-cyan">// hero.plate</p>
+                            <h3 class="text-[clamp(1.6rem,2.8vw,2.4rem)] font-medium leading-[1.05] tracking-[-0.03em]">The sky at the top of this page was never photographed.</h3>
+                            <p class="mt-5 leading-relaxed text-mute">
+                                The plate was generated locally in ComfyUI in about forty seconds of GPU time, then animated with Wan 2.2 on the same GPU into an eight-second loop. The aurora moving across it is drawn live in the browser and mirrored into the lake.
+                            </p>
+                        </div>
+                        <div class="font-mono flex flex-col gap-3 text-[11px] sm:flex-row sm:flex-wrap sm:items-center">
+                            @foreach ($heroRecipe as $step)
+                                <div class="flex items-center gap-3 sm:contents">
+                                    <div class="rounded-lg border border-edge-strong bg-night px-3 py-2">
+                                        <p class="text-ink">{{ $step['node'] }}</p>
+                                        <p class="text-dim">{{ $step['detail'] }}</p>
+                                    </div>
+                                    <span class="aurora-flow hidden h-px w-6 sm:block" aria-hidden="true"></span>
+                                </div>
+                            @endforeach
+                            <div class="overflow-hidden rounded-lg border border-[rgb(63_230_192/0.4)]">
+                                <img src="{{ asset('images/home/hero-aurora-960.webp') }}" alt="The generated night-sky plate used in the hero" width="960" height="540" loading="lazy" class="h-14 w-24 object-cover">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     {{-- =====================================================================
-         CONNECT CTA
+         SELECTED WORK
     ====================================================================== --}}
-    <section class="bg-amber-400 py-16">
-        <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div>
-                <h2 class="text-2xl font-black text-amber-900 tracking-tight">Have something in mind?</h2>
-                <p class="text-amber-800 mt-1">I'd love to hear from you — work, ideas, or just a hello.</p>
+    <section id="work" class="scroll-mt-16 px-6 py-28 lg:py-36" aria-labelledby="aurora-work-title">
+        <div class="mx-auto max-w-6xl">
+            <div class="mb-14 flex items-end justify-between gap-6" data-reveal>
+                <div>
+                    <p class="font-mono mb-4 text-xs text-glow-teal">// selected work</p>
+                    <h2 id="aurora-work-title" class="text-[clamp(2rem,4.4vw,3.6rem)] font-medium leading-[1.02] tracking-[-0.035em]">Shipped, and still running.</h2>
+                </div>
+                <a href="{{ route('projects') }}" class="font-mono hidden text-xs text-mute transition-colors hover:text-ink sm:block">ls ./projects →</a>
             </div>
-            <a href="{{ route('contact') }}"
-                class="shrink-0 bg-amber-900 text-amber-100 px-7 py-3.5 rounded-full font-bold text-sm hover:bg-stone-900 transition-colors">
-                Get in touch
-            </a>
+
+            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                @forelse ($featuredProjects as $project)
+                    <x-aurora.project-card :project="$project" :index="$loop->index" />
+                @empty
+                    <p class="font-mono text-sm text-dim">// new work is being written up</p>
+                @endforelse
+            </div>
+        </div>
+    </section>
+
+    {{-- =====================================================================
+         FIELD NOTES
+    ====================================================================== --}}
+    <section class="px-6 pb-28 lg:pb-36" aria-labelledby="aurora-notes-title">
+        <div class="mx-auto max-w-6xl">
+            <div class="mb-10 flex items-end justify-between gap-6" data-reveal>
+                <div>
+                    <p class="font-mono mb-4 text-xs text-glow-teal">// field notes</p>
+                    <h2 id="aurora-notes-title" class="text-[clamp(2rem,4.4vw,3.6rem)] font-medium leading-[1.02] tracking-[-0.035em]">Writing it down.</h2>
+                </div>
+                <a href="{{ route('blog') }}" class="font-mono hidden text-xs text-mute transition-colors hover:text-ink sm:block">cat ./blog →</a>
+            </div>
+            <ul class="border-t border-edge">
+                @forelse ($recentBlogPosts as $post)
+                    <li class="border-b border-edge" data-reveal style="--i: {{ $loop->index }}">
+                        <a href="{{ route('blog.post', $post) }}" class="group grid gap-2 py-6 sm:grid-cols-[9rem_1fr_auto_auto] sm:items-center sm:gap-8">
+                            <time datetime="{{ $post->published_at->toDateString() }}" class="font-mono text-xs text-dim">{{ $post->published_at->format('Y-m-d') }}</time>
+                            <span class="text-lg font-medium tracking-[-0.015em] transition-colors duration-300 group-hover:text-glow-cyan">{{ $post->title }}</span>
+                            @if ($post->tags && count($post->tags) > 0)
+                                <span class="font-mono hidden rounded-md border border-edge px-2 py-1 text-[10px] text-mute sm:block">{{ $post->tags[0] }}</span>
+                            @else
+                                <span class="hidden sm:block"></span>
+                            @endif
+                            <span class="hidden text-dim transition-transform duration-500 group-hover:translate-x-1 group-hover:text-glow-teal sm:block" aria-hidden="true">→</span>
+                        </a>
+                    </li>
+                @empty
+                    <li class="font-mono py-6 text-sm text-dim">// first entries compiling</li>
+                @endforelse
+            </ul>
+
+            @if ($tools->isNotEmpty())
+                <p class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-xs text-dim" data-reveal>
+                    <span>// also shipped:</span>
+                    @foreach ($tools as $tool)
+                        <a href="{{ $tool->url }}" class="text-mute transition-colors hover:text-glow-cyan">{{ $tool->title }} ↗</a>
+                    @endforeach
+                </p>
+            @endif
+        </div>
+    </section>
+
+    {{-- =====================================================================
+         CLOSING — the aurora returns
+    ====================================================================== --}}
+    <section class="relative overflow-hidden border-t border-edge px-6 py-32 lg:py-40" data-plate-frame>
+        <canvas wire:ignore class="aurora-canvas absolute inset-0 [--aurora-opacity:0.6]" data-aurora data-envelope-start="0" data-envelope-end="0.5" aria-hidden="true"></canvas>
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-void via-transparent to-void"></div>
+        <div class="relative mx-auto grid max-w-6xl gap-14 lg:grid-cols-[1.3fr_1fr] lg:items-end">
+            <div data-reveal>
+                <h2 class="text-[clamp(2.5rem,6vw,5.25rem)] font-medium leading-[0.95] tracking-[-0.045em]">Got an interesting <span class="aurora-gradient-text">problem?</span></h2>
+                <p class="mt-6 max-w-md text-lg leading-relaxed text-mute">The best projects start with a good question. I'm always happy to hear one.</p>
+                <a href="{{ route('contact') }}" class="aurora-cta mt-10 inline-flex items-center gap-3 rounded-full px-6 py-3.5 text-sm font-medium">
+                    Open a conversation <span aria-hidden="true">↗</span>
+                </a>
+            </div>
+            <div class="aurora-glass rounded-2xl p-7" data-reveal style="--i: 1">
+                <p class="font-mono mb-2 text-xs text-glow-teal">// subscribe</p>
+                <p class="text-lg font-medium">Release notes from the lab.</p>
+                <p class="mb-6 mt-1 text-sm text-mute">New experiments, projects and field notes, only when they're worth opening.</p>
+                @livewire('newsletter-signup')
+            </div>
         </div>
     </section>
 </div>

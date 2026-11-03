@@ -1,18 +1,13 @@
 <div>
-    <!-- Header -->
-    <section class="bg-stone-50 border-b border-stone-100">
-        <div class="max-w-4xl mx-auto px-6 py-16">
-            <p class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-3">Legal</p>
-            <h1 class="text-4xl md:text-5xl font-black text-stone-900 tracking-tight mb-4">Privacy Policy</h1>
-            <p class="text-stone-500 text-sm">Last updated: {{ date('F j, Y') }}</p>
-        </div>
-    </section>
+    <x-aurora.page-header path="~/legal/privacy" eyebrow="cat policy.md" width="max-w-4xl" description="How your information is collected, used and protected on this site.">
+        <x-slot:title>Privacy Policy</x-slot:title>
+        <p class="font-mono text-xs text-dim">Last updated: {{ date('F j, Y') }}</p>
+    </x-aurora.page-header>
 
-    <!-- Content -->
-    <div class="bg-white">
-        <div class="max-w-4xl mx-auto px-6 py-14 prose prose-stone prose-lg max-w-none">
+    <div class="px-6 py-14 lg:py-20">
+        <div class="aurora-prose mx-auto max-w-3xl">
 
-            <p class="lead text-stone-600">
+            <p class="text-lg text-ink">
                 This Privacy Policy explains how Anders Learmonth (<strong>"I", "me", or "my"</strong>) collects,
                 uses, and protects information that you provide when using this website
                 (<strong>dregozone.com</strong>). I am committed to ensuring that your privacy is protected and
@@ -20,19 +15,19 @@
                 Protection Act 2018.
             </p>
 
-            <hr class="border-stone-200 my-10">
+            <hr>
 
             <h2>1. Who is the Data Controller?</h2>
             <p>
                 The data controller responsible for your personal information on this website is:
             </p>
-            <address class="not-italic bg-stone-50 border border-stone-200 rounded-xl p-6 text-stone-700 text-base">
+            <address class="aurora-glass rounded-xl p-6 text-base">
                 <strong>Anders Learmonth</strong><br>
                 Founder, Glacial Studio<br>
-                Email: <a href="{{ route('contact') }}" class="text-amber-600 hover:text-amber-700">Contact via website</a>
+                Email: <a href="{{ route('contact') }}">Contact via website</a>
             </address>
 
-            <hr class="border-stone-200 my-10">
+            <hr>
 
             <h2>2. What Personal Data I Collect</h2>
             <p>I collect the following categories of personal data:</p>
@@ -73,7 +68,7 @@
             </ul>
             <p>I do <strong>not</strong> currently use third-party analytics, advertising networks, or tracking pixels.</p>
 
-            <hr class="border-stone-200 my-10">
+            <hr>
 
             <h2>3. Legal Basis for Processing</h2>
             <table>
@@ -103,7 +98,7 @@
                 </tbody>
             </table>
 
-            <hr class="border-stone-200 my-10">
+            <hr>
 
             <h2>4. How Long I Keep Your Data</h2>
             <ul>
@@ -112,7 +107,7 @@
                 <li><strong>Operational database backups</strong> — retained on a rolling schedule for disaster recovery purposes: all backups are kept for 7 days, daily backups for 16 days, weekly backups for 8 weeks, monthly backups for 4 months, and yearly backups for up to 2 years. Older backups may be deleted sooner where storage limits require cleanup.</li>
             </ul>
 
-            <hr class="border-stone-200 my-10">
+            <hr>
 
             <h2>5. Cookies</h2>
             <p>
@@ -154,7 +149,7 @@
                 </tbody>
             </table>
 
-            <hr class="border-stone-200 my-10">
+            <hr>
 
             <h2>6. Your Rights Under UK GDPR</h2>
             <p>You have the following rights regarding your personal data:</p>
@@ -168,15 +163,15 @@
                 <li><strong>Right to object</strong> — you can object to processing based on legitimate interests.</li>
             </ul>
             <p>
-                To exercise any of these rights, please <a href="{{ route('contact') }}" class="text-amber-600 hover:text-amber-700">contact me</a> with the subject line <em>"Data Subject Request"</em>. I will respond within 30 calendar days.
+                To exercise any of these rights, please <a href="{{ route('contact') }}">contact me</a> with the subject line <em>"Data Subject Request"</em>. I will respond within 30 calendar days.
             </p>
             <p>
                 You also have the right to lodge a complaint with the
-                <a href="https://ico.org.uk/make-a-complaint/" target="_blank" rel="noopener noreferrer" class="text-amber-600 hover:text-amber-700">Information Commissioner's Office (ICO)</a>
+                <a href="https://ico.org.uk/make-a-complaint/" target="_blank" rel="noopener noreferrer">Information Commissioner's Office (ICO)</a>
                 if you believe your data has been handled unlawfully.
             </p>
 
-            <hr class="border-stone-200 my-10">
+            <hr>
 
             <h2>7. Newsletter Unsubscribe</h2>
             <p>
@@ -186,12 +181,12 @@
             <p>
                 If you have a registered account on this website, you can also manage your newsletter subscription
                 at any time via your
-                <a href="{{ route('settings.newsletter') }}" class="text-amber-600 hover:text-amber-700">account settings</a>
+                <a href="{{ route('settings.newsletter') }}">account settings</a>
                 (Settings → Newsletter). You can also request removal by
-                <a href="{{ route('contact') }}" class="text-amber-600 hover:text-amber-700">contacting me directly</a>.
+                <a href="{{ route('contact') }}">contacting me directly</a>.
             </p>
 
-            <hr class="border-stone-200 my-10">
+            <hr>
 
             <h2>8. Data Security</h2>
             <p>
@@ -207,7 +202,7 @@
                 with archive encryption.
             </p>
 
-            <hr class="border-stone-200 my-10">
+            <hr>
 
             <h2>9. Third Parties</h2>
             <p>
@@ -224,16 +219,16 @@
                 and abuse.
             </p>
 
-            <hr class="border-stone-200 my-10">
+            <hr>
 
             <h2>10. Children's Privacy</h2>
             <p>
                 This website is not directed at children under the age of 13. I do not knowingly collect personal
                 data from children. If you believe a child has submitted personal data through this site, please
-                <a href="{{ route('contact') }}" class="text-amber-600 hover:text-amber-700">contact me</a> and I will delete it promptly.
+                <a href="{{ route('contact') }}">contact me</a> and I will delete it promptly.
             </p>
 
-            <hr class="border-stone-200 my-10">
+            <hr>
 
             <h2>11. Changes to This Policy</h2>
             <p>
@@ -242,12 +237,12 @@
                 your data is protected.
             </p>
 
-            <hr class="border-stone-200 my-10">
+            <hr>
 
             <h2>12. Contact</h2>
             <p>
                 If you have any questions about this Privacy Policy or how your data is handled, please get in touch
-                via the <a href="{{ route('contact') }}" class="text-amber-600 hover:text-amber-700">contact page</a>.
+                via the <a href="{{ route('contact') }}">contact page</a>.
             </p>
         </div>
     </div>

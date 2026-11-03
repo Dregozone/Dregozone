@@ -1,215 +1,223 @@
-@props(['title' => 'Developer & Writer'])
+@props([
+    'title' => 'Developer & AI Tinkerer',
+    'description' => 'Anders Learmonth — senior full-stack engineer building Laravel products, local AI tooling and interfaces that feel effortless.',
+    'socialImage' => null,
+    'socialImageAlt' => null,
+    'socialType' => 'website',
+    'publishedAt' => null,
+])
+
+@php
+    $navigation = [
+        ['label' => 'Home', 'route' => 'home', 'active' => 'home'],
+        ['label' => 'Now', 'route' => 'now', 'active' => 'now'],
+        ['label' => 'Blog', 'route' => 'blog', 'active' => 'blog*'],
+        ['label' => 'Projects', 'route' => 'projects', 'active' => 'projects'],
+        ['label' => 'Tools', 'route' => 'tools', 'active' => ['tools', 'run-tools']],
+        ['label' => 'Contact', 'route' => 'contact', 'active' => 'contact'],
+    ];
+@endphp
 
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="theme-aurora dark h-full scroll-smooth">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="Personal website of Anders Learmonth — developer portfolio, projects, and technical writing.">
-    <meta name="color-scheme" content="light dark">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="description" content="{{ $description }}">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#04060c">
     <title>Anders Learmonth — {{ $title }}</title>
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- Link previews: a post's own header image when it has a suitable one, otherwise the site card. --}}
+    @php
+        $socialTitle = $socialType === 'article' ? $title : "Anders Learmonth — {$title}";
+        $socialImageUrl = $socialImage ?? asset('images/social/card.jpg');
+        $socialImageAlt ??= 'Anders Learmonth — Developer & AI Tinkerer, over an aurora above a mountain lake.';
+    @endphp
+    <meta property="og:site_name" content="Anders Learmonth">
+    <meta property="og:type" content="{{ $socialType }}">
+    <meta property="og:title" content="{{ $socialTitle }}">
+    <meta property="og:description" content="{{ $description }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ $socialImageUrl }}">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="{{ $socialImageAlt }}">
+    @if ($publishedAt)
+        <meta property="article:published_time" content="{{ $publishedAt }}">
+    @endif
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $socialTitle }}">
+    <meta name="twitter:description" content="{{ $description }}">
+    <meta name="twitter:image" content="{{ $socialImageUrl }}">
+    <meta name="twitter:image:alt" content="{{ $socialImageAlt }}">
     <link rel="manifest" href="/manifest.webmanifest">
+    <script>document.documentElement.classList.add('js-motion')</script>
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800,900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=space-grotesk:400,500,600|jetbrains-mono:400,500&display=swap" rel="stylesheet">
 
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/motion.js'])
     @livewireStyles
     @if (filled(config('services.turnstile.site_key')))
         <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
     @endif
 </head>
 
-<body class="h-full font-sans antialiased bg-white text-stone-900">
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-md focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-stone-900 focus:shadow-lg">
+<body class="min-h-full bg-void font-display text-ink antialiased selection:bg-glow-teal/30 selection:text-white">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-ink focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-void">
         Skip to main content
     </a>
 
-    <!-- Navigation -->
-    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-100"
-        x-data="{ mobileOpen: false }">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="flex items-center justify-between h-16">
-
-                <!-- Brand -->
-                <a href="{{ route('home') }}" class="text-lg font-black tracking-tight text-stone-900 hover:text-stone-700 transition-colors">
-                    <span class="text-amber-600">Anders</span>Learmonth
+    {{-- Header: transparent over the sky, condenses into glass once you scroll. --}}
+    <header data-site-header x-data="{ mobileOpen: false }"
+        class="sticky top-0 z-50 border-b border-transparent transition-[background-color,border-color,backdrop-filter] duration-500 [&.is-scrolled]:border-edge [&.is-scrolled]:bg-void/70 [&.is-scrolled]:backdrop-blur-xl"
+        :class="mobileOpen && 'bg-void/95 border-edge'">
+        <div class="mx-auto max-w-6xl px-6">
+            <div class="flex h-16 items-center justify-between">
+                <a href="{{ route('home') }}" class="text-lg font-semibold tracking-[-0.02em] text-ink">
+                    <span class="aurora-gradient-text">Anders</span>Learmonth
                 </a>
 
-                <!-- Primary nav -->
-                <nav class="hidden sm:flex items-center gap-8">
-                    <a href="{{ route('home') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Home</a>
-                    <a href="{{ route('now') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Now</a>
-                    <a href="{{ route('blog') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Blog</a>
-                    <a href="{{ route('projects') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Projects</a>
-                    <a href="{{ route('tools') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Tools</a>
-                    <a href="{{ route('contact') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Contact</a>
+                <nav class="hidden items-center gap-7 sm:flex" aria-label="Primary">
+                    @foreach ($navigation as $item)
+                        @php $isActive = request()->routeIs($item['active']); @endphp
+                        <a href="{{ route($item['route']) }}" @if ($isActive) aria-current="page" @endif
+                            @class([
+                                'relative text-sm transition-colors duration-300',
+                                'text-ink' => $isActive,
+                                'text-mute hover:text-ink' => ! $isActive,
+                            ])>
+                            {{ $item['label'] }}
+                            @if ($isActive)
+                                <span class="absolute -bottom-2 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-glow-teal shadow-[0_0_8px_2px_rgb(63_230_192/0.6)]" aria-hidden="true"></span>
+                            @endif
+                        </a>
+                    @endforeach
                 </nav>
 
-                <!-- Auth controls (desktop) -->
-                <div class="hidden sm:flex items-center gap-4">
+                <div class="hidden items-center gap-4 sm:flex">
                     @auth
                         @if (auth()->user()->isAdmin())
-                            <a href="{{ route('admin.blog.index') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Admin</a>
+                            <a href="{{ route('admin.blog.index') }}" class="text-sm text-mute transition-colors hover:text-ink">Admin</a>
                         @endif
 
-                        <a href="{{ route('settings.profile') }}" class="text-stone-400 hover:text-stone-700 transition-colors" title="{{ __('Settings') }}" aria-label="{{ __('Settings') }}">
-                            <flux:icon.cog-6-tooth class="w-5 h-5" />
+                        <a href="{{ route('settings.profile') }}" class="text-mute transition-colors hover:text-ink" title="{{ __('Settings') }}" aria-label="{{ __('Settings') }}">
+                            <flux:icon.cog-6-tooth class="h-5 w-5" />
                         </a>
 
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="text-sm font-medium text-stone-400 hover:text-stone-600 transition-colors cursor-pointer">Logout</button>
+                            <button type="submit" class="cursor-pointer text-sm text-mute transition-colors hover:text-ink">Logout</button>
                         </form>
                     @else
-                        <a href="{{ route('login') }}" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Login</a>
-                        <a href="{{ route('register') }}" class="bg-stone-900 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-stone-700 transition-colors">Register</a>
+                        <a href="{{ route('login') }}" class="text-sm text-mute transition-colors hover:text-ink">Login</a>
+                        <a href="{{ route('register') }}" class="rounded-full border border-edge-strong bg-white/5 px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-glow-teal/50">Register</a>
                     @endauth
                 </div>
 
-                <!-- Mobile hamburger -->
                 <button @click="mobileOpen = !mobileOpen"
-                    class="sm:hidden inline-flex items-center justify-center w-9 h-9 rounded-lg text-stone-500 hover:text-stone-900 hover:bg-stone-100 transition-colors"
-                    aria-label="Toggle navigation"
-                    aria-controls="mobile-menu"
-                    :aria-expanded="mobileOpen.toString()">
-                    <svg x-show="!mobileOpen" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                    <svg x-show="mobileOpen" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-mute transition-colors hover:bg-white/5 hover:text-ink sm:hidden"
+                    aria-label="Toggle navigation" aria-controls="mobile-menu" :aria-expanded="mobileOpen.toString()">
+                    <svg x-show="!mobileOpen" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16" /></svg>
+                    <svg x-show="mobileOpen" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
-
             </div>
         </div>
 
-        <!-- Mobile menu -->
-        <div id="mobile-menu"
-            x-show="mobileOpen"
-            x-transition:enter="transition ease-out duration-150"
-            x-transition:enter-start="opacity-0 -translate-y-1"
-            x-transition:enter-end="opacity-100 translate-y-0"
-            x-transition:leave="transition ease-in duration-100"
-            x-transition:leave-start="opacity-100 translate-y-0"
-            x-transition:leave-end="opacity-0 -translate-y-1"
-            class="sm:hidden border-t border-stone-100 bg-white/95 backdrop-blur-md">
-            <nav class="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-1">
-                <a href="{{ route('home') }}" @click="mobileOpen = false"
-                    class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Home</a>
-                <a href="{{ route('now') }}" @click="mobileOpen = false"
-                    class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Now</a>
-                <a href="{{ route('blog') }}" @click="mobileOpen = false"
-                    class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Blog</a>
-                <a href="{{ route('projects') }}" @click="mobileOpen = false"
-                    class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Projects</a>
-                <a href="{{ route('tools') }}" @click="mobileOpen = false"
-                    class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Tools</a>
-                <a href="{{ route('contact') }}" @click="mobileOpen = false"
-                    class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Contact</a>
+        <div id="mobile-menu" x-show="mobileOpen" x-cloak
+            x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-1"
+            class="border-t border-edge sm:hidden">
+            <nav class="mx-auto flex max-w-6xl flex-col gap-1 px-6 py-4" aria-label="Mobile">
+                @foreach ($navigation as $item)
+                    @php $isActive = request()->routeIs($item['active']); @endphp
+                    <a href="{{ route($item['route']) }}" @click="mobileOpen = false"
+                        @class([
+                            'flex items-center justify-between rounded-lg px-3 py-2.5 text-sm transition-colors',
+                            'bg-white/5 text-ink' => $isActive,
+                            'text-mute hover:bg-white/5 hover:text-ink' => ! $isActive,
+                        ])>
+                        {{ $item['label'] }}
+                        @if ($isActive)
+                            <span class="h-1.5 w-1.5 rounded-full bg-glow-teal" aria-hidden="true"></span>
+                        @endif
+                    </a>
+                @endforeach
 
-                <div class="mt-3 pt-3 border-t border-stone-100 flex flex-col gap-2">
+                <div class="mt-3 flex flex-col gap-2 border-t border-edge pt-3">
                     @auth
                         @if (auth()->user()->isAdmin())
-                            <a href="{{ route('admin.blog.index') }}" @click="mobileOpen = false"
-                                class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Admin</a>
+                            <a href="{{ route('admin.blog.index') }}" class="rounded-lg px-3 py-2.5 text-sm text-mute hover:bg-white/5 hover:text-ink">Admin</a>
                         @endif
-                        <a href="{{ route('settings.profile') }}" @click="mobileOpen = false"
-                            class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Settings</a>
+                        <a href="{{ route('settings.profile') }}" class="rounded-lg px-3 py-2.5 text-sm text-mute hover:bg-white/5 hover:text-ink">Settings</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-stone-400 hover:text-stone-600 hover:bg-stone-50 transition-colors cursor-pointer">Logout</button>
+                            <button type="submit" class="w-full cursor-pointer rounded-lg px-3 py-2.5 text-left text-sm text-mute hover:bg-white/5 hover:text-ink">Logout</button>
                         </form>
                     @else
-                        <a href="{{ route('login') }}" @click="mobileOpen = false"
-                            class="px-3 py-2.5 rounded-lg text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors">Login</a>
-                        <a href="{{ route('register') }}" @click="mobileOpen = false"
-                            class="mx-3 mt-1 text-center bg-stone-900 text-white px-4 py-2.5 rounded-full text-sm font-semibold hover:bg-stone-700 transition-colors">Register</a>
+                        <a href="{{ route('login') }}" class="rounded-lg px-3 py-2.5 text-sm text-mute hover:bg-white/5 hover:text-ink">Login</a>
+                        <a href="{{ route('register') }}" class="mx-3 mt-1 rounded-full border border-edge-strong bg-white/5 px-4 py-2.5 text-center text-sm font-medium text-ink">Register</a>
                     @endauth
                 </div>
             </nav>
         </div>
     </header>
 
-    <!-- Page Content -->
     <main id="main-content">
         {{ $slot }}
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-stone-50 border-t border-stone-100">
-        <div class="max-w-6xl mx-auto px-6 py-16">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
-
-                <!-- Brand col -->
-                <div class="md:col-span-2">
-                    <a href="{{ route('home') }}" class="text-xl font-black tracking-tight text-stone-900">
-                        <span class="text-amber-600">Anders</span>Learmonth
+    <footer class="relative overflow-hidden border-t border-edge">
+        <div class="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-glow-teal/40 to-transparent"></div>
+        <div class="mx-auto max-w-6xl px-6 pb-10 pt-16">
+            <div class="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
+                <div>
+                    <a href="{{ route('home') }}" class="text-xl font-semibold tracking-[-0.02em] text-ink">
+                        <span class="aurora-gradient-text">Anders</span>Learmonth
                     </a>
-                    <p class="mt-3 text-stone-500 text-sm leading-relaxed max-w-xs">
-                        Building things for the web, writing about what I learn, and exploring the world one language at a time.
+                    <p class="mt-3 max-w-xs text-sm leading-relaxed text-mute">
+                        Building for the web, taking new AI tools apart to see what they can really do, and running a small lab on one desk.
                     </p>
-                    <div class="mt-5 flex gap-3">
-                        <a href="https://github.com/Dregozone" target="_blank" rel="noopener noreferrer" class="w-9 h-9 flex items-center justify-center rounded-full bg-stone-200 text-stone-600 hover:bg-stone-900 hover:text-white transition-colors" aria-label="GitHub">
-                            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
-                            </svg>
-                        </a>
-                        <a href="https://www.linkedin.com/in/andreas-learmonth-982318a1/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 flex items-center justify-center rounded-full bg-stone-200 text-stone-600 hover:bg-stone-900 hover:text-white transition-colors" aria-label="LinkedIn">
-                            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                            </svg>
-                        </a>
-                        <a href="https://bsky.app/profile/anderslearmonth.bsky.social" target="_blank" rel="noopener noreferrer" class="w-9 h-9 flex items-center justify-center rounded-full bg-stone-200 text-stone-600 hover:bg-stone-900 hover:text-white transition-colors" aria-label="Bluesky">
-                            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 600 530">
-                                <path d="M135.72 44.03C202.216 93.951 273.74 195.17 300 249.49c26.262-54.316 97.782-155.54 164.28-205.46C512.26 8.009 590-19.862 590 68.825c0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.38-3.69-10.832-3.708-7.896-.017-2.936-1.193.516-3.707 7.896-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.45-163.25-81.433C20.15 217.615 10 86.536 10 68.825c0-88.687 77.742-60.816 125.72-24.795z"/>
-                            </svg>
-                        </a>
-                    </div>
+                    <x-aurora.social-links class="mt-6" />
                 </div>
 
-                <!-- Nav col -->
                 <div>
-                    <p class="text-xs font-bold uppercase tracking-widest text-stone-400 mb-4">Pages</p>
-                    <ul class="space-y-3">
-                        <li><a href="{{ route('home') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Home</a></li>
-                        <li><a href="{{ route('now') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Now</a></li>
-                        <li><a href="{{ route('blog') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Blog</a></li>
-                        <li><a href="{{ route('projects') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Projects</a></li>
-                        <li><a href="{{ route('tools') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Tools</a></li>
-                        <li><a href="{{ route('contact') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Contact</a></li>
-                        <li><a href="{{ route('privacy-policy') }}" class="text-sm text-stone-600 hover:text-stone-900 transition-colors">Privacy Policy</a></li>
+                    <p class="mb-4 font-mono text-xs text-dim">// pages</p>
+                    <ul class="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+                        @foreach ($navigation as $item)
+                            <li><a href="{{ route($item['route']) }}" class="text-mute transition-colors hover:text-ink">{{ $item['label'] }}</a></li>
+                        @endforeach
+                        <li><a href="{{ route('privacy-policy') }}" class="text-mute transition-colors hover:text-ink">Privacy Policy</a></li>
                     </ul>
                 </div>
 
-                <!-- Contact col -->
                 <div>
-                    <p class="text-xs font-bold uppercase tracking-widest text-stone-400 mb-4">Say hi</p>
-                    <a href="{{ route('contact') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-stone-900 hover:text-amber-600 transition-colors">
+                    <p class="mb-4 font-mono text-xs text-dim">// say hi</p>
+                    <a href="{{ route('contact') }}" class="group inline-flex items-center gap-2 text-sm font-medium text-ink">
                         Send a message
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                        <span class="transition-transform duration-500 group-hover:translate-x-1" aria-hidden="true">→</span>
                     </a>
+                    <p class="mt-3 text-sm leading-relaxed text-mute">Projects, roles, or a problem worth talking through.</p>
                 </div>
-
             </div>
 
-            <div class="mt-12 pt-8 border-t border-stone-200 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <p class="text-sm text-stone-400">&copy; {{ date('Y') }} Anders Learmonth. All rights reserved. Blog posts and written content may not be reproduced without attribution.</p>
-                <div class="flex items-center gap-4">
-                    <a href="{{ route('privacy-policy') }}" class="text-sm text-stone-400 hover:text-stone-600 transition-colors">Privacy Policy</a>
-                    <span class="text-stone-300">·</span>
-                    <p class="text-sm text-stone-400">Built with Laravel &amp; Livewire</p>
-                </div>
+            <div class="mt-14 flex flex-col gap-4 border-t border-edge pt-8 text-xs text-dim lg:flex-row lg:items-center lg:justify-between">
+                <p>&copy; {{ date('Y') }} Anders Learmonth. All rights reserved. Blog posts and written content may not be reproduced without attribution.</p>
+                <p class="font-mono">
+                    // Laravel {{ app()->version() }} &amp; Livewire
+                    @if (defined('LARAVEL_START'))
+                        · rendered in {{ max(1, (int) round((microtime(true) - LARAVEL_START) * 1000)) }} ms
+                    @endif
+                </p>
             </div>
         </div>
     </footer>
 
-    <!-- Cookie Consent Banner -->
     <x-cookie-banner />
 
     @fluxScripts

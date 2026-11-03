@@ -1,143 +1,67 @@
 <div>
-    <!-- Hero Section -->
-    <section class="bg-stone-50 border-b border-stone-100 py-16 lg:py-20">
-        <div class="max-w-6xl mx-auto px-6 text-center">
-            <div class="flex items-center justify-center gap-3 mb-5">
-                <span class="inline-block w-8 h-0.5 bg-amber-400"></span>
-                <span class="text-xs font-bold uppercase tracking-widest text-amber-600">Portfolio</span>
-                <span class="inline-block w-8 h-0.5 bg-amber-400"></span>
+    <x-aurora.page-header path="~/projects" eyebrow="ls -la"
+        description="A collection of things I've built, from side projects to open-source tools.">
+        <x-slot:title>Shipped, and <span class="aurora-gradient-text">still running.</span></x-slot:title>
+
+        <dl class="flex flex-wrap gap-3 font-mono text-xs">
+            <div class="aurora-glass flex items-center gap-2 rounded-full px-4 py-2">
+                <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-glow-violet"></span>
+                <dt class="text-mute">in progress</dt>
+                <dd class="text-ink">{{ $inProgressProjects->count() }}</dd>
             </div>
-            <h1 class="text-4xl font-black text-stone-900 tracking-tight mb-4">Projects</h1>
-            <p class="text-lg text-stone-600 max-w-2xl mx-auto">
-                A collection of things I've built — from side projects to open-source tools.
-            </p>
-        </div>
-    </section>
+            <div class="aurora-glass flex items-center gap-2 rounded-full px-4 py-2">
+                <span class="h-1.5 w-1.5 rounded-full bg-glow-teal"></span>
+                <dt class="text-mute">shipped</dt>
+                <dd class="text-ink">{{ $completedProjects->count() }}</dd>
+            </div>
+        </dl>
+    </x-aurora.page-header>
 
-    <!-- In Progress -->
-    @if($inProgressProjects->isNotEmpty())
-        <section class="bg-amber-50 border-b border-amber-100 py-12">
-            <div class="max-w-6xl mx-auto px-6">
-                <div class="mb-8">
-                    <p class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-1">Currently building</p>
-                    <h2 class="text-2xl font-black text-stone-900 tracking-tight">In Progress</h2>
+    @if ($inProgressProjects->isNotEmpty())
+        <section class="px-6 pt-16 lg:pt-24" aria-labelledby="in-progress-title">
+            <div class="mx-auto max-w-6xl">
+                <div class="mb-10" data-reveal>
+                    <p class="mb-4 font-mono text-xs text-glow-violet">// currently building</p>
+                    <h2 id="in-progress-title" class="text-[clamp(1.75rem,3.4vw,2.75rem)] font-medium leading-[1.02] tracking-[-0.035em]">In Progress</h2>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach($inProgressProjects as $project)
-                        <div class="group bg-white rounded-2xl p-6 border border-amber-100 hover:border-amber-300 hover:shadow-sm transition-all">
-                            @if($project->uploadedImage)
-                                <div class="mb-5 rounded-xl overflow-hidden bg-stone-100 aspect-video">
-                                    <img src="{{ $project->uploadedImage->base64_data }}" alt="{{ $project->title }}" loading="lazy" decoding="async" class="w-full h-full object-cover">
-                                </div>
-                            @endif
-
-                            <div class="flex items-start justify-between gap-3 mb-3">
-                                <h3 class="font-bold text-stone-900 leading-snug">{{ $project->title }}</h3>
-                                <span class="shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-100 text-amber-700">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                                    In progress
-                                </span>
-                            </div>
-
-                            <p class="text-stone-500 text-sm leading-relaxed mb-4">{{ $project->description }}</p>
-
-                            @if($project->technologies)
-                                <div class="flex flex-wrap gap-1.5 mb-5">
-                                    @foreach($project->technologies as $tech)
-                                        <span class="px-2 py-0.5 bg-stone-50 border border-stone-200 text-stone-500 text-xs font-medium rounded-md">{{ $tech }}</span>
-                                    @endforeach
-                                </div>
-                            @endif
-
-                            <div class="flex items-center gap-4">
-                                @if($project->url)
-                                    <a href="{{ $project->url }}" target="_blank" rel="noopener"
-                                        class="inline-flex items-center gap-1 text-xs font-bold text-stone-700 hover:text-amber-600 transition-colors">
-                                        Live site
-                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                                    </a>
-                                @endif
-                                @if($project->github_url)
-                                    <a href="{{ $project->github_url }}" target="_blank" rel="noopener"
-                                        class="inline-flex items-center gap-1 text-xs font-bold text-stone-700 hover:text-amber-600 transition-colors">
-                                        Source
-                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
+                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    @foreach ($inProgressProjects as $project)
+                        <x-aurora.project-card :project="$project" :index="$loop->index % 3" />
                     @endforeach
                 </div>
             </div>
         </section>
     @endif
 
-    <!-- Completed Projects -->
-    <section class="bg-white py-16 lg:py-20">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="mb-10">
-                <p class="text-xs font-bold uppercase tracking-widest text-stone-400 mb-1">Shipped</p>
-                <h2 class="text-2xl font-black text-stone-900 tracking-tight">Completed Projects</h2>
+    <section class="px-6 py-16 lg:py-24" aria-labelledby="completed-title">
+        <div class="mx-auto max-w-6xl">
+            <div class="mb-10" data-reveal>
+                <p class="aurora-eyebrow mb-4">// shipped</p>
+                <h2 id="completed-title" class="text-[clamp(1.75rem,3.4vw,2.75rem)] font-medium leading-[1.02] tracking-[-0.035em]">Completed Projects</h2>
             </div>
 
-            @if(/*$featuredProjects->isNotEmpty() ||*/ $completedProjects->isNotEmpty())
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach(/*$featuredProjects->merge(*/$completedProjects/*)*/->unique('id') as $project)
-                        <div class="group bg-stone-50 rounded-2xl p-6 border border-stone-100 hover:border-stone-300 hover:shadow-sm transition-all">
-                            @if($project->uploadedImage)
-                                <div class="mb-5 rounded-xl overflow-hidden bg-stone-200 aspect-video">
-                                    <img src="{{ $project->uploadedImage->base64_data }}" alt="{{ $project->title }}" loading="lazy" decoding="async" class="w-full h-full object-cover">
-                                </div>
-                            @endif
-
-                            <div class="flex items-start justify-between gap-3 mb-3">
-                                <h3 class="font-bold text-stone-900 leading-snug">{{ $project->title }}</h3>
-                                @if($project->featured)
-                                    <span class="shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-100 text-amber-700">
-                                        Featured
-                                    </span>
-                                @else
-                                    <span class="shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                        Complete
-                                    </span>
-                                @endif
-                            </div>
-
-                            <p class="text-stone-500 text-sm leading-relaxed mb-4">{{ $project->description }}</p>
-
-                            @if($project->technologies)
-                                <div class="flex flex-wrap gap-1.5 mb-5">
-                                    @foreach($project->technologies as $tech)
-                                        <span class="px-2 py-0.5 bg-white border border-stone-200 text-stone-500 text-xs font-medium rounded-md">{{ $tech }}</span>
-                                    @endforeach
-                                </div>
-                            @endif
-
-                            <div class="flex items-center gap-4">
-                                @if($project->url)
-                                    <a href="{{ $project->url }}" target="_blank" rel="noopener"
-                                        class="inline-flex items-center gap-1 text-xs font-bold text-stone-700 hover:text-amber-600 transition-colors">
-                                        Live site
-                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                                    </a>
-                                @endif
-                                @if($project->github_url)
-                                    <a href="{{ $project->github_url }}" target="_blank" rel="noopener"
-                                        class="inline-flex items-center gap-1 text-xs font-bold text-stone-700 hover:text-amber-600 transition-colors">
-                                        Source
-                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
+            @if ($completedProjects->isNotEmpty())
+                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    @foreach ($completedProjects->unique('id') as $project)
+                        <x-aurora.project-card :project="$project" :index="$loop->index % 3" />
                     @endforeach
                 </div>
             @else
-                <div class="text-center py-16 text-stone-400">
-                    <p class="text-lg">Projects coming soon — check back!</p>
+                <div class="aurora-glass rounded-2xl px-6 py-16 text-center">
+                    <p class="font-mono text-sm text-dim">// building</p>
+                    <p class="mt-3 text-lg text-mute">Projects coming soon — check back!</p>
                 </div>
             @endif
+        </div>
+    </section>
+
+    <section class="border-t border-edge px-6 py-20 lg:py-24">
+        <div class="mx-auto flex max-w-6xl flex-col gap-8 lg:flex-row lg:items-end lg:justify-between" data-reveal>
+            <div>
+                <p class="aurora-eyebrow mb-4">// behind the work</p>
+                <h2 class="max-w-2xl text-[clamp(1.75rem,3.4vw,2.75rem)] font-medium leading-[1.02] tracking-[-0.035em]">Most of these were built alongside a fleet of local AI agents.</h2>
+            </div>
+            <a href="{{ route('home') }}#lab" class="aurora-cta shrink-0">Tour the AI lab <span aria-hidden="true">→</span></a>
         </div>
     </section>
 </div>

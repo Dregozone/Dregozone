@@ -1,4 +1,4 @@
-<section class="w-full md:max-w-3xl mx-auto pb-10">
+<section class="pb-24">
     @include('partials.settings-heading')
 
     <x-settings.layout :heading="__('Update password')" :subheading="__('Ensure your account is using a long, random password to stay secure')">

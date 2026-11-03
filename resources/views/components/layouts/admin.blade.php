@@ -55,7 +55,7 @@
 @endphp
 
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="theme-aurora dark h-full">
 
 <head>
     <meta charset="utf-8">
@@ -64,33 +64,36 @@
 
     <title>{{ config('app.name', 'Laravel') }} - Admin - {{ $title }}</title>
 
-    <!-- Fonts -->
+    <meta name="theme-color" content="#04060c">
+
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=space-grotesk:400,500,600|jetbrains-mono:400,500&display=swap" rel="stylesheet">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
 
-<body class="h-full font-sans antialiased bg-gray-50 dark:bg-gray-900">
-    <div class="min-h-full">
+<body class="min-h-full bg-void font-display text-ink antialiased selection:bg-glow-teal/30">
+    {{-- A faint wash of the aurora, so the console still feels like part of the site. --}}
+    <div class="pointer-events-none fixed inset-x-0 top-0 -z-0 h-96 bg-[radial-gradient(50%_100%_at_80%_0%,rgb(160_141_255/0.10),transparent_70%),radial-gradient(40%_100%_at_10%_0%,rgb(63_230_192/0.07),transparent_70%)]" aria-hidden="true"></div>
+    <div class="relative min-h-full">
         <!-- Navigation -->
-        <nav class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700"
+        <nav class="sticky top-0 z-40 border-b border-edge bg-void/75 backdrop-blur-xl"
             x-data="{ open: false }">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex h-16 items-center gap-4">
                     <div class="flex min-w-0 items-center gap-4">
                         <a href="{{ route('admin.blog.index') }}" wire:navigate class="flex items-center gap-4 min-w-0">
-                            <span class="truncate text-2xl font-bold text-gray-900 dark:text-white">
-                                <span class="text-amber-500">Anders</span>Learmonth
+                            <span class="truncate text-xl font-semibold tracking-[-0.02em] text-ink">
+                                <span class="aurora-gradient-text">Anders</span>Learmonth
                             </span>
-                            <span class="hidden rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300 lg:inline-flex">
-                                Admin
+                            <span class="hidden items-center gap-1.5 rounded-md border border-glow-teal/30 bg-glow-teal/10 px-2 py-1 font-mono text-[11px] text-glow-teal lg:inline-flex">
+                                <span class="h-1.5 w-1.5 rounded-full bg-glow-teal shadow-[0_0_8px_rgb(63_230_192/0.8)]"></span>console
                             </span>
                         </a>
 
-                        <div class="hidden h-8 w-px bg-gray-200 dark:bg-gray-700 lg:block"></div>
+                        <div class="hidden h-8 w-px bg-edge lg:block"></div>
 
                         <flux:navbar class="hidden lg:flex lg:items-center lg:gap-1">
                             @foreach ($primaryNavigation as $item)

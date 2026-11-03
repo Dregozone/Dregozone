@@ -1,5 +1,3 @@
-<div class="relative mb-6 w-full mt-10">
-    <flux:heading size="xl" level="1">{{ __('Settings') }}</flux:heading>
-    <flux:subheading size="lg" class="mb-6">{{ __('Manage your profile and account settings') }}</flux:subheading>
-    <flux:separator variant="subtle" />
-</div>
+<x-aurora.page-header path="~/settings" eyebrow="whoami --account" :description="__('Manage your profile and account settings')">
+    <x-slot:title>{{ __('Settings') }}</x-slot:title>
+</x-aurora.page-header>

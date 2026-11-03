@@ -1,0 +1,133 @@
+{
+    "title": "Stale admin blog list",
+    "project": "~/Herd/dregozone",
+    "date": "2026-11-03",
+    "duration_seconds": 580.754,
+    "shipped": "PR #68",
+    "prompt": "> on the blog list admin page i need to refresh the page after navigating there to see the latest blog posts",
+    "events": [
+        {
+            "type": "say",
+            "text": "The component itself doesn't cache anything, so I'll look at how you arrive at the page: the save redirect in the form and the wire:navigate...",
+            "delay": 450
+        },
+        {
+            "type": "tool",
+            "call": "Bash · Inspect save redirect and navigation links",
+            "result": "108:        $this->redirect(route('admin.blog.index'), navigate: true);",
+            "status": "info",
+            "delay": 842
+        },
+        {
+            "type": "say",
+            "text": "The service worker registered in app.js stands out.",
+            "delay": 1329
+        },
+        {
+            "type": "tool",
+            "call": "Bash(cat public/sw.js; git log --oneline -3 -- public/sw.js)",
+            "result": "45 lines of output",
+            "status": "info",
+            "delay": 672
+        },
+        {
+            "type": "say",
+            "text": "Found it: the service worker serves wire:navigate fetches cache-first, forever. A refresh is a real navigation, so it bypasses the cache.",
+            "delay": 1500
+        },
+        {
+            "type": "diff",
+            "call": "Edit(public/sw.js)",
+            "result": "Updated",
+            "status": "info",
+            "lines": [
+                [
+                    "-",
+                    "const CACHE_NAME = 'dregozone-v1';"
+                ],
+                [
+                    "-",
+                    "const PRECACHE_URLS = ['/', OFFLINE_URL];"
+                ],
+                [
+                    "+",
+                    "const CACHE_NAME = 'dregozone-v2';"
+                ],
+                [
+                    "+",
+                    "const PRECACHE_URLS = [OFFLINE_URL];"
+                ],
+                [
+                    "+",
+                    "const CACHEABLE_DESTINATIONS = ['style', 'script', 'image', 'font'];"
+                ]
+            ],
+            "delay": 1530
+        },
+        {
+            "type": "diff",
+            "call": "Edit(public/sw.js)",
+            "result": "Updated",
+            "status": "info",
+            "lines": [
+                [
+                    "-",
+                    "caches.match(event.request).then((cachedResponse) => {"
+                ],
+                [
+                    "+",
+                    "const isSameOrigin = event.request.url.startsWith(self.location.origin);"
+                ],
+                [
+                    "+",
+                    "if (!isSameOrigin || !CACHEABLE_DESTINATIONS.includes(event.request.destination)) {"
+                ],
+                [
+                    "+",
+                    "return;"
+                ],
+                [
+                    "+",
+                    "}"
+                ]
+            ],
+            "delay": 852
+        },
+        {
+            "type": "diff",
+            "call": "Edit(public/sw.js)",
+            "result": "Updated",
+            "status": "info",
+            "lines": [
+                [
+                    "-",
+                    "if (networkResponse.ok && event.request.url.startsWith(self.location.origin)) {"
+                ],
+                [
+                    "+",
+                    "if (networkResponse.ok) {"
+                ]
+            ],
+            "delay": 722
+        },
+        {
+            "type": "tool",
+            "call": "Bash · Reproduce with the old sw.js, then verify the fix",
+            "result": "old sw.js: still stale ✗   fixed sw.js: fresh ✓",
+            "status": "ok",
+            "delay": 2009
+        },
+        {
+            "type": "tool",
+            "call": "Bash · Add console theme and service worker tests",
+            "result": "Tests:    13 passed (40 assertions)",
+            "status": "ok",
+            "delay": 2200
+        },
+        {
+            "type": "say",
+            "text": "Fixed: pages fetched by wire:navigate always come from the network now, and the stale cache is purged.",
+            "delay": 600
+        }
+    ]
+}

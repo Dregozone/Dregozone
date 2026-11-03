@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ImageUploadController;
+use App\Http\Controllers\BlogPostCardController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailController;
 use App\Livewire\Admin\BlogEngagement;
@@ -33,6 +34,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', Home::class)->name('home');
 Route::get('/blog', Blog::class)->name('blog');
 Route::get('/blog/{post:slug}', BlogPost::class)->name('blog.post');
+Route::get('/blog/{post:slug}/card.jpg', BlogPostCardController::class)->name('blog.post.card');
 Route::get('/contact', Contact::class)->name('contact');
 Route::get('/now', Now::class)->name('now');
 Route::redirect('/brag', '/now');
