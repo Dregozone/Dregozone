@@ -2,6 +2,7 @@
 
 use App\Livewire\Admin\BlogPostPreview;
 use App\Models\BlogPost;
+use App\Models\UploadedImage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -72,4 +73,30 @@ test('preview works for published posts too', function () {
     Livewire::actingAs($user)
         ->test(BlogPostPreview::class, ['postId' => $post->id])
         ->assertSee('Preview Mode');
+});
+
+test('preview page shows the linked header image like the published post', function () {
+    $user = User::factory()->create(['email' => 'aclearmonth@gmail.com']);
+    $image = UploadedImage::create([
+        'name' => 'header.jpg',
+        'imageable_id' => 0,
+        'imageable_type' => 'library',
+        'base64_data' => 'data:image/jpeg;base64,cHJldmlldy1oZWFkZXI=',
+    ]);
+    $post = BlogPost::factory()->draft()->create();
+    $post->image()->associate($image)->save();
+
+    Livewire::actingAs($user)
+        ->test(BlogPostPreview::class, ['postId' => $post->id])
+        ->assertSeeHtml('src="data:image/jpeg;base64,cHJldmlldy1oZWFkZXI="');
+});
+
+test('preview page uses the aurora theme', function () {
+    $user = User::factory()->create(['email' => 'aclearmonth@gmail.com']);
+    $post = BlogPost::factory()->draft()->create();
+
+    Livewire::actingAs($user)
+        ->test(BlogPostPreview::class, ['postId' => $post->id])
+        ->assertSeeHtml('aurora-prose')
+        ->assertDontSeeHtml('bg-amber-400');
 });
