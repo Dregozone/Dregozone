@@ -16,7 +16,7 @@ class BlogPostPreview extends Component
 
     public function mount(int $postId): void
     {
-        $this->post = BlogPost::findOrFail($postId);
+        $this->post = BlogPost::with('image')->findOrFail($postId);
     }
 
     public function render(): View
