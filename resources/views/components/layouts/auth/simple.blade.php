@@ -13,6 +13,9 @@
         <link href="https://fonts.bunny.net/css?family=space-grotesk:400,500,600|jetbrains-mono:400,500&display=swap" rel="stylesheet">
 
         @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/motion.js'])
+        @if (filled(config('services.turnstile.site_key')))
+            <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+        @endif
     </head>
     <body class="min-h-screen bg-void font-display text-ink antialiased selection:bg-glow-teal/30">
         <div class="flex min-h-screen">

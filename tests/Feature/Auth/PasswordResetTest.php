@@ -69,3 +69,22 @@ test('password can be reset with valid token', function () {
         return true;
     });
 });
+
+test('reset link requests are rate limited per ip address', function () {
+    Notification::fake();
+
+    $users = User::factory()->count(6)->create();
+    $component = Livewire::test(ForgotPassword::class);
+
+    foreach ($users->take(5) as $user) {
+        $component->set('email', $user->email)->call('sendPasswordResetLink')->assertHasNoErrors();
+    }
+
+    $component->set('email', $users->last()->email)
+        ->call('sendPasswordResetLink')
+        ->assertHasErrors('email')
+        ->assertSee('Too many');
+
+    Notification::assertSentTimes(ResetPasswordNotification::class, 5);
+    Notification::assertNotSentTo($users->last(), ResetPasswordNotification::class);
+});

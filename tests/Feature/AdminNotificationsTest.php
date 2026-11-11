@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Exceptions;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
 
@@ -147,6 +148,9 @@ test('more than five sign-ups in ten minutes become one summary', function () {
     foreach (range(1, 8) as $number) {
         registerUser("user{$number}@example.com");
         auth()->logout();
+
+        // Sign-ups would normally come from different IPs; reset the per-IP registration limit.
+        RateLimiter::clear('register|127.0.0.1');
     }
 
     Mail::assertSent(NewUserSignedUp::class, 5);
