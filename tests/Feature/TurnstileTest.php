@@ -1,9 +1,11 @@
 <?php
 
+use App\Livewire\Auth\Register;
 use App\Livewire\Contact;
 use App\Livewire\NewsletterSignup;
 use App\Models\ContactMessage;
 use App\Models\NewsletterSubscriber;
+use App\Models\User;
 use App\Rules\Turnstile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Client\ConnectionException;
@@ -147,5 +149,56 @@ test('the turnstile rule passes without a check when no secret key is set', func
     $validator = Validator::make(['token' => ''], ['token' => [new Turnstile]]);
 
     expect($validator->passes())->toBeTrue();
+    Http::assertNothingSent();
+});
+
+function fillRegistrationForm(): Testable
+{
+    return Livewire::test(Register::class)
+        ->set('name', 'Test User')
+        ->set('email', 'test@example.com')
+        ->set('password', 'password');
+}
+
+test('the registration page shows the turnstile widget when it is configured', function () {
+    $this->get(route('register'))
+        ->assertSuccessful()
+        ->assertSee('challenges.cloudflare.com/turnstile/v0/api.js', false)
+        ->assertSee('test-site-key');
+});
+
+test('registration succeeds when the turnstile check passes', function () {
+    fakeTurnstile(true);
+
+    fillRegistrationForm()
+        ->set('turnstileToken', 'valid-token')
+        ->call('register')
+        ->assertHasNoErrors()
+        ->assertRedirect(route('dashboard', absolute: false));
+
+    expect(User::where('email', 'test@example.com')->exists())->toBeTrue();
+});
+
+test('registration is rejected when the turnstile check fails', function () {
+    fakeTurnstile(false);
+
+    fillRegistrationForm()
+        ->set('turnstileToken', 'bad-token')
+        ->call('register')
+        ->assertHasErrors(['turnstileToken'])
+        ->assertDispatched('turnstile-reset');
+
+    expect(User::count())->toBe(0);
+    $this->assertGuest();
+});
+
+test('registration is rejected without a turnstile token', function () {
+    Http::fake();
+
+    fillRegistrationForm()
+        ->call('register')
+        ->assertHasErrors(['turnstileToken']);
+
+    expect(User::count())->toBe(0);
     Http::assertNothingSent();
 });

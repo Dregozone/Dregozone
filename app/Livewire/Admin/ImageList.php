@@ -47,6 +47,8 @@ class ImageList extends Component
 
     public function save(): void
     {
+        abort_unless(auth()->user()?->isAdmin(), 403);
+
         $this->validate();
 
         $base64 = 'data:'.$this->photo->getMimeType().';base64,'.base64_encode(

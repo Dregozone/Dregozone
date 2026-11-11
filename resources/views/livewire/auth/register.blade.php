@@ -94,6 +94,16 @@
             </span>
         </label>
 
+        <!-- Security check -->
+        @if (filled(config('services.turnstile.site_key')))
+            <div class="flex flex-col gap-1.5">
+                <x-turnstile theme="dark" />
+                @error('turnstileToken')
+                    <p class="text-xs text-rose-300 font-medium">{{ $message }}</p>
+                @enderror
+            </div>
+        @endif
+
         <!-- Submit -->
         <button type="submit"
             class="w-full flex items-center justify-center gap-2 bg-ink hover:bg-white text-void font-semibold text-sm px-5 py-3 rounded-xl shadow-none hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-glow-teal/50 focus:ring-offset-2 focus:ring-offset-void active:scale-[0.98] mt-1"

@@ -24,6 +24,12 @@
         </div>
     @endif
 
+    @error('verification')
+        <div class="animate-auth-enter rounded-lg bg-rose-500/5 border border-rose-400/30 px-4 py-3 text-sm font-medium text-rose-300">
+            {{ $message }}
+        </div>
+    @enderror
+
     <!-- Actions -->
     <div class="flex flex-col gap-3 animate-auth-enter auth-stagger-2">
         <button

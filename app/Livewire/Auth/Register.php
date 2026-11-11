@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Auth;
 
+use App\Livewire\Concerns\ThrottlesAttempts;
+use App\Livewire\Concerns\VerifiesTurnstile;
 use App\Mail\AdminNotifier;
 use App\Models\NewsletterSubscriber;
 use App\Models\User;
@@ -16,6 +18,18 @@ use Livewire\Component;
 #[Layout('components.layouts.auth')]
 class Register extends Component
 {
+    use ThrottlesAttempts, VerifiesTurnstile;
+
+    /**
+     * Registration attempts allowed per IP address within the decay window.
+     */
+    protected const MAX_ATTEMPTS = 5;
+
+    /**
+     * Length of the rate limiting window, in seconds.
+     */
+    protected const DECAY_SECONDS = 600;
+
     public string $name = '';
 
     public string $email = '';
@@ -40,11 +54,15 @@ class Register extends Component
      */
     public function register(AdminNotifier $adminNotifier): void
     {
+        $this->throttleAttempt('register|'.request()->ip(), self::MAX_ATTEMPTS, self::DECAY_SECONDS, 'email');
+
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'string', Rules\Password::defaults()],
         ]);
+
+        $this->verifyTurnstile();
 
         $validated['password'] = Hash::make($validated['password']);
 
