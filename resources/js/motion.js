@@ -182,9 +182,15 @@ function updateScrollEffects() {
     const viewport = window.innerHeight;
     const scrollY = window.scrollY;
 
+    const progressElements = [...document.querySelectorAll('[data-progress]')];
+
+    // Read every rect before writing anything: interleaving reads with style writes forces a
+    // synchronous layout per element on every scroll frame, which is what made scrolling stutter.
+    const rects = reduceMotion ? [] : progressElements.map((element) => element.getBoundingClientRect());
+
     document.querySelector('[data-site-header]')?.classList.toggle('is-scrolled', scrollY > 24);
 
-    document.querySelectorAll('[data-progress]').forEach((element) => {
+    progressElements.forEach((element, index) => {
         const stages = Number(element.dataset.stages ?? 1);
 
         if (reduceMotion) {
@@ -194,7 +200,7 @@ function updateScrollEffects() {
             return;
         }
 
-        const rect = element.getBoundingClientRect();
+        const rect = rects[index];
         const readingLine = window.innerWidth < 1024 ? Number(element.dataset.progressLineMobile) : NaN;
         let progress;
 
@@ -209,14 +215,30 @@ function updateScrollEffects() {
             progress = clamp((start - rect.top) / (start - end));
         }
 
-        element.style.setProperty('--p', progress.toFixed(4));
+        const value = progress.toFixed(4);
         // Stage n is "current" once the packet reaches it; stages + 1 means the job has passed every stage.
-        element.dataset.stage = progress >= 1 ? String(stages + 1) : Math.ceil(progress * stages - 0.0001).toString();
+        const stage = progress >= 1 ? String(stages + 1) : Math.ceil(progress * stages - 0.0001).toString();
+
+        // Only touch the DOM when something changed, so off-screen sections cost nothing per frame.
+        if (element.style.getPropertyValue('--p') !== value) {
+            element.style.setProperty('--p', value);
+        }
+
+        if (element.dataset.stage !== stage) {
+            element.dataset.stage = stage;
+        }
     });
 
-    if (!reduceMotion && scrollY < viewport * 1.2) {
+    if (!reduceMotion) {
+        // Clamp rather than stop updating, so a fast fling never leaves the hero at a stale offset.
+        const parallaxY = Math.min(scrollY, viewport * 1.2);
+
         document.querySelectorAll('[data-parallax]').forEach((element) => {
-            element.style.transform = `translate3d(0, ${(scrollY * Number(element.dataset.parallax)).toFixed(2)}px, 0)`;
+            const transform = `translate3d(0, ${(parallaxY * Number(element.dataset.parallax)).toFixed(2)}px, 0)`;
+
+            if (element.style.transform !== transform) {
+                element.style.transform = transform;
+            }
         });
     }
 }
@@ -244,39 +266,106 @@ function bindScrollEffects() {
     window.addEventListener('resize', request);
 
     if (!reduceMotion && canHover) {
-        window.addEventListener('pointermove', (event) => {
-            pointerX = event.clientX / window.innerWidth - 0.5;
-            pointerY = event.clientY / window.innerHeight - 0.5;
-        }, { passive: true });
+        let settling = false;
 
         const settle = () => {
             // Damped follow so the plate drifts rather than snaps.
             currentX += (pointerX - currentX) * 0.06;
             currentY += (pointerY - currentY) * 0.06;
+
+            // Once the plate has caught up, stop: an endless loop of style writes on the hero
+            // competes with the aurora and with scrolling for every frame.
+            const settled = Math.abs(pointerX - currentX) < 0.0005 && Math.abs(pointerY - currentY) < 0.0005;
+
+            if (settled) {
+                currentX = pointerX;
+                currentY = pointerY;
+            }
+
             document.querySelectorAll('[data-tilt]').forEach((element) => {
                 const depth = Number(element.dataset.tilt || 12);
                 element.style.translate = `${(-currentX * depth).toFixed(2)}px ${(-currentY * depth).toFixed(2)}px`;
             });
-            requestAnimationFrame(settle);
+
+            settling = !settled;
+
+            if (settling) {
+                requestAnimationFrame(settle);
+            }
         };
 
-        requestAnimationFrame(settle);
+        window.addEventListener('pointermove', (event) => {
+            pointerX = event.clientX / window.innerWidth - 0.5;
+            pointerY = event.clientY / window.innerHeight - 0.5;
+
+            if (!settling) {
+                settling = true;
+                requestAnimationFrame(settle);
+            }
+        }, { passive: true });
     }
+}
+
+/**
+ * Whether this browser can blur and saturate on a 2D canvas (Chromium and Firefox can; older
+ * Safari ignores `context.filter`). Probed once by blurring a single pixel and looking for spill.
+ */
+let canvasFilterSupport = null;
+
+function supportsCanvasFilter() {
+    if (canvasFilterSupport !== null) {
+        return canvasFilterSupport;
+    }
+
+    try {
+        const source = document.createElement('canvas');
+        const probe = document.createElement('canvas');
+        source.width = probe.width = 5;
+        source.height = probe.height = 1;
+        source.getContext('2d').fillRect(2, 0, 1, 1);
+
+        const context = probe.getContext('2d', { willReadFrequently: true });
+        context.filter = 'blur(1px)';
+        context.drawImage(source, 0, 0);
+        canvasFilterSupport = context.getImageData(0, 0, 1, 1).data[3] > 0;
+    } catch {
+        canvasFilterSupport = false;
+    }
+
+    return canvasFilterSupport;
 }
 
 /**
  * Live aurora: layered curtains of light drawn at low resolution (the browser's
  * upscale gives the soft, diffuse glow for free) and blended additively.
+ *
+ * Kept cheap so it never fights scrolling for the frame:
+ *  - each curtain's gradient is pre-rendered once per size into a thin sprite, so a frame is
+ *    one alpha + one drawImage per column instead of a save/translate/fill/restore;
+ *  - the glow (blur + saturate) is applied here at half resolution rather than by a CSS filter,
+ *    which re-filtered the full-viewport layer at device resolution on every frame;
+ *  - drawing is capped at ~60 fps, so 120 Hz screens don't render twice the work for no visible gain;
+ *  - the backing store is only reallocated when the size really changes (mobile browsers fire
+ *    resize as the address bar slides in and out while scrolling).
  */
 function bindAurora() {
     unbound('canvas[data-aurora]', 'Aurora').forEach((canvas) => {
         const context = canvas.getContext('2d');
         const scale = 0.25;
+        const bakeGlow = supportsCanvasFilter();
+        // The glow is applied while upscaling the curtains to half resolution: canvas blurs under
+        // ~1px are skipped by Chromium, and 1.5px here is the former CSS `blur(3px)` on screen.
+        const outputScale = bakeGlow ? 0.5 : scale;
+        const glowFilter = `blur(${3 * outputScale}px) saturate(1.15)`;
+        // Without canvas filters, curtains are drawn straight onto the visible canvas and CSS adds the glow.
+        const buffer = bakeGlow ? document.createElement('canvas') : canvas;
+        const target = bakeGlow ? buffer.getContext('2d') : context;
         const curtains = [
             { hue: 165, base: 0.34, amplitude: 0.07, frequency: 1.6, speed: 0.00011, height: 0.34, alpha: 0.55, phase: 0 },
             { hue: 186, base: 0.26, amplitude: 0.05, frequency: 2.4, speed: -0.00008, height: 0.26, alpha: 0.42, phase: 2.1 },
             { hue: 268, base: 0.2, amplitude: 0.06, frequency: 1.1, speed: 0.00006, height: 0.3, alpha: 0.38, phase: 4.2 },
         ];
+        const step = 2;
         const horizon = Number(canvas.dataset.horizon ?? 0);
         const baseline = Number(canvas.dataset.baseline ?? 0.18);
         const envelopeStart = Number(canvas.dataset.envelopeStart ?? 0.2);
@@ -284,65 +373,111 @@ function bindAurora() {
         const fpsElement = canvas.dataset.fps ? document.querySelector(canvas.dataset.fps) : null;
         let width = 0;
         let height = 0;
+        let outputWidth = 0;
+        let outputHeight = 0;
+        let envelopes = [];
         let visible = true;
 
-        const resize = () => {
-            const rect = canvas.getBoundingClientRect();
-            width = Math.max(1, Math.round(rect.width * scale));
-            height = Math.max(1, Math.round(rect.height * scale));
-            canvas.width = width;
-            canvas.height = height;
-            // Observers don't always re-fire on viewport changes, so re-derive visibility here too.
-            visible = rect.bottom > 0 && rect.top < window.innerHeight;
-        };
+        if (bakeGlow) {
+            canvas.classList.add('is-glow-baked');
+        }
 
-        const draw = (time) => {
-            context.clearRect(0, 0, width, height);
-            context.globalCompositeOperation = 'lighter';
-
+        // One thin bitmap per curtain holding its vertical gradient, bright feathered base at the bottom.
+        const renderSprites = () => {
             curtains.forEach((curtain) => {
-                const gradient = context.createLinearGradient(0, 0, 0, -height * curtain.height);
+                const spriteHeight = Math.max(1, Math.round(height * curtain.height));
+                const sprite = curtain.sprite ?? document.createElement('canvas');
+                sprite.width = step;
+                sprite.height = spriteHeight;
+
+                const spriteContext = sprite.getContext('2d');
+                const gradient = spriteContext.createLinearGradient(0, spriteHeight, 0, 0);
                 // Feathered base: real curtains have a bright lower edge that still fades into the sky.
                 gradient.addColorStop(0, `hsla(${curtain.hue}, 90%, 62%, 0)`);
                 gradient.addColorStop(0.08, `hsla(${curtain.hue}, 90%, 64%, ${curtain.alpha})`);
                 gradient.addColorStop(0.3, `hsla(${curtain.hue}, 90%, 58%, ${curtain.alpha * 0.5})`);
                 gradient.addColorStop(1, `hsla(${curtain.hue + 30}, 90%, 50%, 0)`);
-                context.fillStyle = gradient;
+                spriteContext.clearRect(0, 0, step, spriteHeight);
+                spriteContext.fillStyle = gradient;
+                spriteContext.fillRect(0, 0, step, spriteHeight);
+                curtain.sprite = sprite;
+            });
 
-                const step = 2;
-                for (let x = 0; x < width; x += step) {
+            // The calm-side envelope only depends on x, so work it out once per size.
+            envelopes = [];
+            for (let x = 0; x < width; x += step) {
+                // Keep one side calm so headlines always read cleanly.
+                envelopes.push(0.18 + 0.82 * smoothstep(envelopeStart, envelopeEnd, x / width));
+            }
+        };
+
+        const resize = () => {
+            const rect = canvas.getBoundingClientRect();
+            const nextWidth = Math.max(1, Math.round(rect.width * scale));
+            const nextHeight = Math.max(1, Math.round(rect.height * scale));
+            const nextOutputWidth = Math.max(1, Math.round(rect.width * outputScale));
+            const nextOutputHeight = Math.max(1, Math.round(rect.height * outputScale));
+            // Observers don't always re-fire on viewport changes, so re-derive visibility here too.
+            visible = rect.bottom > 0 && rect.top < window.innerHeight;
+
+            if (nextOutputWidth === outputWidth && nextOutputHeight === outputHeight) {
+                return false;
+            }
+
+            width = buffer.width = nextWidth;
+            height = buffer.height = nextHeight;
+            outputWidth = canvas.width = nextOutputWidth;
+            outputHeight = canvas.height = nextOutputHeight;
+            renderSprites();
+
+            return true;
+        };
+
+        const draw = (time) => {
+            target.clearRect(0, 0, width, height);
+            target.globalCompositeOperation = 'lighter';
+
+            curtains.forEach((curtain) => {
+                const curtainHeight = height * curtain.height;
+                const top = height * baseline - curtainHeight;
+                const sway = time * curtain.speed;
+
+                for (let x = 0, column = 0; x < width; x += step, column++) {
                     const u = x / width;
-                    // Keep one side calm so headlines always read cleanly.
-                    const envelope = 0.18 + 0.82 * smoothstep(envelopeStart, envelopeEnd, u);
-                    const wave = Math.sin(u * Math.PI * curtain.frequency + time * curtain.speed * 6 + curtain.phase)
-                        + 0.5 * Math.sin(u * Math.PI * curtain.frequency * 3.1 - time * curtain.speed * 9 + curtain.phase * 1.7);
+                    const wave = Math.sin(u * Math.PI * curtain.frequency + sway * 6 + curtain.phase)
+                        + 0.5 * Math.sin(u * Math.PI * curtain.frequency * 3.1 - sway * 9 + curtain.phase * 1.7);
                     const y = height * (curtain.base + wave * curtain.amplitude);
                     // Vertical "rays" flicker independently, like real auroral curtains.
                     const flicker = 0.55 + 0.45 * Math.sin(x * 0.37 + time * 0.0011 + curtain.phase) * Math.sin(x * 0.11 - time * 0.0007);
-                    context.globalAlpha = clamp(flicker, 0.1, 1) * envelope;
-                    context.save();
-                    context.translate(x, y + height * baseline);
-                    context.fillRect(0, -height * curtain.height, step + 0.5, height * curtain.height);
-                    context.restore();
+                    target.globalAlpha = clamp(flicker, 0.1, 1) * envelopes[column];
+                    target.drawImage(curtain.sprite, x, y + top, step + 0.5, curtainHeight);
                 }
             });
 
-            context.globalCompositeOperation = 'source-over';
+            target.globalCompositeOperation = 'source-over';
 
             // Mirror the sky into the lake of the plate below the horizon.
             if (horizon > 0) {
                 const horizonY = Math.round(height * horizon);
-                context.save();
-                context.globalAlpha = 0.28;
-                context.translate(0, horizonY * 2);
-                context.scale(1, -1);
-                context.drawImage(canvas, 0, 0, width, horizonY, 0, 0, width, horizonY);
-                context.restore();
+                target.globalAlpha = 0.28;
+                target.setTransform(1, 0, 0, -1, 0, horizonY * 2);
+                target.drawImage(buffer, 0, 0, width, horizonY, 0, 0, width, horizonY);
+                target.setTransform(1, 0, 0, 1, 0, 0);
             }
 
-            context.globalAlpha = 1;
+            target.globalAlpha = 1;
+
+            if (bakeGlow) {
+                context.clearRect(0, 0, outputWidth, outputHeight);
+                context.filter = glowFilter;
+                context.drawImage(buffer, 0, 0, outputWidth, outputHeight);
+                context.filter = 'none';
+            }
         };
 
+        // Leave a little slack under 16.7 ms so 60 Hz screens never skip frames to timer jitter.
+        const minFrameGap = 1000 / 60 - 4;
+        let lastDraw = -Infinity;
         let frames = 0;
         let lastSample = performance.now();
 
@@ -351,7 +486,8 @@ function bindAurora() {
                 return;
             }
 
-            if (visible) {
+            if (visible && time - lastDraw >= minFrameGap) {
+                lastDraw = time;
                 draw(time);
                 frames++;
 
@@ -366,13 +502,16 @@ function bindAurora() {
         };
 
         resize();
-        window.addEventListener('resize', resize);
 
         if (reduceMotion) {
             draw(12000);
+            // A resize clears the canvas, so repaint the still frame after one.
+            window.addEventListener('resize', () => resize() && draw(12000));
 
             return;
         }
+
+        window.addEventListener('resize', resize);
 
         new IntersectionObserver(([entry]) => {
             visible = entry.isIntersecting;
