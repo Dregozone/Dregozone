@@ -354,6 +354,22 @@ html.theme-aurora {
         transition: opacity 3s ease 0.6s;
     }
 
+    /* motion.js applies the glow to the small bitmap itself where the browser can, so the
+       full-viewport layer isn't re-filtered on every frame (the main cause of hero scroll jank). */
+    .aurora-canvas.is-glow-baked {
+        filter: none;
+    }
+
+    /* Hero layers moved by scroll (parallax) and pointer (tilt): keep them on their own compositor
+       layers so moving them never repaints the plate, video or canvas beneath. */
+    [data-parallax] {
+        will-change: transform;
+    }
+
+    [data-tilt] {
+        will-change: translate;
+    }
+
     [data-plate-frame].is-loaded .aurora-canvas {
         opacity: var(--aurora-opacity, 0.95);
     }
