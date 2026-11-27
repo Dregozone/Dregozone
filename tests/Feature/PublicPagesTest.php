@@ -168,6 +168,14 @@ test('now page highlights ai work, reading, side projects and goals', function (
         ->assertDontSee('Still to personalise');
 });
 
+test('now page explains itself around growth, not hiring managers', function () {
+    $this->get('/now')
+        ->assertSuccessful()
+        ->assertSee('// Why this page exists', false)
+        ->assertSee('deliberately investing in growth')
+        ->assertDontSee('faster way for a hiring manager');
+});
+
 test('now page images exist as jpegs', function () {
     $html = $this->get('/now')->getContent();
 

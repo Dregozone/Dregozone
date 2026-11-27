@@ -156,7 +156,7 @@
                     <div class="rounded-2xl border border-edge bg-[radial-gradient(80%_100%_at_100%_0%,rgb(160_141_255/0.14),transparent)] p-6" data-reveal style="--i: 2">
                         <p class="mb-3 font-mono text-xs text-dim">// Why this page exists</p>
                         <p class="text-sm leading-relaxed text-mute">
-                            It is a faster way for a hiring manager to understand what I am doing now, how I think about my craft, and where I am deliberately investing in growth.
+                            It keeps me honest about where I am deliberately investing in growth: the skills I am sharpening, the tools I am learning, and what I am building to get better at my craft. It is a snapshot of that, open to anyone curious.
                         </p>
                     </div>
                 </div>
