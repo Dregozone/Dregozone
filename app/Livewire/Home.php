@@ -131,17 +131,19 @@ class Home extends Component
     /**
      * The local ComfyUI recipe used to generate the hero plates on this page.
      *
-     * @return list<array{node: string, detail: string}>
+     * `explain` is the plain-English line shown on small screens, where the node graph becomes a list.
+     *
+     * @return list<array{node: string, detail: string, explain: string}>
      */
     protected function heroRecipe(): array
     {
         return [
-            ['node' => 'Checkpoint', 'detail' => 'SDXL Turbo fp16'],
-            ['node' => 'KSampler', 'detail' => '1024×576 · 4 steps · cfg 1.0'],
-            ['node' => 'Latent upscale', 'detail' => '1536×864 · bislerp'],
-            ['node' => 'KSampler', 'detail' => '5 steps · denoise 0.45'],
-            ['node' => 'VAE decode', 'detail' => 'tiled · fits in 8 GB'],
-            ['node' => 'Wan 2.2 TI2V', 'detail' => 'image → 4 s video · ping-pong loop'],
+            ['node' => 'Checkpoint', 'detail' => 'SDXL Turbo fp16', 'explain' => 'Load a fast image model onto the local GPU.'],
+            ['node' => 'KSampler', 'detail' => '1024×576 · 4 steps · cfg 1.0', 'explain' => 'Draft the fjord and night sky from a text prompt.'],
+            ['node' => 'Latent upscale', 'detail' => '1536×864 · bislerp', 'explain' => 'Enlarge the draft before any detail is added.'],
+            ['node' => 'KSampler', 'detail' => '5 steps · denoise 0.45', 'explain' => 'Repaint the enlarged image to add fine detail.'],
+            ['node' => 'VAE decode', 'detail' => 'tiled · fits in 8 GB', 'explain' => 'Turn it into pixels in tiles, so it fits in 8 GB of memory.'],
+            ['node' => 'Wan 2.2 TI2V', 'detail' => 'image → 4 s video · ping-pong loop', 'explain' => 'Animate the still into a seamless looping video.'],
         ];
     }
 

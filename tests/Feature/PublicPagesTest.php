@@ -311,3 +311,16 @@ test('curated agent session replays show no failed steps', function () {
             ->toBeEmpty(basename($path).' replays a failed step');
     }
 });
+
+test('home page explains each hero plate step for small screens', function () {
+    $this->get('/')
+        ->assertSuccessful()
+        ->assertSee('// the recipe, step by step', false)
+        ->assertSeeInOrder([
+            'Load a fast image model onto the local GPU.',
+            'Draft the fjord and night sky from a text prompt.',
+            'Animate the still into a seamless looping video.',
+            'The result: the sky behind the top of this page.',
+        ])
+        ->assertSee('Latent upscale');
+});
