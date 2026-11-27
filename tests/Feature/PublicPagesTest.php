@@ -290,3 +290,10 @@ test('home page replays the curated agent sessions and offers the hero video', f
         ->assertSee('data-hero-video', false)
         ->assertSee('images/home/hero-aurora-loop.webm', false);
 });
+
+test('footer does not reveal the framework version', function () {
+    $this->get('/')
+        ->assertSuccessful()
+        ->assertSee('// Laravel &amp; Livewire', false)
+        ->assertDontSee(app()->version());
+});
