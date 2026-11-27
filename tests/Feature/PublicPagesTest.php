@@ -169,11 +169,16 @@ test('now page highlights ai work, reading, side projects and goals', function (
 });
 
 test('now page explains itself around growth, not hiring managers', function () {
+    $description = "What I'm building now and where I'm deliberately investing in growth: Laravel builds, AI-powered workflows, clear writing and continuous learning.";
+
     $this->get('/now')
         ->assertSuccessful()
         ->assertSee('// Why this page exists', false)
-        ->assertSee('deliberately investing in growth')
-        ->assertDontSee('faster way for a hiring manager');
+        ->assertSee('A living snapshot of where I am deliberately investing in growth')
+        ->assertSee('<meta name="description" content="'.e($description).'">', false)
+        ->assertSee('<meta property="og:description" content="'.e($description).'">', false)
+        ->assertSee('<meta name="twitter:description" content="'.e($description).'">', false)
+        ->assertDontSee('hiring manager');
 });
 
 test('now page images exist as jpegs', function () {

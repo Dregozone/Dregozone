@@ -1,6 +1,6 @@
 <div>
     <x-aurora.page-header path="~/now" eyebrow="Now / Brag page"
-        description="A living snapshot for hiring managers, collaborators, and anyone curious about the kind of work I do best: thoughtful Laravel builds, AI-powered workflows that multiply what one developer can ship, strong written communication, and steady growth through continuous learning.">
+        description="A living snapshot of where I am deliberately investing in growth, and the work it shows up in: thoughtful Laravel builds, AI-powered workflows that multiply what one developer can ship, strong written communication, and continuous learning.">
         <x-slot:title>What I'm building, improving, and bringing to a team <span class="aurora-gradient-text">right now.</span></x-slot:title>
 
         <div class="flex flex-wrap items-center gap-6">
