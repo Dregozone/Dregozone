@@ -1,6 +1,6 @@
 <div>
     <x-aurora.page-header path="~/now" eyebrow="Now / Brag page"
-        description="A living snapshot for hiring managers, collaborators, and anyone curious about the kind of work I do best: thoughtful Laravel builds, AI-powered workflows that multiply what one developer can ship, strong written communication, and steady growth through continuous learning.">
+        description="A living snapshot of where I am deliberately investing in growth, and the work it shows up in: thoughtful Laravel builds, AI-powered workflows that multiply what one developer can ship, strong written communication, and continuous learning.">
         <x-slot:title>What I'm building, improving, and bringing to a team <span class="aurora-gradient-text">right now.</span></x-slot:title>
 
         <div class="flex flex-wrap items-center gap-6">
@@ -156,7 +156,7 @@
                     <div class="rounded-2xl border border-edge bg-[radial-gradient(80%_100%_at_100%_0%,rgb(160_141_255/0.14),transparent)] p-6" data-reveal style="--i: 2">
                         <p class="mb-3 font-mono text-xs text-dim">// Why this page exists</p>
                         <p class="text-sm leading-relaxed text-mute">
-                            It is a faster way for a hiring manager to understand what I am doing now, how I think about my craft, and where I am deliberately investing in growth.
+                            It keeps me honest about where I am deliberately investing in growth: the skills I am sharpening, the tools I am learning, and what I am building to get better at my craft. It is a snapshot of that, open to anyone curious.
                         </p>
                     </div>
                 </div>

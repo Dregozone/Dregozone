@@ -192,6 +192,8 @@ class Now extends Component
                     'description' => 'I regularly invest in courses and structured practice so I can keep improving beyond day-to-day delivery work.',
                 ],
             ],
+        ])->layoutData([
+            'description' => "What I'm building now and where I'm deliberately investing in growth: Laravel builds, AI-powered workflows, clear writing and continuous learning.",
         ]);
     }
 }
