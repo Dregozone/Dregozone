@@ -1,0 +1,181 @@
+{
+    "title": "Hero plate on mobile",
+    "project": "~/user/Dregozone",
+    "date": "2026-11-27",
+    "duration_seconds": 123.809,
+    "shipped": "PR #87",
+    "prompt": "> on mobile the hero plate section collapses to a single column of cards and doesn't explain anything, improve only the mobile version",
+    "events": [
+        {
+            "type": "tool",
+            "call": "Bash · Read the hero plate section of the home page",
+            "result": "27 lines of output",
+            "status": "info",
+            "delay": 450
+        },
+        {
+            "type": "tool",
+            "call": "Bash · Read the hero recipe data",
+            "result": "6 recipe steps",
+            "status": "info",
+            "delay": 1099
+        },
+        {
+            "type": "tool",
+            "call": "Bash · Set up the database and start the app locally",
+            "result": "200",
+            "status": "info",
+            "delay": 1191
+        },
+        {
+            "type": "tool",
+            "call": "Bash · Screenshot the section at phone and desktop widths",
+            "result": "2 screenshots",
+            "status": "info",
+            "delay": 1417
+        },
+        {
+            "type": "tool",
+            "call": "Read(shots/before-mobile.png)",
+            "result": "image",
+            "status": "info",
+            "delay": 1452
+        },
+        {
+            "type": "tool",
+            "call": "Read(shots/before-desktop.png)",
+            "result": "image",
+            "status": "info",
+            "delay": 631
+        },
+        {
+            "type": "say",
+            "text": "On mobile the recipe collapses to bare, unexplained cards. I'll add a numbered pipeline for phones and leave desktop as it is.",
+            "delay": 1200
+        },
+        {
+            "type": "diff",
+            "call": "Edit(app/Livewire/Home.php)",
+            "result": "Updated",
+            "status": "info",
+            "lines": [
+                [
+                    "+",
+                    "['node' => 'Checkpoint', 'detail' => 'SDXL Turbo fp16', 'explain' => 'Load a fast image mo..."
+                ],
+                [
+                    "+",
+                    "['node' => 'KSampler', 'detail' => '1024×576 · 4 steps · cfg 1.0', 'explain' => 'Draft the..."
+                ]
+            ],
+            "delay": 1655
+        },
+        {
+            "type": "diff",
+            "call": "Edit(resources/views/livewire/home.blade.php)",
+            "result": "Updated",
+            "status": "info",
+            "lines": [
+                [
+                    "-",
+                    "<div class=\"font-mono flex flex-col gap-3 text-[11px] sm:flex-row sm:flex-wrap sm:items-ce..."
+                ],
+                [
+                    "+",
+                    "<div class=\"sm:hidden\">"
+                ],
+                [
+                    "+",
+                    "<p class=\"font-mono mb-5 text-[11px] text-dim\">// the recipe, step by step</p>"
+                ],
+                [
+                    "+",
+                    "<ol class=\"relative ml-3 border-l border-[rgb(63_230_192/0.35)]\">"
+                ],
+                [
+                    "+",
+                    "@foreach ($heroRecipe as $step)"
+                ],
+                [
+                    "+",
+                    "<li class=\"relative pb-5 pl-6\">"
+                ]
+            ],
+            "delay": 1415
+        },
+        {
+            "type": "tool",
+            "call": "Grep(\"--color-(void|glow-teal|night|ink|dim)\\b\", resources/css)",
+            "result": "27 lines of output",
+            "status": "info",
+            "delay": 1187
+        },
+        {
+            "type": "say",
+            "text": "All the theme colours exist.",
+            "delay": 1091
+        },
+        {
+            "type": "tool",
+            "call": "Bash · Build assets and re-screenshot both widths",
+            "result": "shots saved",
+            "status": "ok",
+            "delay": 944
+        },
+        {
+            "type": "tool",
+            "call": "Read(shots/after-mobile.png)",
+            "result": "image",
+            "status": "info",
+            "delay": 1535
+        },
+        {
+            "type": "tool",
+            "call": "Read(shots/after-desktop.png)",
+            "result": "image",
+            "status": "info",
+            "delay": 622
+        },
+        {
+            "type": "say",
+            "text": "The mobile pipeline reads well.",
+            "delay": 1234
+        },
+        {
+            "type": "tool",
+            "call": "Bash · Compare desktop before and after, pixel by pixel",
+            "result": "identical",
+            "status": "ok",
+            "delay": 845
+        },
+        {
+            "type": "say",
+            "text": "The desktop render is pixel-identical.",
+            "delay": 1116
+        },
+        {
+            "type": "tool",
+            "call": "Bash · Add a feature test and run the suite",
+            "result": "Tests:    330 passed (877 assertions)",
+            "status": "ok",
+            "delay": 1164
+        },
+        {
+            "type": "say",
+            "text": "The total didn't change as I expected, so I'm running the new test on its own.",
+            "delay": 1634
+        },
+        {
+            "type": "tool",
+            "call": "Bash · Run the new test on its own",
+            "result": "Tests:    1 passed (4 assertions)",
+            "status": "ok",
+            "delay": 683
+        },
+        {
+            "type": "say",
+            "text": "It runs and passes (the baseline was 329).",
+            "delay": 1599
+        }
+    ]
+}

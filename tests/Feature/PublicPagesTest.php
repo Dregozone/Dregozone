@@ -284,7 +284,7 @@ test('home page replays the curated agent sessions and offers the hero video', f
         ->assertSuccessful()
         ->assertSee('data-agent-replay', false)
         ->assertSee('data-replay-sessions', false)
-        ->assertSee('Local hero images with ComfyUI')
+        ->assertSee('Hero plate on mobile')
         ->assertSee('Stale admin blog list')
         ->assertSee('real transcript, lightly trimmed')
         ->assertSee('data-hero-video', false)
@@ -296,4 +296,18 @@ test('footer does not reveal the framework version', function () {
         ->assertSuccessful()
         ->assertSee('// Laravel &amp; Livewire', false)
         ->assertDontSee(app()->version());
+});
+
+test('curated agent session replays show no failed steps', function () {
+    $sessions = glob(resource_path('data/agent-sessions/*.json'));
+
+    expect($sessions)->not->toBeEmpty();
+
+    foreach ($sessions as $path) {
+        $session = json_decode(file_get_contents($path), true);
+
+        expect($session['events'])->not->toBeEmpty()
+            ->and(collect($session['events'])->where('status', 'error')->all())
+            ->toBeEmpty(basename($path).' replays a failed step');
+    }
 });
