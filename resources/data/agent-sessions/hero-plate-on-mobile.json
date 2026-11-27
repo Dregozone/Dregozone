@@ -15,14 +15,14 @@
         },
         {
             "type": "tool",
-            "call": "Bash · Read the hero recipe data and the database driver",
-            "result": "6 recipe steps · DB_CONNECTION=sqlite",
+            "call": "Bash · Read the hero recipe data",
+            "result": "6 recipe steps",
             "status": "info",
             "delay": 1099
         },
         {
             "type": "tool",
-            "call": "Bash · Migrate SQLite and start the app locally",
+            "call": "Bash · Set up the database and start the app locally",
             "result": "200",
             "status": "info",
             "delay": 1191
