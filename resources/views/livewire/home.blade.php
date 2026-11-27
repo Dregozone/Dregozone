@@ -208,7 +208,29 @@
                                 The plate was generated locally in ComfyUI in about forty seconds of GPU time, then animated with Wan 2.2 on the same GPU into an eight-second loop. The aurora moving across it is drawn live in the browser and mirrored into the lake.
                             </p>
                         </div>
-                        <div class="font-mono flex flex-col gap-3 text-[11px] sm:flex-row sm:flex-wrap sm:items-center">
+                        {{-- Small screens: the node graph reads as a numbered pipeline, each step explained. --}}
+                        <div class="sm:hidden">
+                            <p class="font-mono mb-5 text-[11px] text-dim">// the recipe, step by step</p>
+                            <ol class="relative ml-3 border-l border-[rgb(63_230_192/0.35)]">
+                                @foreach ($heroRecipe as $step)
+                                    <li class="relative pb-5 pl-6">
+                                        <span class="font-mono absolute -left-3 top-0 flex h-6 w-6 items-center justify-center rounded-full border border-[rgb(63_230_192/0.5)] bg-night text-[10px] text-glow-teal" aria-hidden="true">{{ $loop->iteration }}</span>
+                                        <p class="text-sm leading-snug text-ink">{{ $step['explain'] }}</p>
+                                        <p class="font-mono mt-1 text-[10px] text-dim">{{ $step['node'] }} · {{ $step['detail'] }}</p>
+                                    </li>
+                                @endforeach
+                                <li class="relative pl-6">
+                                    <span class="absolute -left-3 top-0 flex h-6 w-6 items-center justify-center rounded-full bg-glow-teal text-[11px] text-void" aria-hidden="true">✓</span>
+                                    <p class="text-sm leading-snug text-ink">The result: the sky behind the top of this page.</p>
+                                    <figure class="mt-3 overflow-hidden rounded-xl border border-[rgb(63_230_192/0.4)]">
+                                        <img src="{{ asset('images/home/hero-aurora-960.webp') }}" alt="The generated night-sky plate used in the hero" width="960" height="540" loading="lazy" class="aspect-video w-full object-cover">
+                                        <figcaption class="font-mono bg-night px-3 py-2 text-[10px] text-dim">1536×864 plate · about 40 s of GPU time</figcaption>
+                                    </figure>
+                                </li>
+                            </ol>
+                        </div>
+
+                        <div class="font-mono hidden gap-3 text-[11px] sm:flex sm:flex-row sm:flex-wrap sm:items-center">
                             @foreach ($heroRecipe as $step)
                                 <div class="flex items-center gap-3 sm:contents">
                                     <div class="rounded-lg border border-edge-strong bg-night px-3 py-2">
