@@ -209,7 +209,7 @@
             <div class="mt-14 flex flex-col gap-4 border-t border-edge pt-8 text-xs text-dim lg:flex-row lg:items-center lg:justify-between">
                 <p>&copy; {{ date('Y') }} Anders Learmonth. All rights reserved. Blog posts and written content may not be reproduced without attribution.</p>
                 <p class="font-mono">
-                    // Laravel {{ app()->version() }} &amp; Livewire
+                    // Laravel &amp; Livewire
                     @if (defined('LARAVEL_START'))
                         · rendered in {{ max(1, (int) round((microtime(true) - LARAVEL_START) * 1000)) }} ms
                     @endif
